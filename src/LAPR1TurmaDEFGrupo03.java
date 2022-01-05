@@ -11,12 +11,12 @@ public class LAPR1TurmaDEFGrupo03 {
         int res;
         switch (MOD) {
             case 0:
-                System.out.println("Modo iterativo");
-                modoIterativo();
+                System.out.println("Modo interativo");
+                modoInterativo();
                 Scann();
                 break;
             case 1:
-                System.out.println("Modo não iterativo");
+                System.out.println("Modo não interativo");
                 break;
         }
     }
@@ -27,7 +27,7 @@ public class LAPR1TurmaDEFGrupo03 {
         else return 1;
     }
 
-    public static void modoIterativo() throws FileNotFoundException {
+    public static void modoInterativo() throws FileNotFoundException {
         Scanner sc = new Scanner(System.in);
         String nomeFile;
         nomeFile = sc.nextLine();
