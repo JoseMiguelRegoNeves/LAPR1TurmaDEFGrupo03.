@@ -49,13 +49,14 @@ public class LAPR1TurmaDEFGrupo03 {
         int res = resolucaoInterface();
         System.out.println("Indique o caminho do ficheiro fonte:");
         String caminho = sc.nextLine();
-        String[] matrix = Scann(caminho);
+        String[]matrix = Scann(caminho);
         System.out.println("Indique a data de início (AAAA-MM-DD): ");
         String di = recolhaData();
         int posDi = posicaoDatas(matrix, di);
         System.out.println("Indique a data final (AAAA-MM-DD): ");
         String df = recolhaData();
         int posDf = posicaoDatas(matrix, df);
+        calculoDif(matrix, posDi, posDf, res);
 
         /*           CALCULAR                   */
     }
@@ -99,6 +100,12 @@ public class LAPR1TurmaDEFGrupo03 {
                 resolucao = sc.nextInt();
             } while (resolucao != 0 && resolucao != 1 && resolucao != 2);
         }
+        switch (resolucao) {
+            case 0: return 1;
+            case 1: return 7;
+            case 2: return 30;
+        }
+
         return resolucao;
     }
 
@@ -160,13 +167,16 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
 
-    public static int[][] calculoDif(String[][] matrizDatas, int di, int df, int step) {
-        int[][] matrizDiferenca = new int[1][matrizDatas[0].length];
-        for (int j = di; j <= df; step) {
-            for (int i = 1; i < matrizDatas[0].length; i++) {
-                matrizDiferenca[di][i-1] = matrizDatas[1][i] - matrizDatas[0][i];
+    public static String[][] calculoDif(String[][] matrizDatas, int di, int df, int step) {
+        String[][] matrizDiferenca = new String[1][matrizDatas[0].length];
+        int aux=0;
+            for (int j = di+1; j <= df; j+=step) {
+                matrizDiferenca[aux][0] = matrizDatas[j][0];
+                for (int i = 1; i < matrizDatas[0].length; i++) {
+                    matrizDiferenca[aux][i] = matrizDatas[j][i] - matrizDatas[j-1][i];
+                }
+                aux++;
             }
-        }
         return matrizDiferenca;
     }
 
