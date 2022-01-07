@@ -1,4 +1,6 @@
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 
@@ -61,24 +63,37 @@ public class LAPR1TurmaDEFGrupo03 {
         int res = resolucaoInterface();
         System.out.println("Indique o nome do ficheiro fonte: ");
         nomeFileIn = sc.nextLine();
-        System.out.println("Indique a data de inicio: ");
-        int[] di = recolhaData();
-        System.out.println("Indique a data final: ");
-        int[] df = recolhaData();
+        System.out.println("Indique a data de início (AAAA-MM-DD): ");
+        String di = recolhaData();
+        System.out.println("Indique a data final (AAAA-MM-DD): ");
+        String df = recolhaData();
 
     }
 
 
-    public static int[] recolhaData() {
+    public static String recolhaData() {
         Scanner sc = new Scanner(System.in);
-        int[] data = new int[3];
-        System.out.println("Ano: ");
-        data[0] = sc.nextInt();
-        System.out.println("Mes: ");
-        data[1] = sc.nextInt();
-        System.out.println("Dia: ");
-        data[2] = sc.nextInt();
+        String data = sc.nextLine();
+        while(ValidarData(data) != 1){
+            System.out.println("Introduza uma data válida no formato AAAA-MM-DD");
+            data = sc.nextLine();
+        }
+
         return data;
+    }
+
+    private static int ValidarData(String input) {
+        String formatString = "yyyy-MM-dd";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString);
+            format.setLenient(false);
+            format.parse(input);
+        } catch (ParseException e) {    //erro previsto (mês=13 ou formato errado, por exemplo)
+            return 0;
+        } catch (IllegalArgumentException e) {  //erro imprevisto (colocar letras em vez de números, por exemplo)
+            return 0;
+        }
+        return 1;
     }
 
     public static int resolucaoInterface() {
