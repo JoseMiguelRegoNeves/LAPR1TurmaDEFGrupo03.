@@ -2,12 +2,14 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
+import java.util.Calendar;
+
 
 
 public class LAPR1TurmaDEFGrupo03 {
     static final String FILE1 = "textFile.txt";
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException , ParseException{
         int[][] matriz = new int[5][5];
         int MOD = verificacaoModo(args);
         int res;
@@ -44,44 +46,59 @@ public class LAPR1TurmaDEFGrupo03 {
 
     }
 
-    public static void modoInterativo() throws FileNotFoundException {
+    public static void modoInterativo() throws FileNotFoundException , ParseException{
         Scanner sc = new Scanner(System.in);
         int res = resolucaoInterface();
         System.out.println("Indique o caminho do ficheiro fonte:");
         String caminho = sc.nextLine();
         String[]matrix = Scann(caminho);
         System.out.println("Indique a data de início (AAAA-MM-DD): ");
-        String di = recolhaData();
+        String di = recolhaData(res);
         int posDi = posicaoDatas(matrix, di);
         System.out.println("Indique a data final (AAAA-MM-DD): ");
-        String df = recolhaData();
+        String df = recolhaData(res);
         int posDf = posicaoDatas(matrix, df);
-        calculoDif(matrix, posDi, posDf, res);
+        //calculoDif(matrix, posDi, posDf, res);
 
         /*           CALCULAR                   */
     }
 
 
-    public static String recolhaData() {
+    public static String recolhaData(int res) throws ParseException {
         Scanner sc = new Scanner(System.in);
         String data = sc.nextLine();
-        while(ValidarData(data) != 1){
+        while(ValidarData(data , res) != 1){
             System.out.println("Introduza uma data válida no formato AAAA-MM-DD");
             data = sc.nextLine();
         }
         return data;
     }
 
-    private static int ValidarData(String input) {
+    private static int ValidarData(String input, int res) throws ParseException {
         String formatString = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
-            SimpleDateFormat format = new SimpleDateFormat(formatString);
             format.setLenient(false);
             format.parse(input);
         } catch (ParseException e) {    //erro previsto (mês=13 ou formato errado, por exemplo)
             return 0;
         } catch (IllegalArgumentException e) {  //erro imprevisto (colocar letras em vez de números, por exemplo)
             return 0;
+        }
+        Calendar data = Calendar.getInstance();                                                                          //ajudar a implementar o Calendar
+        data.setTime(format.parse(input));
+        switch (res){
+            case 0:
+                return 1;
+            case 1:
+                if(data.get(Calendar.DAY_OF_WEEK) != 2){
+                    System.out.println(data.get(Calendar.DAY_OF_WEEK));
+                   return 0;
+                }
+            case 2:
+                if(data.get(Calendar.DAY_OF_MONTH) != 1){
+                    return 0;
+                }
         }
         return 1;
     }
@@ -99,11 +116,6 @@ public class LAPR1TurmaDEFGrupo03 {
                 System.out.println("Introduza uma opcao valida");
                 resolucao = sc.nextInt();
             } while (resolucao != 0 && resolucao != 1 && resolucao != 2);
-        }
-        switch (resolucao) {
-            case 0: return 1;
-            case 1: return 7;
-            case 2: return 30;
         }
 
         return resolucao;
@@ -161,7 +173,7 @@ public class LAPR1TurmaDEFGrupo03 {
     public static int posicaoDatas(String[] ficheiro, String di){
         int i;
         for ( i = 0; i < 999; i++) {
-            if(ficheiro[i][0].equals(di)) return i;
+            //if(ficheiro[i][0].equals(di)) return i;
         }
         return i;
     }
@@ -173,7 +185,7 @@ public class LAPR1TurmaDEFGrupo03 {
             for (int j = di+1; j <= df; j+=step) {
                 matrizDiferenca[aux][0] = matrizDatas[j][0];
                 for (int i = 1; i < matrizDatas[0].length; i++) {
-                    matrizDiferenca[aux][i] = matrizDatas[j][i] - matrizDatas[j-1][i];
+                   // matrizDiferenca[aux][i] = matrizDatas[j][i] - matrizDatas[j-1][i];
                 }
                 aux++;
             }
