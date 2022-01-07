@@ -1,8 +1,7 @@
-import java.io.File;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
-import java.io.FileNotFoundException;
 
 
 public class LAPR1TurmaDEFGrupo03 {
@@ -15,14 +14,15 @@ public class LAPR1TurmaDEFGrupo03 {
         switch (MOD) {
             case 0:
                 System.out.println("Modo interativo");
-                Scann();
                 modoInterativo();
                 break;
+                /*
             case 1:
                 System.out.println("Modo não interativo");
                 Scann();
                 modoNaoInterativo(args);
                 break;
+                */
         }
     }
 
@@ -34,40 +34,30 @@ public class LAPR1TurmaDEFGrupo03 {
             return 1;
     }
 
-    // public static int recolhaDatas () {                                                                                      AVISO!
-
-    // }
-
-    public static int[][] calculoDif(int[][] matrizDatas) {
-        int[][] matrizDiferenca = new int[1][matrizDatas[0].length];
-        for (int i = 1; i < matrizDatas[0].length; i++) {
-            matrizDiferenca[0][i-1] = matrizDatas[1][i] - matrizDatas[0][i];
-        }
-        return matrizDiferenca;
-    }
-
     public static void modoNaoInterativo(String[] args) throws FileNotFoundException {
-        Scanner sc = new Scanner(System.in);
         String nomeFileIn, nomeFileOut;
         String res = args[1]; // java -jar nome_programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA registoNumerosCovid19.csv nome_ficheiro_saida.txt
         nomeFileIn = args[6];
         nomeFileOut = args[7];
-        String di = args[3]; // recolhaData();                                                                                   Recolha de data por parâmetro?
-        String df = args[5]; // recolhaData();                                                                                   Recolha de data por parâmetro?
+        String di = args[3];
+        String df = args[5];
 
     }
 
     public static void modoInterativo() throws FileNotFoundException {
         Scanner sc = new Scanner(System.in);
-        String nomeFileIn;
         int res = resolucaoInterface();
-        System.out.println("Indique o nome do ficheiro fonte: ");
-        nomeFileIn = sc.nextLine();
+        System.out.println("Indique o caminho do ficheiro fonte:");
+        String caminho = sc.nextLine();
+        String[] matrix = Scann(caminho);
         System.out.println("Indique a data de início (AAAA-MM-DD): ");
         String di = recolhaData();
+        int posDi = posicaoDatas(matrix, di);
         System.out.println("Indique a data final (AAAA-MM-DD): ");
         String df = recolhaData();
+        int posDf = posicaoDatas(matrix, df);
 
+        /*           CALCULAR                   */
     }
 
 
@@ -78,7 +68,6 @@ public class LAPR1TurmaDEFGrupo03 {
             System.out.println("Introduza uma data válida no formato AAAA-MM-DD");
             data = sc.nextLine();
         }
-
         return data;
     }
 
@@ -113,19 +102,72 @@ public class LAPR1TurmaDEFGrupo03 {
         return resolucao;
     }
 
+    public static String[] Scann(String caminho) throws FileNotFoundException {
+        //CAMINHO JOANA "C:\\Users\\joana\\OneDrive\\Ambiente de Trabalho\\exemploRegistoNumerosCovid19.csv";
+        //CAMINHO MIGUEL C:\Users\Miguel\Documents\exemploRegistoNumerosCovid19.csv
+        BufferedReader sc;
+        String[] ficheiro = new String[6];
+        String line;
 
-    //public static final String delimiter = ",";                                                                           //AJUDA! NÃO ESTÁ A FUNCIONAR
-    public static String[][] Scann() throws FileNotFoundException {
-        Scanner sc = new Scanner(new File("textFile.txt"));
-        String linha = sc.nextLine();
-        String[][] matrix = new String[5][5];
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                matrix[i][j] = String.valueOf(linha.split(","));
-                System.out.print(matrix[i][j] + " ");
+        try {
+            sc = new BufferedReader(new FileReader(caminho));
+            while ((line = sc.readLine()) != null) {
+                ficheiro = line.split(",");
+/*
+                    for (int i = 0; i < 6; i++) {
+                        System.out.print(ficheiro[i]);
+                    }
+                    System.out.println();
+*/
             }
-            sc.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return matrix;
+
+        return ficheiro;
     }
+
+    public static void guardarFicheiro() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Onde deseja guardar o novo ficheiro?");
+        String caminho2 = sc.nextLine();
+        // PrintWriter pw = new PrintWriter(new File(""));
+        try {
+            PrintWriter pw = new PrintWriter(new File(caminho2));
+            StringBuilder write = new StringBuilder();
+            write.append("gghdg");
+            write.append(",");
+            write.append("gghdg");
+            write.append(",");
+            write.append("gghdg");
+            pw.write(write.toString());
+            pw.close();
+            System.out.println("finished");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int posicaoDatas(String[] ficheiro, String di){
+        int i;
+        for ( i = 0; i < 999; i++) {
+            if(ficheiro[i][0].equals(di)) return i;
+        }
+        return i;
+    }
+
+
+    public static int[][] calculoDif(String[][] matrizDatas, int di, int df, int step) {
+        int[][] matrizDiferenca = new int[1][matrizDatas[0].length];
+        for (int j = di; j <= df; step) {
+            for (int i = 1; i < matrizDatas[0].length; i++) {
+                matrizDiferenca[di][i-1] = matrizDatas[1][i] - matrizDatas[0][i];
+            }
+        }
+        return matrizDiferenca;
+    }
+
 }
