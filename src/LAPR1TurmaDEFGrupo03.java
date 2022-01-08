@@ -67,14 +67,14 @@ public class LAPR1TurmaDEFGrupo03 {
     public static String recolhaData(int res) throws ParseException {
         Scanner sc = new Scanner(System.in);
         String data = sc.nextLine();
-        while(ValidarData(data , res) != 1){
+        while(ValidarData(data , res) == 1){
             System.out.println("Introduza uma data válida no formato AAAA-MM-DD");
             data = sc.nextLine();
         }
         return data;
     }
 
-    private static int ValidarData(String input, int res) throws ParseException {
+    public static int ValidarData(String input, int res) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
@@ -91,12 +91,13 @@ public class LAPR1TurmaDEFGrupo03 {
             case 0:
                 return 1;
             case 1:
-                if(data.get(Calendar.DAY_OF_WEEK) != 2){
+                if(data.get(Calendar.DAY_OF_WEEK) == 2){
                     System.out.println(data.get(Calendar.DAY_OF_WEEK));
                    return 0;
                 }
             case 2:
-                if(data.get(Calendar.DAY_OF_MONTH) != 1){
+                if(data.get(Calendar.DAY_OF_MONTH) == 1){
+                    System.out.println(data.get(Calendar.DAY_OF_MONTH));
                     return 0;
                 }
         }
@@ -122,7 +123,7 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static String[] Scann(String caminho) throws FileNotFoundException {
-        //CAMINHO JOANA "C:\\Users\\joana\\OneDrive\\Ambiente de Trabalho\\exemploRegistoNumerosCovid19.csv";
+        //CAMINHO JOANA C:\\Users\\joana\\OneDrive\\Ambiente de Trabalho\\exemploRegistoNumerosCovid19.csv
         //CAMINHO MIGUEL C:\Users\Miguel\Documents\exemploRegistoNumerosCovid19.csv
         BufferedReader sc;
         String[] ficheiro = new String[6];
