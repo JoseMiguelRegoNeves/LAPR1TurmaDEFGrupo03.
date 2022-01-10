@@ -6,24 +6,18 @@ import java.util.Calendar;
 
 
 public class LAPR1TurmaDEFGrupo03 {
-    static final String FILE1 = "textFile.txt";
 
     public static void main(String[] args) throws FileNotFoundException, ParseException {
-        int[][] matriz = new int[5][5];
         int MOD = verificacaoModo(args);
-        int res;
         switch (MOD) {
             case 0:
                 System.out.println("Modo interativo");
                 modoInterativo();
                 break;
-                /*
             case 1:
                 System.out.println("Modo não interativo");
-                Scann();
                 modoNaoInterativo(args);
                 break;
-                */
         }
     }
 
@@ -35,14 +29,20 @@ public class LAPR1TurmaDEFGrupo03 {
             return 1;
     }
 
-    public static void modoNaoInterativo(String[] args) throws FileNotFoundException {
-        String nomeFileIn, nomeFileOut;
-        String res = args[1]; // java -jar nome_programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA registoNumerosCovid19.csv nome_ficheiro_saida.txt
-        nomeFileIn = args[6];
+    public static void modoNaoInterativo(String[] args) throws FileNotFoundException, ParseException {
+        Scanner sc = new Scanner(System.in);
+        String caminho, nomeFileOut;
+        int res = Integer.parseInt(args[1]); // java -jar nome_programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA registoNumerosCovid19.csv nome_ficheiro_saida.txt
+        caminho = args[6];
         nomeFileOut = args[7];
+        String[][] matrix = Scann(caminho);
+        int aux = 0;
         String di = args[3];
+        int posDi = posicaoDatas(matrix, di);
         String df = args[5];
-
+        int posDf = posicaoDatas(matrix, df);
+        calculoDif(matrix, posDi, posDf, res);
+        // ficheiro output
     }
 
     public static void modoInterativo() throws FileNotFoundException, ParseException {
@@ -50,32 +50,39 @@ public class LAPR1TurmaDEFGrupo03 {
         int res = resolucaoInterface();
         System.out.println("Indique o caminho do ficheiro fonte:");
         String caminho = sc.nextLine();
-        String[] matrix = Scann(caminho);
+        String[][] matrix = Scann(caminho);
         System.out.println("Indique a data de início (AAAA-MM-DD): ");
         int aux = 0;
-        String di = recolhaData(res, aux);
+        String di = recolhaDataInicio(res, aux);
         int posDi = posicaoDatas(matrix, di);
         System.out.println("Indique a data final (AAAA-MM-DD): ");
-        aux = 1;
-        String df = recolhaData(res, aux);                                                                              // erro loop infinito
+        String df = recolhaDataFim(res, aux);                                                                              // erro loop infinito
         int posDf = posicaoDatas(matrix, df);
-        //calculoDif(matrix, posDi, posDf, res);
-
-        /*           CALCULAR                   */
+        calculoDif(matrix, posDi, posDf, res);
+        // ficheiro output
     }
 
-
-    public static String recolhaData(int res, int aux) throws ParseException {
+    public static String recolhaDataInicio(int res, int aux) throws ParseException {
         Scanner sc = new Scanner(System.in);
         String data = sc.nextLine();
-        while (ValidarData(data, res, aux) == 1) {
+        while (ValidarDataInicio(data, res, aux) == 1) {
             System.out.println("Introduza uma data válida no formato AAAA-MM-DD");
             data = sc.nextLine();
         }
         return data;
     }
 
-    public static int ValidarData(String input, int res, int aux) throws ParseException {
+    public static String recolhaDataFim(int res, int aux) throws ParseException {
+        Scanner sc = new Scanner(System.in);
+        String data = sc.nextLine();
+        while (ValidarDataFim(data, res, aux) == 1) {
+            System.out.println("Introduza uma data válida no formato AAAA-MM-DD");
+            data = sc.nextLine();
+        }
+        return data;
+    }
+
+    public static int ValidarDataInicio(String input, int resolucao, int aux) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
@@ -87,25 +94,56 @@ public class LAPR1TurmaDEFGrupo03 {
             return 0;
         }
         if (aux == 0) {
-            Calendar data = Calendar.getInstance();                                                                          //ajudar a implementar o Calendar
+            Calendar data = Calendar.getInstance();
             data.setTime(format.parse(input));
-            switch (res) {
+            switch (resolucao) {
                 case 0:
-                    return 1;
+                    return 0;
                 case 1:
+                    System.out.println("Indique uma data referente a uma segunda-feira");
                     if (data.get(Calendar.DAY_OF_WEEK) == 2) {
-
                         return 0;
                     }
                 case 2:
+                    System.out.println("Indique uma data referente ao primeiro dia do mês");
                     if (data.get(Calendar.DAY_OF_MONTH) == 1) {
-
                         return 0;
                     }
             }
         }
         return 1;
     }
+
+    public static int ValidarDataFim(String input, int resolucao, int aux) throws ParseException {
+        String formatString = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        try {
+            format.setLenient(false);
+            format.parse(input);
+        } catch (ParseException e) {    //erro previsto (mês=13 ou formato errado, por exemplo)
+            return 0;
+        } catch (IllegalArgumentException e) {  //erro imprevisto (colocar letras em vez de números, por exemplo)
+            return 0;
+        }
+        if (aux == 0) {
+            Calendar data = Calendar.getInstance();
+            data.setTime(format.parse(input));
+            switch (resolucao) {
+                case 0:
+                    return 0;
+                case 1:
+                    if (data.get(Calendar.DAY_OF_WEEK) == 1) {
+                        return 0;
+                    }
+                case 2:
+                    if (data.get(Calendar.DAY_OF_MONTH) == 1) {
+                        return 0;
+                    }
+            }
+        }
+        return 1;
+    }
+
 
     public static int resolucaoInterface() {
         int resolucao;
@@ -117,7 +155,7 @@ public class LAPR1TurmaDEFGrupo03 {
         resolucao = sc.nextInt();
         if (resolucao != 0 && resolucao != 1 && resolucao != 2) {
             do {
-                System.out.println("Introduza uma opcao valida");
+                System.out.println("Introduza uma opção válida");
                 resolucao = sc.nextInt();
             } while (resolucao != 0 && resolucao != 1 && resolucao != 2);
         }
@@ -125,23 +163,24 @@ public class LAPR1TurmaDEFGrupo03 {
         return resolucao;
     }
 
-    public static String[] Scann(String caminho) throws FileNotFoundException {
+    public static String[][] Scann(String caminho) throws FileNotFoundException {
         //CAMINHO JOANA C:\\Users\\joana\\OneDrive\\Ambiente de Trabalho\\exemploRegistoNumerosCovid19.csv
         //CAMINHO MIGUEL C:\Users\Miguel\Documents\exemploRegistoNumerosCovid19.csv
+        //CAMINHO BRUNA C:\Users\Bruna\Downloads\exemploRegistoNumerosCovid19.csv
         BufferedReader sc;
-        String[] ficheiro = new String[6];
+        String[][] ficheiro = new String[90][6];                                                                            // Verificar o número de linhas
         String line;
+        int j = 0;
 
         try {
             sc = new BufferedReader(new FileReader(caminho));
             while ((line = sc.readLine()) != null) {
-                ficheiro = line.split(",");
-/*
-                    for (int i = 0; i < 6; i++) {
-                        System.out.print(ficheiro[i]);
-                    }
-                    System.out.println();
-*/
+                ficheiro[j] = line.split(",");
+     /*           for (int i = 0; i < 6; i++) {
+                    System.out.print(ficheiro[j][i] + " ");
+                }
+                System.out.println(); */
+                j++;
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -156,7 +195,6 @@ public class LAPR1TurmaDEFGrupo03 {
         Scanner sc = new Scanner(System.in);
         System.out.println("Onde deseja guardar o novo ficheiro?");
         String caminho2 = sc.nextLine();
-        // PrintWriter pw = new PrintWriter(new File(""));
         try {
             PrintWriter pw = new PrintWriter(new File(caminho2));
             StringBuilder write = new StringBuilder();
@@ -174,10 +212,12 @@ public class LAPR1TurmaDEFGrupo03 {
         }
     }
 
-    public static int posicaoDatas(String[] ficheiro, String di) {
+    public static int posicaoDatas(String[][] ficheiro, String di) {
         int i;
         for (i = 0; i < 999; i++) {
-            //if(ficheiro[i][0].equals(di)) return i;
+            if (ficheiro[i][0].equals(di)) {
+                return i;
+            }
         }
         return i;
     }
@@ -191,7 +231,7 @@ public class LAPR1TurmaDEFGrupo03 {
         int j = di;
         int a = 0;
         String dt = matrizDatas[j][0];
-        Calendar data = Calendar.getInstance();                                                                          //ajudar a implementar o Calendar
+        Calendar data = Calendar.getInstance();
         data.setTime(format.parse(dt));
         switch (step) {
             case 0:
@@ -207,7 +247,7 @@ public class LAPR1TurmaDEFGrupo03 {
         while (j <= df && a <= df) {
             matrizDiferenca[aux][0] = matrizDatas[j][0];
             for (int i = 1; i < matrizDatas[0].length; i++) {
-                // matrizDiferenca[aux][i] = matrizDatas[a][i] - matrizDatas[j][i];
+                matrizDiferenca[aux][i] = String.valueOf(Integer.parseInt(matrizDatas[a][i]) - Integer.parseInt(matrizDatas[j][i]));
             }
             dt = matrizDatas[a][0];
             data = Calendar.getInstance();                                                                          //ajudar a implementar o Calendar
@@ -215,7 +255,7 @@ public class LAPR1TurmaDEFGrupo03 {
             j = a;
             switch (step) {
                 case 0:
-                    a = a++;
+                    a++;
                 case 1:
                     data.add(Calendar.WEEK_OF_YEAR, +1);
                     a = posicaoDatas(matrizDatas, data.toString());
@@ -227,9 +267,5 @@ public class LAPR1TurmaDEFGrupo03 {
             aux++;
         }
         return matrizDiferenca;
-    }
-
-    public static String[][] retornarData() {
-
     }
 }
