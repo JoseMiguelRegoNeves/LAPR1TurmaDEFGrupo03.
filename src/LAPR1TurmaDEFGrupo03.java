@@ -30,18 +30,52 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static void modoNaoInterativo(String[] args) throws FileNotFoundException, ParseException {
+        // java -jar nome programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA -di1 DD-MMAAAA -df1 DD-MM-AAAA -di2 DD-MM-AAAA -df2 DD-MM-AAAA -T DD-MM-AAAA
+        // registoNumeroTotalCovid19.csv registoNumerosAcumuladosCovid19.csv matrizTransicao.txt nome_ficheiro_saida.txt.
         Scanner sc = new Scanner(System.in);
-        String caminho, nomeFileOut;
-        int res = Integer.parseInt(args[1]); // java -jar nome_programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA registoNumerosCovid19.csv nome_ficheiro_saida.txt
-        caminho = args[6];
-        nomeFileOut = args[7];
-        String[][] matrix = Scann(caminho);
-        int aux = 0;
+        String caminhoTotal, caminhoAcumulado, nomeFileOut1, nomeFileOut2;
+        int res = Integer.parseInt(args[1]);
+        caminhoTotal = args[16];
+        caminhoAcumulado = args[17];
+        nomeFileOut1 = args[18];
+        nomeFileOut2 = args[19];
+        String[][] matrixTotal = Scann(caminhoTotal);
+        String[][] matrixAcumulado = Scann(caminhoAcumulado);
+
+        //Matriz Diferença Periódica
         String di = args[3];
         int posDi = posicaoDatas(matrix, di);
         String df = args[5];
         int posDf = posicaoDatas(matrix, df);
-        calculoDif(matrix, posDi, posDf, res);
+        String [][] matrixDifPer = calculoDif(matrix, posDi, posDf, res);
+        //Fim Matriz Diferença Periódica
+
+        //Matriz Periodo1
+        String di1 = args[7];
+        int posDi1 = posicaoDatas(matrix, di1);
+        String df1 = args[9];
+        int posDf1 = posicaoDatas(matrix, df1);
+        String[][] matrixDif1 = calculoPeriodo(matrix, posDi1, posDf1);
+        //Fim Matriz Periodo1
+
+        //Matriz Periodo2
+        String di2 = args[11];
+        int posDi2 = posicaoDatas(matrix, di2);
+        String df2 = args[13];
+        int posDf2 = posicaoDatas(matrix, df2);
+        String[][] matrixDif2 = calculoPeriodo(matrix, posDi2, posDf2);
+        //Fim Matriz Periodo2
+
+        //Matriz PeriodoTotal
+        String[][] matrixPeriodo = calculoDifPeriodo(matrixDif1, matrixDif2);
+        //Fim Matriz PeriodoTotal
+
+        //Matriz Previsão
+        String T = args[15];
+        int posT = posicaoDatas(matrix, T);
+        String[][] matrixPrevisao;
+        //Fim Matriz Previsão
+
         // ficheiro output
     }
 
@@ -56,7 +90,7 @@ public class LAPR1TurmaDEFGrupo03 {
         String di = recolhaDataInicio(res, aux);
         int posDi = posicaoDatas(matrix, di);
         System.out.println("Indique a data final (AAAA-MM-DD): ");
-        String df = recolhaDataFim(res, aux);                                                                              // erro loop infinito
+        String df = recolhaDataFim(res, aux);                                                                           // erro loop infinito
         int posDf = posicaoDatas(matrix, df);
         calculoDif(matrix, posDi, posDf, res);
         // ficheiro output
@@ -226,7 +260,7 @@ public class LAPR1TurmaDEFGrupo03 {
     public static String[][] calculoDif(String[][] matrizDatas, int di, int df, int step) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
-        String[][] matrizDiferenca = new String[1][matrizDatas[0].length];
+        String[][] matrizDiferenca = new String[df-di][matrizDatas[0].length];
         int aux = 0;
         int j = di;
         int a = 0;
@@ -245,12 +279,12 @@ public class LAPR1TurmaDEFGrupo03 {
 
         }
         while (j <= df && a <= df) {
-            matrizDiferenca[aux][0] = matrizDatas[j][0];
-            for (int i = 1; i < matrizDatas[0].length; i++) {
+            matrizDiferenca[aux][0] = matrizDatas[a][0];
+            for (int i = 1; i <= matrizDatas[0].length; i++) {
                 matrizDiferenca[aux][i] = String.valueOf(Integer.parseInt(matrizDatas[a][i]) - Integer.parseInt(matrizDatas[j][i]));
             }
             dt = matrizDatas[a][0];
-            data = Calendar.getInstance();                                                                          //ajudar a implementar o Calendar
+            data = Calendar.getInstance();
             data.setTime(format.parse(dt));
             j = a;
             switch (step) {
@@ -267,5 +301,29 @@ public class LAPR1TurmaDEFGrupo03 {
             aux++;
         }
         return matrizDiferenca;
+    }
+
+    public static String[][] calculoPeriodo(String[][] matrizDatas, int di, int df){
+
+        String[][] matrizPeriodo = new String[1][matrizDatas[0].length];
+        matrizPeriodo[0][0] = matrizDatas[0][0];
+
+        for (int i = 1; i <= matrizDatas[0].length; i++) {
+            matrizPeriodo[0][i] = String.valueOf(Integer.parseInt(matrizDatas[df][i]) - Integer.parseInt(matrizDatas[di][i]));
+        }
+
+        return matrizPeriodo;
+    }
+
+    public static String[][] calculoDifPeriodo(String[][] matrizPer1, String[][] matrizPer2){
+
+        String[][] matrizPeriodoFinal = new String[1][matrizPer1[0].length];
+        matrizPeriodoFinal[0][0] = "Diferença entre os Periodos";
+
+        for (int i = 1; i <= matrizPer1[0].length; i++) {
+            matrizPeriodoFinal[0][i] = String.valueOf(Integer.parseInt(matrizPer2[0][i]) - Integer.parseInt(matrizPer1[0][i]));
+        }
+
+        return matrizPeriodoFinal;
     }
 }
