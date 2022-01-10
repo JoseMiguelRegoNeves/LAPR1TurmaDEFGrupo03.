@@ -227,24 +227,19 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static void guardarFicheiro() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Onde deseja guardar o novo ficheiro?");
         String caminho2 = sc.nextLine();
-        try {
-            PrintWriter pw = new PrintWriter(new File(caminho2));
-            StringBuilder write = new StringBuilder();
-            write.append("gghdg");
-            write.append(",");
-            write.append("gghdg");
-            write.append(",");
-            write.append("gghdg");
-            pw.write(write.toString());
-            pw.close();
-            System.out.println("finished");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        try{
+            try (FileWriter fw = new FileWriter(caminho2,true)) {
+                String gravaTeste = "Output\r\n";
+                fw.write(gravaTeste);
+            }
+        }
+        catch(IOException e){
+            System.out.println("Error: " + e.getMessage());
         }
     }
+
+
 
     public static int posicaoDatas(String[][] ficheiro, String di) {
         int i;
