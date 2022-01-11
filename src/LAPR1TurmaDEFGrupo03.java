@@ -110,7 +110,7 @@ public class LAPR1TurmaDEFGrupo03 {
             case 0: //Analizar dados de um dia
                 System.out.println("Indique o dia a analizar: ");
                 String dia = sc.nextLine();
-                ValidarDataInicio(dia, 0);
+                ValidarData(dia, 0);
                 int posDia = posicaoDatas(matrix, dia);
                 for (int i = 0; i < 6; i++) {
                     System.out.print(cabecalho[i] + " -> " + matrix[posDia][i]);
@@ -120,12 +120,14 @@ public class LAPR1TurmaDEFGrupo03 {
             case 1: //Analisar periodo de tempo
                 int res = resolucaoInterface();
                 System.out.println("Indique a data de início (AAAA-MM-DD): ");
-                String di = recolhaDataInicio(res);
+                String di = recolhaData(res);
                 int posDi = posicaoDatas(matrix, di);
+                int posDiUtil = posDataUtilSemana(posDi, matrix);
+                //System.out.println(posDiUtil);
                 System.out.println("Indique a data final (AAAA-MM-DD): ");
-                String df = recolhaDataFim(res);
+                String df = recolhaData(res);
                 int posDf = posicaoDatas(matrix, df);
-                calculoDif(matrix, posDi, posDf, res);
+                String[][] resultadosPeriodo = calculoDif(matrix, posDiUtil, posDf, res);
                 break;
             case 2: //Analisar dados comparativamente a outro periodo de tempo (Acomulativo)
                 if (uploadMOD == 1) {
@@ -149,7 +151,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static int upload() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Selecione o tipo de ficheito que pretende carregar:");
+        System.out.println("Selecione o tipo de ficheiro que pretende obter:");
         System.out.println("Casos Covid19 Acomulativo -> 0");
         System.out.println("Casos Covid19 Total -> 1");
         int up = sc.nextInt();
@@ -196,27 +198,18 @@ public class LAPR1TurmaDEFGrupo03 {
         return resolucao;
     }
 
-    public static String recolhaDataInicio(int res) throws ParseException {
+    public static String recolhaData(int res) throws ParseException {
         Scanner sc = new Scanner(System.in);
         String data = sc.nextLine();
-        while (ValidarDataInicio(data, res) == 1) {
+        while (ValidarData(data, res) == 0) {
             System.out.println("Introduza uma data válida no formato AAAA-MM-DD");
             data = sc.nextLine();
         }
         return data;
     }
 
-    public static String recolhaDataFim(int res) throws ParseException {
-        Scanner sc = new Scanner(System.in);
-        String data = sc.nextLine();
-        while (ValidarDataFim(data, res) == 1) {
-            System.out.println("Introduza uma data válida no formato AAAA-MM-DD");
-            data = sc.nextLine();
-        }
-        return data;
-    }
 
-    public static int ValidarDataInicio(String input, int resolucao) throws ParseException {
+    public static int ValidarData(String input, int resolucao) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
@@ -227,7 +220,24 @@ public class LAPR1TurmaDEFGrupo03 {
         } catch (IllegalArgumentException e) {  //erro imprevisto (colocar letras em vez de números, por exemplo)
             return 0;
         }
+        return 1;
+    }
 
+    public static int posDataUtilSemana(int posDi, String[][] matriz) throws ParseException {
+        String formatString = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        String input = matriz[posDi][0];
+        Calendar data = Calendar.getInstance();
+        data.setTime(format.parse(input));
+        int posDataUtil = posDi;
+        while(data.get(Calendar.DAY_OF_WEEK) != 2){
+            data.add(Calendar.DATE, 1);
+            posDataUtil++;
+        }
+        return posDataUtil;
+    }
+
+    /*
         Calendar data = Calendar.getInstance();
         data.setTime(format.parse(input));
         switch (resolucao) {
@@ -244,9 +254,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     return 0;
                 }
         }
-
-        return 1;
-    }
+*/
 
     public static int ValidarDataFim(String input, int resolucao) throws ParseException {
         String formatString = "yyyy-MM-dd";
@@ -288,10 +296,10 @@ public class LAPR1TurmaDEFGrupo03 {
             sc = new BufferedReader(new FileReader(caminho));
             while ((line = sc.readLine()) != null) {
                 ficheiro[j] = line.split(",");
-     /*           for (int i = 0; i < 6; i++) {
+                /*for (int i = 0; i < 6; i++) {
                     System.out.print(ficheiro[j][i] + " ");
                 }
-                System.out.println(); */
+                System.out.println();*/
                 j++;
             }
         } catch (FileNotFoundException e) {
@@ -319,7 +327,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static int posicaoDatas(String[][] ficheiro, String di) {
         int i;
-        for (i = 0; i < 999; i++) {
+        for (i = 0; i < ficheiro.length; i++) {
             if (ficheiro[i][0].equals(di)) {
                 return i;
             }
