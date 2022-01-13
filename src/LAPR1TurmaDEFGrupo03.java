@@ -106,6 +106,7 @@ public class LAPR1TurmaDEFGrupo03 {
         cabecalho = line.split(",");
 
         int opcao = opcoesInterface();
+        int posDiUtil;
         switch (opcao) {
             case 0: //Analizar dados de um dia
                 System.out.println("Indique o dia a analizar: ");
@@ -122,12 +123,17 @@ public class LAPR1TurmaDEFGrupo03 {
                 System.out.println("Indique a data de início (AAAA-MM-DD): ");
                 String di = recolhaData(res);
                 int posDi = posicaoDatas(matrix, di);
-                int posDiUtil = posDataUtilSemana(posDi, matrix);
-                //System.out.println(posDiUtil);
                 System.out.println("Indique a data final (AAAA-MM-DD): ");
                 String df = recolhaData(res);
                 int posDf = posicaoDatas(matrix, df);
-                String[][] resultadosPeriodo = calculoDif(matrix, posDiUtil, posDf, res);
+                if (res != 0){
+                    posDiUtil = posDataUtilSemana(posDi, matrix);
+                    //System.out.println(posDiUtil);
+                    String[][] resultadosPeriodo = calculoDif(matrix, posDiUtil, posDf, res);
+                }
+                else{
+                    String[][] resultadosPeriodo = calculoDif(matrix, posDi, posDf, res);
+                }
                 break;
             case 2: //Analisar dados comparativamente a outro periodo de tempo (Acomulativo)
                 if (uploadMOD == 1) {
@@ -327,8 +333,11 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static int posicaoDatas(String[][] ficheiro, String di) {
         int i;
+        System.out.println(ficheiro.length);
         for (i = 0; i < ficheiro.length; i++) {
+
             if (ficheiro[i][0].equals(di)) {
+                System.out.println(i);
                 return i;
             }
         }
@@ -361,7 +370,7 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         while (j <= df && a <= df) {
             matrizDiferenca[aux][0] = matrizDatas[a][0];
-            for (int i = 1; i <= 6; i++) {
+            for (int i = 1; i <= 5; i++) {
                 matrizDiferenca[aux][i] = String.valueOf(Integer.parseInt(matrizDatas[a][i]) - Integer.parseInt(matrizDatas[j][i]));
             }
             dt = matrizDatas[a][0];
