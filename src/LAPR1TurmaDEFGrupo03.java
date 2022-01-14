@@ -86,53 +86,79 @@ public class LAPR1TurmaDEFGrupo03 {
         BufferedReader sc1;
         int uploadMOD = upload();
         String caminho = "";
+        String acomulativo = "";
+        String total = "";
         String[] cabecalho = new String[6];
         switch (uploadMOD) {
             case 0: {
                 System.out.println("Indique o caminho para o ficheiro com os dados Acomulativos:");
-                caminho = uploadAcomulativo();
+                acomulativo = uploadFicheiro();
                 break;
             }
             case 1: {
                 System.out.println("Indique o caminho para o ficheiro com os dados Totais:");
-                caminho = uploadTotal();
+                total = uploadFicheiro();
+                break;
+            }
+            case 2:{
+                System.out.println("Indique o caminho para o ficheiro com os dados Acomulativos:");
+                acomulativo= uploadFicheiro();
+                System.out.println("Indique o caminho para o ficheiro com os dados Totais:");
+                total = uploadFicheiro();
                 break;
             }
         }
-        String[][] matrix = new String[99][6];
-        matrix = Scann(caminho);
+
+        String[][] acomulativoMatrix = new String[99][6];
+        acomulativoMatrix = Scann(acomulativo);
+        String[][] totalMatrix = new String[99][6];
+        totalMatrix = Scann(total);
+        String TXT = uploadTXT();
+        //FUNÇAO SCANNER MATRIZ TRANSIÇÕES
         sc1 = new BufferedReader(new FileReader(caminho));
         String line = sc1.readLine();
         cabecalho = line.split(",");
 
         int opcao = opcoesInterface();
         int posDiUtil;
+
         switch (opcao) {
             case 0: //Analizar dados de um dia
-                System.out.println("Indique o dia a analizar: ");
-                String dia = sc.nextLine();
-                ValidarData(dia, 0);
-                int posDia = posicaoDatas(matrix, dia);
-                for (int i = 0; i < 6; i++) {
-                    System.out.print(cabecalho[i] + " -> " + matrix[posDia][i]);
-                    System.out.println();
+                System.out.println("Indique o tipo de dados que pretende analisar:");
+                System.out.println("Casos Covid19 Acomulativo -> 0");
+                System.out.println("Novos casos Covid19 -> 1");
+                int tipoDados = sc.nextInt();
+                switch (tipoDados){
+                    case 0:
+                        casosDia(acomulativoMatrix, cabecalho);
+                    case 1:
+                        casosDia(totalMatrix, cabecalho);
                 }
+
                 break;
             case 1: //Analisar periodo de tempo
                 int res = resolucaoInterface();
                 System.out.println("Indique a data de início (AAAA-MM-DD): ");
                 String di = recolhaData(res);
-                int posDi = posicaoDatas(matrix, di);
+                int posDi = posicaoDatas(acomulativoMatrix, di);
                 System.out.println("Indique a data final (AAAA-MM-DD): ");
                 String df = recolhaData(res);
-                int posDf = posicaoDatas(matrix, df);
-                if (res != 0){
-                    posDiUtil = posDataUtilSemana(posDi, matrix);
-                    //System.out.println(posDiUtil);
-                    String[][] resultadosPeriodo = calculoDif(matrix, posDiUtil, posDf, res);
-                }
-                else{
-                    String[][] resultadosPeriodo = calculoDif(matrix, posDi, posDf, res);
+                int posDf = posicaoDatas(acomulativoMatrix, df);
+                String[][] resultadosPeriodo;
+                switch (res){
+                    case 0:
+                        resultadosPeriodo = calculoDif(acomulativoMatrix, posDi, posDf, res);
+                        break;
+                    case 1:
+                        posDiUtil = posDataUtilSemana(posDi, acomulativoMatrix);
+                        //System.out.println(posDiUtil);
+                         resultadosPeriodo = calculoDif(acomulativoMatrix, posDiUtil, posDf, res);
+                        break;
+                    case 2:
+                        posDiUtil = posDataUtilMes(posDi, acomulativoMatrix);
+                        //System.out.println(posDiUtil);
+                        resultadosPeriodo = calculoDif(acomulativoMatrix, posDiUtil, posDf, res);
+                        break;
                 }
                 break;
             case 2: //Analisar dados comparativamente a outro periodo de tempo (Acomulativo)
@@ -157,24 +183,38 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static int upload() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Selecione o tipo de ficheiro que pretende obter:");
+        System.out.println("Selecione o tipo de ficheiro que pretende carregar:");
         System.out.println("Casos Covid19 Acomulativo -> 0");
         System.out.println("Casos Covid19 Total -> 1");
+        System.out.println("Ambos os ficheiros -> 2");
         int up = sc.nextInt();
         return up;
     }
 
-    public static String uploadAcomulativo() {
+    public static String uploadFicheiro() {
         Scanner sc = new Scanner(System.in);
         String ficheiro = sc.nextLine();
         return ficheiro;
     }
 
-    public static String uploadTotal() {
+    public static String uploadTXT() {
         Scanner sc = new Scanner(System.in);
-        String ficheiro = sc.nextLine();
-        return ficheiro;
+        System.out.println("Pretende carregar um ficheiro contendo uma matriz de transições?");
+        System.out.println("Sim -> 0");
+        System.out.println("Não -> 1");
+        int sn = sc.nextInt();
+        String TXT = "";
+        switch (sn){
+            case 0:
+                System.out.println("Indique o caminho para o ficheiro TXT:");
+                TXT = sc.nextLine();
+                break;
+            case 1:
+                break;
+        }
+        return TXT;
     }
+
 
     public static int opcoesInterface() {
         Scanner sc = new Scanner(System.in);
@@ -186,6 +226,19 @@ public class LAPR1TurmaDEFGrupo03 {
         int opcao = sc.nextInt();
         return opcao;
     }
+
+    public static void casosDia(String[][] matrix, String[] cabecalho)  throws ParseException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Indique o dia a analizar: ");
+        String dia = sc.nextLine();
+        ValidarData(dia, 0);
+        int posDia = posicaoDatas(matrix, dia);
+        for (int i = 0; i < 6; i++) {
+            System.out.print(cabecalho[i] + " -> " + matrix[posDia][i]);
+            System.out.println();
+        }
+    }
+
 
     public static int resolucaoInterface() {
         int resolucao;
@@ -237,6 +290,20 @@ public class LAPR1TurmaDEFGrupo03 {
         data.setTime(format.parse(input));
         int posDataUtil = posDi;
         while(data.get(Calendar.DAY_OF_WEEK) != 2){
+            data.add(Calendar.DATE, 1);
+            posDataUtil++;
+        }
+        return posDataUtil;
+    }
+
+    public static int posDataUtilMes(int posDi, String[][] matriz) throws ParseException {
+        String formatString = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        String input = matriz[posDi][0];
+        Calendar data = Calendar.getInstance();
+        data.setTime(format.parse(input));
+        int posDataUtil = posDi;
+        while(data.get(Calendar.DAY_OF_MONTH) != 1){
             data.add(Calendar.DATE, 1);
             posDataUtil++;
         }
