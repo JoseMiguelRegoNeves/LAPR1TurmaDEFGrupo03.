@@ -110,8 +110,7 @@ public class LAPR1TurmaDEFGrupo03 {
         acomulativoMatrix = Scann(acomulativo);
         String[][] totalMatrix;
         totalMatrix = Scann(total);
-        String TXT = uploadTXT();
-        //FUNÇAO SCANNER MATRIZ TRANSIÇÕES
+        double[][] matrizTransicao = uploadTXT();
         sc1 = new BufferedReader(new FileReader(caminho));
         String line = sc1.readLine();
         cabecalho = line.split(",");
@@ -195,22 +194,24 @@ public class LAPR1TurmaDEFGrupo03 {
         return sc.nextLine();
     }
 
-    public static String uploadTXT() {
+    public static double[][] uploadTXT() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Pretende carregar um ficheiro contendo uma matriz de transições?");
         System.out.println("Sim -> 0");
         System.out.println("Não -> 1");
         int sn = sc.nextInt();
-        String TXT = "";
+        String TXT;
+        double[][] matrizT = new double[5][5];
         switch (sn){
             case 0:
                 System.out.println("Indique o caminho para o ficheiro TXT:");
                 TXT = sc.nextLine();
+                matrizT = matrizTransicao(TXT);
                 break;
             case 1:
                 break;
         }
-        return TXT;
+        return matrizT;
     }
 
 
@@ -430,5 +431,33 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             System.out.println();
         }
+    }
+
+   public static double[][] matrizTransicao(String TXT) {
+        Scanner sc = new Scanner(System.in);
+        double[][] matrizT = new double[5][5];
+        int linhas = 0;
+        String line;
+        String avancarLinha;
+        // C:\Users\joana\OneDrive\Ambiente de Trabalho\novo.csv
+        try {
+            sc = new Scanner(new FileReader(TXT));
+            while ((sc.hasNextLine())) {
+                for (int i = 0; i < 5; i++) {
+                    line = sc.nextLine();
+                    line = line.trim();
+                    line = line.substring(4);
+                    matrizT[linhas][i] = Double.parseDouble(line);
+                }
+                linhas++;
+                if (sc.hasNextLine()) avancarLinha = sc.nextLine();
+            }
+            sc.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return matrizT;
     }
 }
