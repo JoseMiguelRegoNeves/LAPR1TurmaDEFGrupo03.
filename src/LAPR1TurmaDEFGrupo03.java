@@ -1,4 +1,3 @@
-import java.awt.desktop.ScreenSleepEvent;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -350,7 +349,9 @@ public class LAPR1TurmaDEFGrupo03 {
             String[] vetline = line.split(",");
             for (int i = 0; i < 6; i++) {
                 ficheiro[j][i] = vetline[i];
+                System.out.print(ficheiro[j][i] + " ");
             }
+            System.out.println();
             j++;
         }
         return j-1;
@@ -678,7 +679,98 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             System.out.println();
         }
-        return matrizA;                                                                                                 //RETURN????
+
+        for (int i = 0; i < 4; i++) {
+            for (int k = i; k < 4; k++) {
+                int soma = 0;
+                for (int j = 0; j < i; j++) {
+                    soma += (matrizL[i][j] * matrizU[j][k]);
+                }
+                matrizU[i][k] = matrizA[i][k] - soma;
+            }
+            for (int k = i; k < 4; k++) {
+                if (i == k) {
+                    matrizL[i][i] = 1;
+                } else {
+                    int soma = 0;
+                    for (int j = 0; j < i; j++) {
+                        soma += (matrizL[k][j] * matrizU[j][i]);
+                    }
+                    matrizL[k][i] = (matrizA[k][i] - soma) / matrizU[i][i];
+                }
+            }
+        }
+
+        System.out.println("L");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.print(matrizL[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        System.out.println("U");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.print(matrizU[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("L inversa");
+
+        double[][] matrizLinversa = new double[4][4];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (i==j) matrizLinversa[i][j] = 1;
+                if (i<j) matrizLinversa[i][j] = 0;
+                if (i>j) {
+                    matrizLinversa[1][0] = - (matrizL[1][0] / matrizL[1][1]);
+                    matrizLinversa[2][0] = - (matrizL[2][0] + (matrizLinversa[1][0] * matrizL[2][1]));
+                    matrizLinversa[3][0] = - (matrizL[3][0] + (matrizL[3][1] * matrizLinversa[1][0]) + (matrizL[3][2] * matrizLinversa[2][0]));
+                    matrizLinversa[2][1] = - matrizL[2][1] / matrizL[2][2];
+                    matrizLinversa[3][1] = - matrizL[3][1] - (matrizL[3][2] * matrizLinversa[2][1]);
+                    matrizLinversa[3][2] = - matrizL[3][2];
+                }
+                System.out.print(matrizLinversa[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("U inversa");
+
+        double[][] matrizUinversa = new double[4][4];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (i>j) matrizUinversa[i][j] = 0;
+                if (i<=j) {
+                    matrizUinversa[0][0] = 1 / matrizU[0][0];
+                    matrizUinversa[1][1] = 1 / matrizU[1][1];
+                    matrizUinversa[0][1] = -((matrizU[0][1] * matrizUinversa[1][1]))/ matrizU[0][0];
+                    matrizUinversa[2][2] = 1 / matrizU[2][2];
+                    matrizUinversa[1][2] = - (matrizU[1][2] * matrizUinversa[2][2]) / matrizU[1][1];
+                    matrizUinversa[0][2] = (- ((matrizU[0][1] * matrizUinversa[1][2]) + (matrizU[0][2]*matrizUinversa[2][2])))/matrizU[0][0];
+                    matrizUinversa[3][3] = 1 / matrizU[3][3];
+                    matrizUinversa[2][3] = (- ((matrizU[2][3] * matrizUinversa[3][3])))/matrizU[2][2];
+                    matrizUinversa[1][3] = - ((matrizU[1][2] * matrizUinversa[2][3]) + (matrizU[1][3] * matrizUinversa[3][3]))/matrizU[1][1];
+                    matrizUinversa[0][3] = - ((matrizU[0][1] * matrizUinversa[1][3]) + (matrizU[0][2] * matrizUinversa[2][3]) + (matrizU[0][3] * matrizUinversa[3][3]))/matrizU[0][0];
+                }
+                System.out.print(matrizUinversa[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("I-Q inversa");
+        double[][] inversaIQ = new double[4][4];
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
+                inversaIQ[i][j]=0;
+                for(int k=0;k<4;k++)
+                {
+                    inversaIQ[i][j]+=matrizLinversa[i][k]*matrizUinversa[k][j];
+                }//end of k loop
+                System.out.print(inversaIQ[i][j]+" ");  //printing matrix element
+            }//end of j loop
+            System.out.println();//new line
+        }
+        return inversaIQ;                                                                                                 //RETURN????
     }
 
     public static double[][] previsaoDiasAteMorrer(double[][] matrizTransicao) {
