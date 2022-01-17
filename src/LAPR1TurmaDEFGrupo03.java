@@ -99,23 +99,33 @@ public class LAPR1TurmaDEFGrupo03 {
                 System.out.println("Indique o caminho para o ficheiro com os dados Acumulativos:");
                 caminho = acumulativo = uploadFicheiro();
                 linhasAcumulativoMatrix = Scann(acumulativo, acumulativoMatrix);
+                String[][] acumulativoTemp = new String[linhasAcumulativoMatrix][6];
+                System.arraycopy(acumulativoMatrix, 0, acumulativoTemp, 0, linhasAcumulativoMatrix);
+                acumulativoMatrix = acumulativoTemp;
             }
             case 1 -> {
                 System.out.println("Indique o caminho para o ficheiro com os dados Totais:");
                 caminho = total = uploadFicheiro();
                 linhasTotalMatrix = Scann(total, totalMatrix);
+                String[][] totalTemp = new String[linhasTotalMatrix][6];
+                System.arraycopy(totalMatrix, 0, totalTemp, 0, linhasTotalMatrix);
+                totalMatrix = totalTemp;
             }
             case 2 -> {
                 System.out.println("Indique o caminho para o ficheiro com os dados Acumulativos:");
                 caminho = acumulativo = uploadFicheiro();
                 linhasAcumulativoMatrix = Scann(acumulativo, acumulativoMatrix);
+                String[][] acumulativoTemp = new String[linhasAcumulativoMatrix][6];
+                System.arraycopy(acumulativoMatrix, 0, acumulativoTemp, 0, linhasAcumulativoMatrix);
+                acumulativoMatrix = acumulativoTemp;
                 System.out.println("Indique o caminho para o ficheiro com os dados Totais:");
                 total = uploadFicheiro();
                 linhasTotalMatrix = Scann(total, totalMatrix);
+                String[][] totalTemp = new String[linhasTotalMatrix][6];
+                System.arraycopy(totalMatrix, 0, totalTemp, 0, linhasTotalMatrix);
+                totalMatrix = totalTemp;
             }
         }
-        acumulativoMatrix = new String[linhasAcumulativoMatrix][6];
-        totalMatrix = new String[linhasTotalMatrix][6];
         double[][] matrizTransicao = uploadTXT();
         sc1 = new BufferedReader(new FileReader(caminho));
         String line = sc1.readLine();
@@ -139,7 +149,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 int res = resolucaoInterface();
                 System.out.println("Indique a data de início (AAAA-MM-DD): ");
                 String di = recolhaData();
-                acumulativoMatrix = new String[linhasAcumulativoMatrix][6];
+                mostraDeResultados(acumulativoMatrix);
                 int posDi = posicaoDatas(acumulativoMatrix, di);
                 System.out.println("Indique a data final (AAAA-MM-DD): ");
                 String df = recolhaData();
@@ -320,21 +330,27 @@ public class LAPR1TurmaDEFGrupo03 {
         Calendar data = Calendar.getInstance();
         data.setTime(format.parse(input));
         int posDataUtil = posDi;
+        System.out.println(data.get(Calendar.DAY_OF_MONTH));
         while (data.get(Calendar.DAY_OF_MONTH) != 1) {
             data.add(Calendar.DATE, 1);
             posDataUtil++;
         }
+        System.out.println(posDataUtil);
         return posDataUtil;
     }
+
+
 
     public static int Scann(String caminho, String[][] ficheiro) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(caminho));         // Verificar o número de linhas
         String line;
         int j = 0;
+        sc.nextLine();
         while (sc.hasNextLine()) {
             line = sc.nextLine();
+            String[] vetline = line.split(",");
             for (int i = 0; i < 6; i++) {
-                ficheiro[j] = line.split(",");
+                ficheiro[j][i] = vetline[i];
             }
             j++;
         }
@@ -436,7 +452,7 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static void mostraDeResultados(String[][] matrix) {
-        for (int i = 0; i <= matrix.length; i++) {
+        for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 System.out.println(matrix[i][j] + " ");
             }
