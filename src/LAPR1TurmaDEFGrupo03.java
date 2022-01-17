@@ -141,15 +141,16 @@ public class LAPR1TurmaDEFGrupo03 {
                 switch (tipoDados) {
                     case 0:
                         casosDia(acumulativoMatrix, cabecalho);
+                        break;
                     case 1:
                         casosDia(totalMatrix, cabecalho);
+                        break;
                 }
                 break;
             case 1: //Analisar periodo de tempo
                 int res = resolucaoInterface();
                 System.out.println("Indique a data de início (AAAA-MM-DD): ");
                 String di = recolhaData();
-                mostraDeResultados(acumulativoMatrix);
                 int posDi = posicaoDatas(acumulativoMatrix, di);
                 System.out.println("Indique a data final (AAAA-MM-DD): ");
                 String df = recolhaData();
@@ -162,13 +163,11 @@ public class LAPR1TurmaDEFGrupo03 {
                     }
                     case 1 -> {
                         posDiUtil = posDataUtilSemana(posDi, acumulativoMatrix);
-                        //System.out.println(posDiUtil);
                         resultadosPeriodo = calculoDif(acumulativoMatrix, posDiUtil, posDf, res);
                         mostraDeResultados(resultadosPeriodo);
                     }
                     case 2 -> {
                         posDiUtil = posDataUtilMes(posDi, acumulativoMatrix);
-                        //System.out.println(posDiUtil);
                         resultadosPeriodo = calculoDif(acumulativoMatrix, posDiUtil, posDf, res);
                         mostraDeResultados(resultadosPeriodo);
                     }
@@ -374,7 +373,6 @@ public class LAPR1TurmaDEFGrupo03 {
         int i;
         for (i = 0; i < ficheiro.length; i++) {
             if (ficheiro[i][0].equals(di)) {
-                System.out.println(i);
                 return i;
             }
         }
@@ -384,7 +382,7 @@ public class LAPR1TurmaDEFGrupo03 {
     public static String[][] calculoDif(String[][] matrizDatas, int di, int df, int step) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
-        String[][] matrizDiferenca = new String[(df - di) + 1][6];
+        String[][] matrizDiferenca = new String[(df - di)][6];
         int aux = 0;
         int j = di;
         int a = 0;
@@ -500,7 +498,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 data.setTime((format.parse(matriz[i][0])));
             }
         }
-        if (i == max + 1) {                                                                                                       // ver max matriz.
+        if (i == max + 1) {
             i = max;
             k = 0;
             data.setTime((format.parse(matriz[i][0])));
