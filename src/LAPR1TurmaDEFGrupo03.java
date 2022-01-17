@@ -162,13 +162,13 @@ public class LAPR1TurmaDEFGrupo03 {
                         mostraDeResultados(resultadosPeriodo);
                     }
                     case 1 -> {
-                        posDiUtil = posDataUtilSemana(posDi, acumulativoMatrix);
-                        resultadosPeriodo = calculoDif(acumulativoMatrix, posDiUtil, posDf, res);
+                        resultadosPeriodo = calculoDiferencaPeriodicaSemana(acumulativoMatrix, posDi, posDf);
                         mostraDeResultados(resultadosPeriodo);
                     }
                     case 2 -> {
-                        posDiUtil = posDataUtilMes(posDi, acumulativoMatrix);
-                        resultadosPeriodo = calculoDif(acumulativoMatrix, posDiUtil, posDf, res);
+                        //posDiUtil = posDataUtilMes(posDi, acumulativoMatrix);
+                        resultadosPeriodo = calculoDiferencaPeriodicaMes(acumulativoMatrix, posDi, posDf);
+                                //calculoDif(acumulativoMatrix, posDiUtil, posDf, res);
                         mostraDeResultados(resultadosPeriodo);
                     }
                 }
@@ -178,7 +178,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
                     System.exit(0);
                 } else {
-
+                    //calculoDifPeriodo(int posdi1, int posdf1, int posdi2, int posdf2, String[][] datas)
                 }
                 break;
             case 3: //Analisar dados comparativamente a outro periodo de tempo (Total)
@@ -186,7 +186,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
                     System.exit(0);
                 } else {
-
+                    //calculoDifPeriodo(int posdi1, int posdf1, int posdi2, int posdf2, String[][] datas)
                 }
                 break;
             case 4:
@@ -378,75 +378,169 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         return i;
     }
-
-    public static String[][] calculoDif(String[][] matrizDatas, int di, int df, int step) throws ParseException {
+    public static String[][] calculoDiferencaPeriodicaSemana(String[][] matrizDatas, int di, int df) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
-        String[][] matrizDiferenca = new String[(df - di)][6];
-        int aux = 0;
-        int j = di;
-        int a = 0;
-        String dt = matrizDatas[j][0];
         Calendar data = Calendar.getInstance();
-        data.setTime(format.parse(dt));
-        switch (step) {
-            case 0 -> a = j + 1;
-            case 1 -> {
-                data.add(Calendar.WEEK_OF_YEAR, +1);
-                a = posicaoDatas(matrizDatas, data.toString());
+        int countDomingos = 0;
+        int countSegundas = 0;
+        int auxs=0;
+        int auxd=0;
+        int max=0;
+        for (int i = di; i <= df; i++) {
+            data.setTime(format.parse(matrizDatas[i][0]));
+            if (data.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
+                countSegundas++;
+
             }
-            case 2 -> {
-                data.add(Calendar.MONTH, +1);
-                a = posicaoDatas(matrizDatas, data.toString());
+
+            else if(data.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+                countDomingos++;
             }
         }
-        while (j <= df && a <= df) {
-            matrizDiferenca[aux][0] = matrizDatas[a][0];
-            for (int i = 1; i <= 5; i++) {
-                matrizDiferenca[aux][i] = String.valueOf(Integer.parseInt(matrizDatas[a][i]) - Integer.parseInt(matrizDatas[j][i]));
+        int[] segundas = new int[countSegundas];
+        int[] domingos = new int[countDomingos];
+        for (int i = di; i <= df; i++) {
+            data.setTime(format.parse(matrizDatas[i][0]));
+            if (data.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
+                segundas[auxs]=i;
+                auxs++;
             }
-            dt = matrizDatas[a][0];
-            data = Calendar.getInstance();
-            data.setTime(format.parse(dt));
-            j = a;
-            switch (step) {
-                case 0 -> a++;
-                case 1 -> {
-                    data.add(Calendar.WEEK_OF_YEAR, +1);
-                    a = posicaoDatas(matrizDatas, data.toString());
-                }
-                case 2 -> {
-                    data.add(Calendar.MONTH, +1);
-                    a = posicaoDatas(matrizDatas, data.toString());
-                }
+            else if(data.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+                domingos[auxd]=i;
+                auxd++;
             }
-            aux++;
         }
-        return matrizDiferenca;
+        if(domingos[0]<segundas[0]){
+            for (int j = 0; j < auxd-1; j++) {
+                domingos[j]=domingos[j+1];
+            }
+            countDomingos--;
+        }
+        if(countDomingos>countSegundas){
+            max=countSegundas;
+        }
+        else{
+            max=countDomingos;
+        }
+        String[][] dif = new String[max][6];
+        for (int i = 0; i < max; i++) {
+            dif[i][0] = matrizDatas[segundas[i]][0];
+            for (int j = 1; j < 6; j++) {
+                dif[i][j] = String.valueOf(Integer.parseInt(matrizDatas[domingos[i]][j]) - Integer.parseInt(matrizDatas[segundas[i]][j]));
+            }
+        }
+        return dif;
     }
 
-    public static String[][] calculoPeriodo(String[][] matrizDatas, int di, int df) {
+    public static String[][] calculoDiferencaPeriodicaMes(String[][] matrizDatas, int di, int df) throws ParseException {
+        String formatString = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        Calendar data = Calendar.getInstance();
+        int countPrimDias = 0;
+        int countUltDias = 0;
+        int auxpd=0;
+        int auxud=0;
+        int max=0;
+        for (int i = di; i <= df; i++) {
+            data.setTime(format.parse(matrizDatas[i][0]));
+            if (data.get(Calendar.DAY_OF_MONTH) == data.getMinimum(Calendar.DAY_OF_MONTH)){
+                countPrimDias++;
+            }
 
-        String[][] matrizPeriodo = new String[1][matrizDatas[0].length];
-        matrizPeriodo[0][0] = matrizDatas[0][0];
-
-        for (int i = 1; i <= matrizDatas[0].length; i++) {
-            matrizPeriodo[0][i] = String.valueOf(Integer.parseInt(matrizDatas[df][i]) - Integer.parseInt(matrizDatas[di][i]));
+            else if(data.get(Calendar.DAY_OF_MONTH) == data.getMaximum(Calendar.DAY_OF_MONTH)){
+                countUltDias++;
+            }
         }
-
-        return matrizPeriodo;
+        int[] primDias = new int[countPrimDias];
+        int[] ultDias = new int[countUltDias];
+        System.out.println(data.getMaximum(Calendar.DAY_OF_MONTH));
+        for (int i = di; i <= df; i++) {
+            data.setTime(format.parse(matrizDatas[i][0]));
+            if (data.get(Calendar.DAY_OF_MONTH) == data.getMinimum(Calendar.DAY_OF_MONTH)){
+                primDias[auxpd]=i;
+                auxpd++;
+                System.out.println("minimo");
+                System.out.println(i);
+            }
+            else if(data.get(Calendar.DAY_OF_MONTH) == data.getMaximum(Calendar.DAY_OF_MONTH)){
+                ultDias[auxud]=i;
+                auxud++;
+                System.out.println("maximo");
+                System.out.println(i);
+            }
+        }
+        if(ultDias[0]<primDias[0]){
+            for (int j = 0; j < auxud-1; j++) {
+                ultDias[j]=primDias[j+1];
+            }
+            countUltDias--;
+        }
+        if(countUltDias>countPrimDias){
+            max=countPrimDias;
+        }
+        else{
+            max=countUltDias;
+        }
+        String[][] dif = new String[max][6];
+        for (int i = 0; i < max; i++) {
+            dif[i][0] = matrizDatas[primDias[i]][0];
+            for (int j = 1; j < 6; j++) {
+                dif[i][j] = String.valueOf(Integer.parseInt(matrizDatas[ultDias[i]][j]) - Integer.parseInt(matrizDatas[primDias[i]][j]));
+            }
+        }
+        return dif;
     }
 
-    public static String[][] calculoDifPeriodo(String[][] matrizPer1, String[][] matrizPer2) {
+    public static String[][] calculoDifPeriodo(int posdi1, int posdf1, int posdi2, int posdf2, String[][] datas) {
+        int dimPer1 = (posdi1 - posdf1) + 1;
+        int dimPer2 = (posdi2 - posdf2) + 1;
+        int dimComp = 0;
+        int j = 0;
 
-        String[][] matrizPeriodoFinal = new String[1][matrizPer1[0].length];
-        matrizPeriodoFinal[0][0] = "Diferença entre os Periodos";
-
-        for (int i = 1; i <= matrizPer1[0].length; i++) {
-            matrizPeriodoFinal[0][i] = String.valueOf(Integer.parseInt(matrizPer2[0][i]) - Integer.parseInt(matrizPer1[0][i]));
+        if (dimPer1 > dimPer2){
+            dimComp = dimPer2;
+        }
+        else{
+            dimComp = dimPer1;
         }
 
-        return matrizPeriodoFinal;
+        String[][] difPer = new String[dimComp][17];
+
+        for (int i = posdi1; i < posdf1; i++) {
+            for (int k = 0; k < 6; k++) {
+                difPer[j][k]=datas[i][k];
+            }
+            j++;
+        }
+
+        for (int i = posdi2; i < posdf2; i++) {
+            for (int k = 0; k < 6; k++) {
+                difPer[j][k+6]=datas[i][k];
+            }
+            j++;
+        }
+
+        for (int i = 0; i < dimComp; i++) {
+            difPer[i][12] = String.valueOf(Integer.parseInt(difPer[i][7]) - Integer.parseInt(difPer[i][1]));
+        }
+
+        for (int i = 0; i < dimComp; i++) {
+            difPer[i][13] = String.valueOf(Integer.parseInt(difPer[i][8]) - Integer.parseInt(difPer[i][2]));
+        }
+
+        for (int i = 0; i < dimComp; i++) {
+            difPer[i][14] = String.valueOf(Integer.parseInt(difPer[i][9]) - Integer.parseInt(difPer[i][3]));
+        }
+
+        for (int i = 0; i < dimComp; i++) {
+            difPer[i][15] = String.valueOf(Integer.parseInt(difPer[i][10]) - Integer.parseInt(difPer[i][4]));
+        }
+
+        for (int i = 0; i < dimComp; i++) {
+            difPer[i][16] = String.valueOf(Integer.parseInt(difPer[i][11]) - Integer.parseInt(difPer[i][5]));
+        }
+        return difPer;
     }
 
     public static void mostraDeResultados(String[][] matrix) {
