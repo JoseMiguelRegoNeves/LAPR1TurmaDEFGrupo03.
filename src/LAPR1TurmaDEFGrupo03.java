@@ -424,7 +424,7 @@ public class LAPR1TurmaDEFGrupo03 {
         return matrizPeriodoFinal;
     }
 
-    public static void mostraDeResultados(String[][] matrix) throws ParseException{
+    public static void mostraDeResultados(String[][] matrix) {
         for (int i = 0; i <= matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 System.out.println(matrix[i][j] + " ");
@@ -434,14 +434,13 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
    public static double[][] matrizTransicao(String TXT) {
-        Scanner sc = new Scanner(System.in);
         double[][] matrizT = new double[5][5];
         int linhas = 0;
         String line;
         String avancarLinha;
         // C:\Users\joana\OneDrive\Ambiente de Trabalho\novo.csv
         try {
-            sc = new Scanner(new FileReader(TXT));
+            Scanner sc = new Scanner(new FileReader(TXT));
             while ((sc.hasNextLine())) {
                 for (int i = 0; i < 5; i++) {
                     line = sc.nextLine();
@@ -459,5 +458,69 @@ public class LAPR1TurmaDEFGrupo03 {
             e.printStackTrace();
         }
         return matrizT;
+    }
+
+    static double[][] subtracaoMatrizTransicao(double[][] matrizQ, int n){
+        double I[][] = { { 1, 0, 0, 0 },
+                         { 0, 1, 0, 0 },
+                         { 0, 0, 1, 0 },
+                         { 0, 0, 0, 1 } };
+        double[][] matrizIQ = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrizIQ[i][j] = I[i][j] - matrizQ[i][j];
+            }
+        }
+        return matrizIQ;
+    }
+
+    static double[][] decomposicaoLU(double[][] matrizA, int n)
+    {
+        double[][] matrizL = new double[n][n];
+        double[][] matrizU = new double[n][n];
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int k = i; k < n; k++)
+            {
+                int soma = 0;
+                for (int j = 0; j < i; j++) {
+                    soma += (matrizL[i][j] * matrizU[j][k]);
+                }
+                matrizU[i][k] = matrizA[i][k] - soma;
+            }
+
+            for (int k = i; k < n; k++)
+            {
+                if (i == k) {
+                    matrizL[i][i] = 1;
+                }
+                else
+                {
+                    int soma = 0;
+                    for (int j = 0; j < i; j++) {
+                        soma += (matrizL[k][j] * matrizU[j][i]);
+                    }
+                    matrizL[k][i] = (matrizA[k][i] - soma) / matrizU[i][i];
+                }
+            }
+        }
+
+        System.out.println("Triangula Inferior");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.println(matrizL[i][j]);
+            }
+            System.out.println();
+        }
+
+        System.out.println("Triangular Superior");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.println(matrizU[i][j] + " ");
+            }
+            System.out.println();
+        }
+        return matrizA;                                                                                                 //RETURN????
     }
 }
