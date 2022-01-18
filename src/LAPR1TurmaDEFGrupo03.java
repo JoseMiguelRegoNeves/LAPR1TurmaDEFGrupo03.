@@ -36,52 +36,76 @@ public class LAPR1TurmaDEFGrupo03 {
             return 1;
     }
 
-    public static void modoNaoInterativo(String[] args) throws ParseException {
-       /* // java -jar nome programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA -di1 DD-MMAAAA -df1 DD-MM-AAAA -di2 DD-MM-AAAA -df2 DD-MM-AAAA -T DD-MM-AAAA
+    public static void modoNaoInterativo(String[] args) throws ParseException, FileNotFoundException {
+        // java -jar nome programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA -di1 DD-MMAAAA -df1 DD-MM-AAAA -di2 DD-MM-AAAA -df2 DD-MM-AAAA -T DD-MM-AAAA
         // registoNumeroTotalCovid19.csv registoNumerosAcumuladosCovid19.csv matrizTransicao.txt nome_ficheiro_saida.txt.
-        String caminhoTotal, caminhoAcumulado, nomeFileOut1, nomeFileOut2;
-        int res = Integer.parseInt(args[1]);
-        caminhoTotal = args[16];
-        caminhoAcumulado = args[17];
-        nomeFileOut1 = args[18];
-        nomeFileOut2 = args[19];
-        String[][] matrixTotal = Scann(caminhoTotal);
-        String[][] matrixAcumulado = Scann(caminhoAcumulado);
+        int res, linhasTotalMatrix, linhasAcumulativoMatrix;
+        String di = null, df = null, di1 = null, df1 = null, di2 = null, df2 = null, dia = null;
+        String[] cabecalho;
+        String[][] acumulativoMatrix = new String[9999][6];
+        String[][] totalMatrix = new String[9999][6];
+        String[][] totalTemp, acumulativoTemp;
+        double[][] matrizT = new double[5][5];
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "-r" -> res = Integer.parseInt(args[i + 1]);
+                case "-di" -> di = args[i + 1];
+                case "-df" -> df = args[i + 1];
+                case "-di1" -> di1 = args[i + 1];
+                case "-df1" -> df1 = args[i + 1];
+                case "-di2" -> di2 = args[i + 1];
+                case "-df2" -> df2 = args[i + 1];
+                case "-T" -> dia = args[i + 1];
+            }
+        }
+        switch (args.length) {
+            case 5:
+                //Recolha Matrizes
+                //Rgisto Numeros Total Covid19.
+                linhasTotalMatrix = Scann(args[2], totalMatrix);
+                totalTemp = new String[linhasTotalMatrix][6];
+                System.arraycopy(totalMatrix, 0, totalTemp, 0, linhasTotalMatrix);
+                totalMatrix = totalTemp;
 
-        //Matriz Diferença Periódica
-        String di = args[3];
-        int posDi = posicaoDatas(matrix, di);
-        String df = args[5];
-        int posDf = posicaoDatas(matrix, df);
-        String[][] matrixDifPer = calculoDif(matrix, posDi, posDf, res);
-        //Fim Matriz Diferença Periódica
+                //Matriz Transição
+                matrizT = matrizTransicao(args[3]);
 
-        //Matriz Periodo1
-        String di1 = args[7];
-        int posDi1 = posicaoDatas(matrix, di1);
-        String df1 = args[9];
-        int posDf1 = posicaoDatas(matrix, df1);
-        String[][] matrixDif1 = calculoPeriodo(matrix, posDi1, posDf1);
-        //Fim Matriz Periodo1
+                //Previsão evolução da pandemia
+                String[] previsao = new String[6];
+                previsao = previsaoPandemia(totalMatrix, matrizT, dia, linhasTotalMatrix);
+                mostraPrevisaoPandemia(previsao);
 
-        //Matriz Periodo2
-        String di2 = args[11];
-        int posDi2 = posicaoDatas(matrix, di2);
-        String df2 = args[13];
-        int posDf2 = posicaoDatas(matrix, df2);
-        String[][] matrixDif2 = calculoPeriodo(matrix, posDi2, posDf2);
-        //Fim Matriz Periodo2
+                //Previsão dias até morrer
+                previsaoDiasAteMorrer(matrizT);
+                break;
+            case 16:
+                //Recolha Matrizes
+                //Registo Numeros Acumulados Covid19.
+                linhasAcumulativoMatrix = Scann(args[14], acumulativoMatrix);
+                acumulativoTemp = new String[linhasAcumulativoMatrix][6];
+                System.arraycopy(acumulativoMatrix, 0, acumulativoTemp, 0, linhasAcumulativoMatrix);
+                acumulativoMatrix = acumulativoTemp;
 
-        //Matriz PeriodoTotal
-        String[][] matrixPeriodo = calculoDifPeriodo(matrixDif1, matrixDif2);
-        //Fim Matriz PeriodoTotal
+                break;
+            case 20:
+                //Recolha Matrizes
+                //Rgisto Numeros Total Covid19.
+                linhasTotalMatrix = Scann(args[16], totalMatrix);
+                totalTemp = new String[linhasTotalMatrix][6];
+                System.arraycopy(totalMatrix, 0, totalTemp, 0, linhasTotalMatrix);
+                totalMatrix = totalTemp;
 
-        //Matriz Previsão
-        String T = args[15];
-        int posT = posicaoDatas(matrix, T);
-        String[][] matrixPrevisao;
-        //Fim Matriz Previsão
+                //Registo Numeros Acumulados Covid19.
+                linhasAcumulativoMatrix = Scann(args[17], acumulativoMatrix);
+                acumulativoTemp = new String[linhasAcumulativoMatrix][6];
+                System.arraycopy(acumulativoMatrix, 0, acumulativoTemp, 0, linhasAcumulativoMatrix);
+                acumulativoMatrix = acumulativoTemp;
 
+                //Matriz Transição
+                matrizT = matrizTransicao(args[18]);
+
+                break;
+        }
         // ficheiro output*/
     }
 
