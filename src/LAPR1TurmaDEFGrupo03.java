@@ -157,7 +157,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 String[][] resultadosPeriodo;
                 switch (res) {
                     case 0 -> {
-                        resultadosPeriodo = calculoDif(acumulativoMatrix, posDi, posDf, res);
+                        resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf, res);
                         mostraDeResultados(resultadosPeriodo);
                     }
                     case 1 -> {
@@ -307,38 +307,6 @@ public class LAPR1TurmaDEFGrupo03 {
         return 1;
     }
 
-    public static int posDataUtilSemana(int posDi, String[][] matriz) throws ParseException {
-        String formatString = "yyyy-MM-dd";
-        SimpleDateFormat format = new SimpleDateFormat(formatString);
-        String input = matriz[posDi][0];
-        Calendar data = Calendar.getInstance();
-        data.setTime(format.parse(input));
-        int posDataUtil = posDi;
-        while (data.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
-            data.add(Calendar.DATE, 1);
-            posDataUtil++;
-        }
-        return posDataUtil;
-    }
-
-    public static int posDataUtilMes(int posDi, String[][] matriz) throws ParseException {
-        String formatString = "yyyy-MM-dd";
-        SimpleDateFormat format = new SimpleDateFormat(formatString);
-        String input = matriz[posDi][0];
-        Calendar data = Calendar.getInstance();
-        data.setTime(format.parse(input));
-        int posDataUtil = posDi;
-        System.out.println(data.get(Calendar.DAY_OF_MONTH));
-        while (data.get(Calendar.DAY_OF_MONTH) != 1) {
-            data.add(Calendar.DATE, 1);
-            posDataUtil++;
-        }
-        System.out.println(posDataUtil);
-        return posDataUtil;
-    }
-
-
-
     public static int Scann(String caminho, String[][] ficheiro) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(caminho));         // Verificar o número de linhas
         String line;
@@ -354,20 +322,7 @@ public class LAPR1TurmaDEFGrupo03 {
             System.out.println();
             j++;
         }
-        return j-1;
-    }
-
-    public static void guardarFicheiro() {
-        Scanner sc = new Scanner(System.in);
-        String caminho2 = sc.nextLine();
-        try {
-            try (FileWriter fw = new FileWriter(caminho2, true)) {
-                String gravaTeste = "Output\r\n";
-                fw.write(gravaTeste);
-            }
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        return j;
     }
 
     public static int posicaoDatas(String[][] ficheiro, String di) {
@@ -379,6 +334,57 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         return i;
     }
+
+    public static String[][] calculoDiferencaPeriodicaDiaria(String[][] matrizDatas, int di, int df, int step) throws ParseException {
+        String formatString = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        String[][] matrizDiferenca = new String[(df - di) + 1][6];
+        int aux = 0;
+        int j = di;
+        int a = 0;
+        String dt = matrizDatas[j][0];
+        Calendar data = Calendar.getInstance();
+        data.setTime(format.parse(dt));
+        switch (step) {
+            case 0:
+                a = j + 1;
+                break;
+            case 1:
+                data.add(Calendar.WEEK_OF_YEAR, +1);
+                a = posicaoDatas(matrizDatas, data.toString());
+                break;
+            case 2:
+                data.add(Calendar.MONTH, +1);
+                a = posicaoDatas(matrizDatas, data.toString());
+                break;
+        }
+        while (j <= df && a <= df) {
+            matrizDiferenca[aux][0] = matrizDatas[a][0];
+            for (int i = 1; i <= 5; i++) {
+                matrizDiferenca[aux][i] = String.valueOf(Integer.parseInt(matrizDatas[a][i]) - Integer.parseInt(matrizDatas[j][i]));
+            }
+            dt = matrizDatas[a][0];
+            data = Calendar.getInstance();
+            data.setTime(format.parse(dt));
+            j = a;
+            switch (step) {
+                case 0:
+                    a++;
+                    break;
+                case 1:
+                    data.add(Calendar.WEEK_OF_YEAR, +1);
+                    a = posicaoDatas(matrizDatas, data.toString());
+                    break;
+                case 2:
+                    data.add(Calendar.MONTH, +1);
+                    a = posicaoDatas(matrizDatas, data.toString());
+                    break;
+            }
+            aux++;
+        }
+        return matrizDiferenca;
+    }
+
     public static String[][] calculoDiferencaPeriodicaSemana(String[][] matrizDatas, int di, int df) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
@@ -449,26 +455,21 @@ public class LAPR1TurmaDEFGrupo03 {
                 countPrimDias++;
             }
 
-            else if(data.get(Calendar.DAY_OF_MONTH) == data.getMaximum(Calendar.DAY_OF_MONTH)){
+            else if(data.get(Calendar.DAY_OF_MONTH) == data.getActualMaximum(Calendar.DAY_OF_MONTH)){
                 countUltDias++;
             }
         }
         int[] primDias = new int[countPrimDias];
         int[] ultDias = new int[countUltDias];
-        System.out.println(data.getMaximum(Calendar.DAY_OF_MONTH));
         for (int i = di; i <= df; i++) {
             data.setTime(format.parse(matrizDatas[i][0]));
             if (data.get(Calendar.DAY_OF_MONTH) == data.getMinimum(Calendar.DAY_OF_MONTH)){
                 primDias[auxpd]=i;
                 auxpd++;
-                System.out.println("minimo");
-                System.out.println(i);
             }
-            else if(data.get(Calendar.DAY_OF_MONTH) == data.getMaximum(Calendar.DAY_OF_MONTH)){
+            else if(data.get(Calendar.DAY_OF_MONTH) == data.getActualMaximum(Calendar.DAY_OF_MONTH)){
                 ultDias[auxud]=i;
                 auxud++;
-                System.out.println("maximo");
-                System.out.println(i);
             }
         }
         if(ultDias[0]<primDias[0]){
@@ -542,6 +543,33 @@ public class LAPR1TurmaDEFGrupo03 {
             difPer[i][16] = String.valueOf(Integer.parseInt(difPer[i][11]) - Integer.parseInt(difPer[i][5]));
         }
         return difPer;
+    }
+
+    public static String[][] mediaPer(String[][] difPer){
+        String[][] media = new String[2][17];
+        media[0][0] = "Média";
+        media[1][0] = "DiasPeríodo1";
+        media[1][6] = "DiasPeríodo2";
+        for (int i = 1; i < 6; i++) {
+            int soma=0;
+            for (int j = 0; j < difPer.length; j++) {
+                soma = soma + Integer.parseInt(difPer[j][i]);
+                media[1][i] = String.valueOf(soma / difPer.length);
+            }
+        }
+        for (int i = 7; i < difPer[0].length; i++) {
+            int soma=0;
+            for (int j = 0; j < difPer.length; j++) {
+                soma = soma + Integer.parseInt(difPer[j][i]);
+                media[1][i] = String.valueOf(soma / difPer.length);
+            }
+        }
+        return media;
+    }
+
+    public static String[][] desvioPadraoPer(String[][] difPer){
+
+
     }
 
     public static void mostraDeResultados(String[][] matrix) {
@@ -770,7 +798,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }//end of j loop
             System.out.println();//new line
         }
-        return inversaIQ;                                                                                                 //RETURN????
+        return inversaIQ;
     }
 
     public static double[][] previsaoDiasAteMorrer(double[][] matrizTransicao) {
@@ -783,5 +811,18 @@ public class LAPR1TurmaDEFGrupo03 {
             }
         }
         return diasAteMorrer;
+    }
+
+    public static void guardarFicheiro() {
+        Scanner sc = new Scanner(System.in);
+        String caminho2 = sc.nextLine();
+        try {
+            try (FileWriter fw = new FileWriter(caminho2, true)) {
+                String gravaTeste = "Output\r\n";
+                fw.write(gravaTeste);
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
