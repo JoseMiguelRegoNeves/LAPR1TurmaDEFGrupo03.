@@ -7,7 +7,11 @@ import java.util.Calendar;
 
 public class LAPR1TurmaDEFGrupo03 {
     //CAMINHO JOANA C:\\Users\\joana\\OneDrive\\Ambiente de Trabalho\\exemploRegistoNumerosCovid19.csv
-    //CAMINHO MIGUEL C:\Users\Miguel\Documents\exemploRegistoNumerosCovid19.csv
+
+    //CAMINHOS MIGUEL ACOMULATIVO C:\Users\Miguel\IdeaProjects\LAPR1_TurmaDEF_Grupo03\src\exemploRegistoNumerosCovid19.csv
+    //CAMINHOS MIGUEL TOTAL C:\Users\Miguel\IdeaProjects\LAPR1_TurmaDEF_Grupo03\src\totalPorEstadoCovid19EmCadaDia.csv
+    //CAMINHOS MIGUEL TRANSIÇÃO C:\Users\Miguel\IdeaProjects\LAPR1_TurmaDEF_Grupo03\src\MatrizTransicao.txt
+
     //CAMINHO BRUNA C:\Users\Bruna\Downloads\exemploRegistoNumerosCovid19.csv
 
     public static void main(String[] args) throws IOException, ParseException {
@@ -130,7 +134,6 @@ public class LAPR1TurmaDEFGrupo03 {
         String line = sc1.readLine();
         cabecalho = line.split(",");
         int opcao = opcoesInterface();
-        int posDiUtil;
         switch (opcao) {
             case 0: //Analizar dados de um dia
                 System.out.println("Indique o tipo de dados que pretende analisar:");
@@ -165,9 +168,7 @@ public class LAPR1TurmaDEFGrupo03 {
                         mostraDeResultados(resultadosPeriodo);
                     }
                     case 2 -> {
-                        //posDiUtil = posDataUtilMes(posDi, acumulativoMatrix);
                         resultadosPeriodo = calculoDiferencaPeriodicaMes(acumulativoMatrix, posDi, posDf);
-                                //calculoDif(acumulativoMatrix, posDiUtil, posDf, res);
                         mostraDeResultados(resultadosPeriodo);
                     }
                 }
@@ -177,7 +178,19 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
                     System.exit(0);
                 } else {
-                    //calculoDifPeriodo(int posdi1, int posdf1, int posdi2, int posdf2, String[][] datas)
+                    System.out.println("Indique a data de início (AAAA-MM-DD): ");
+                    String di1 = recolhaData();
+                    int posDi1 = posicaoDatas(acumulativoMatrix, di1);
+                    System.out.println("Indique a data final (AAAA-MM-DD): ");
+                    String df1 = recolhaData();
+                    int posDf1 = posicaoDatas(acumulativoMatrix, df1);
+                    System.out.println("Indique a data de início (AAAA-MM-DD): ");
+                    String di2 = recolhaData();
+                    int posDi2 = posicaoDatas(acumulativoMatrix, di2);
+                    System.out.println("Indique a data final (AAAA-MM-DD): ");
+                    String df2 = recolhaData();
+                    int posDf2 = posicaoDatas(acumulativoMatrix, df2);
+                    calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
                 }
                 break;
             case 3: //Analisar dados comparativamente a outro periodo de tempo (Total)
@@ -185,7 +198,19 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
                     System.exit(0);
                 } else {
-                    //calculoDifPeriodo(int posdi1, int posdf1, int posdi2, int posdf2, String[][] datas)
+                    System.out.println("Indique a data de início do primeiro período (AAAA-MM-DD): ");
+                    String di1 = recolhaData();
+                    int posDi1 = posicaoDatas(totalMatrix, di1);
+                    System.out.println("Indique a data final do primeiro período (AAAA-MM-DD): ");
+                    String df1 = recolhaData();
+                    int posDf1 = posicaoDatas(totalMatrix, df1);
+                    System.out.println("Indique a data de início do segundo período (AAAA-MM-DD): ");
+                    String di2 = recolhaData();
+                    int posDi2 = posicaoDatas(totalMatrix, di2);
+                    System.out.println("Indique a data final do segundo período (AAAA-MM-DD): ");
+                    String df2 = recolhaData();
+                    int posDf2 = posicaoDatas(totalMatrix, df2);
+                    calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, totalMatrix);
                 }
                 break;
             case 4:
@@ -193,9 +218,11 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("Operação inválida: Ficheiro armazenado não pode ser utilizado para fazer previsões!");
                     System.exit(0);
                 } else {
-                    System.out.println("Indique o dia para o qual pretende realizar a previsão.");
+                    System.out.println("Indique o dia para o qual pretende realizar a previsão (DD-MM-AAAA): ");
                     String data = sc.nextLine();
-                    previsaoPandemia(totalMatrix, matrizTransicao, data, linhasTotalMatrix);
+                    String[] previsao = new String[6];
+                    previsao = previsaoPandemia(totalMatrix, matrizTransicao, data, linhasTotalMatrix);
+                    mostraPrevisaoPandemia(previsao);
                 }
                 break;
             case 5:
@@ -234,6 +261,7 @@ public class LAPR1TurmaDEFGrupo03 {
         double[][] matrizT = new double[5][5];
         switch (sn) {
             case 0:
+                sc.nextLine();
                 System.out.println("Indique o caminho para o ficheiro TXT:");
                 TXT = sc.nextLine();
                 matrizT = matrizTransicao(TXT);
@@ -317,9 +345,7 @@ public class LAPR1TurmaDEFGrupo03 {
             String[] vetline = line.split(",");
             for (int i = 0; i < 6; i++) {
                 ficheiro[j][i] = vetline[i];
-                System.out.print(ficheiro[j][i] + " ");
             }
-            System.out.println();
             j++;
         }
         return j;
@@ -566,11 +592,12 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         return media;
     }
-
+/*
     public static String[][] desvioPadraoPer(String[][] difPer){
 
 
-    }
+        return desvioPadrao;
+    }*/
 
     public static void mostraDeResultados(String[][] matrix) {
         for (int i = 0; i < matrix.length; i++) {
@@ -607,19 +634,19 @@ public class LAPR1TurmaDEFGrupo03 {
         return matrizT;
     }
 
-    public static double[][] previsaoPandemia(String[][] matriz, double[][] matrizT, String date, int max) throws ParseException {
-        String formatString = "yyyy-MM-dd";
+    public static String[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date, int max) throws ParseException {
+        String formatString = "dd-MM-yyyy";
         int i = 0, k;
-        double[][] previsao = new double[1][5];
-        double[][] matrizP = new double[5][5];
+        String[] previsao = new String[6];
+        double[][] matrizP = new double[6][6];
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         Calendar data = Calendar.getInstance();
-        data.setTime((format.parse(matriz[0][0])));
-        while (!data.equals(date) && i <= matriz.length) {
-            i++;
-            if (i <= matriz.length) {
-                data.setTime((format.parse(matriz[i][0])));
+        while (i < matriz.length) {
+            data.setTime((format.parse(matriz[i][0])));
+            if (data.equals(date)){
+                break;
             }
+            i++;
         }
         if (i == max + 1) {
             i = max;
@@ -647,10 +674,21 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         for (int j = 1; j <= 5; j++) {
             for (int l = 1; l <= 5; l++) {
-                previsao[0][j] = Double.parseDouble(matriz[i][l]) * matrizP[l][j];
+                previsao[j] = String.valueOf(Double.parseDouble(matriz[i][l]) * matrizP[l][j]);
             }
         }
+        previsao[0] = date;
         return previsao;
+    }
+
+    public static void mostraPrevisaoPandemia(String[] previsao){
+        System.out.println("Previsão da pandemia");
+        System.out.println("Data: " + previsao[0]);
+        System.out.println("Não Infetados: " + previsao[1]);
+        System.out.println("Infetados: " + previsao[2]);
+        System.out.println("Internados: " + previsao[3]);
+        System.out.println("Internados em Unidade Cuidados Intencívos: " + previsao[4]);
+        System.out.println("Óbitos: " + previsao[5]);
     }
 
     public static double[][] subtracaoMatrizTransicao(double[][] matrizQ, int n) {
