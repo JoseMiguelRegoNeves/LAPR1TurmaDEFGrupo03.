@@ -323,6 +323,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
+                    if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                     break;
             }
             // ficheiro output
