@@ -441,17 +441,15 @@ public class LAPR1TurmaDEFGrupo03 {
         Calendar data = Calendar.getInstance();
         int countDomingos = 0;
         int countSegundas = 0;
-        int auxs=0;
-        int auxd=0;
-        int max=0;
+        int auxs = 0;
+        int auxd = 0;
+        int max = 0;
         for (int i = di; i <= df; i++) {
             data.setTime(format.parse(matrizDatas[i][0]));
-            if (data.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
+            if (data.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
                 countSegundas++;
 
-            }
-
-            else if(data.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+            } else if (data.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 countDomingos++;
             }
         }
@@ -459,26 +457,24 @@ public class LAPR1TurmaDEFGrupo03 {
         int[] domingos = new int[countDomingos];
         for (int i = di; i <= df; i++) {
             data.setTime(format.parse(matrizDatas[i][0]));
-            if (data.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
-                segundas[auxs]=i;
+            if (data.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+                segundas[auxs] = i;
                 auxs++;
-            }
-            else if(data.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
-                domingos[auxd]=i;
+            } else if (data.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                domingos[auxd] = i;
                 auxd++;
             }
         }
-        if(domingos[0]<segundas[0]){
-            for (int j = 0; j < auxd-1; j++) {
-                domingos[j]=domingos[j+1];
+        if (domingos[0] < segundas[0]) {
+            for (int j = 0; j < auxd - 1; j++) {
+                domingos[j] = domingos[j + 1];
             }
             countDomingos--;
         }
-        if(countDomingos>countSegundas){
-            max=countSegundas;
-        }
-        else{
-            max=countDomingos;
+        if (countDomingos > countSegundas) {
+            max = countSegundas;
+        } else {
+            max = countDomingos;
         }
         String[][] dif = new String[max][6];
         for (int i = 0; i < max; i++) {
@@ -496,16 +492,14 @@ public class LAPR1TurmaDEFGrupo03 {
         Calendar data = Calendar.getInstance();
         int countPrimDias = 0;
         int countUltDias = 0;
-        int auxpd=0;
-        int auxud=0;
-        int max=0;
+        int auxpd = 0;
+        int auxud = 0;
+        int max = 0;
         for (int i = di; i <= df; i++) {
             data.setTime(format.parse(matrizDatas[i][0]));
-            if (data.get(Calendar.DAY_OF_MONTH) == data.getMinimum(Calendar.DAY_OF_MONTH)){
+            if (data.get(Calendar.DAY_OF_MONTH) == data.getMinimum(Calendar.DAY_OF_MONTH)) {
                 countPrimDias++;
-            }
-
-            else if(data.get(Calendar.DAY_OF_MONTH) == data.getActualMaximum(Calendar.DAY_OF_MONTH)){
+            } else if (data.get(Calendar.DAY_OF_MONTH) == data.getActualMaximum(Calendar.DAY_OF_MONTH)) {
                 countUltDias++;
             }
         }
@@ -513,26 +507,24 @@ public class LAPR1TurmaDEFGrupo03 {
         int[] ultDias = new int[countUltDias];
         for (int i = di; i <= df; i++) {
             data.setTime(format.parse(matrizDatas[i][0]));
-            if (data.get(Calendar.DAY_OF_MONTH) == data.getMinimum(Calendar.DAY_OF_MONTH)){
-                primDias[auxpd]=i;
+            if (data.get(Calendar.DAY_OF_MONTH) == data.getMinimum(Calendar.DAY_OF_MONTH)) {
+                primDias[auxpd] = i;
                 auxpd++;
-            }
-            else if(data.get(Calendar.DAY_OF_MONTH) == data.getActualMaximum(Calendar.DAY_OF_MONTH)){
-                ultDias[auxud]=i;
+            } else if (data.get(Calendar.DAY_OF_MONTH) == data.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+                ultDias[auxud] = i;
                 auxud++;
             }
         }
-        if(ultDias[0]<primDias[0]){
-            for (int j = 0; j < auxud-1; j++) {
-                ultDias[j]=primDias[j+1];
+        if (ultDias[0] < primDias[0]) {
+            for (int j = 0; j < auxud - 1; j++) {
+                ultDias[j] = primDias[j + 1];
             }
             countUltDias--;
         }
-        if(countUltDias>countPrimDias){
-            max=countPrimDias;
-        }
-        else{
-            max=countUltDias;
+        if (countUltDias > countPrimDias) {
+            max = countPrimDias;
+        } else {
+            max = countUltDias;
         }
         String[][] dif = new String[max][6];
         for (int i = 0; i < max; i++) {
@@ -550,10 +542,9 @@ public class LAPR1TurmaDEFGrupo03 {
         int dimComp = 0;
         int j = 0;
 
-        if (dimPer1 > dimPer2){
+        if (dimPer1 > dimPer2) {
             dimComp = dimPer2;
-        }
-        else{
+        } else {
             dimComp = dimPer1;
         }
 
@@ -561,14 +552,14 @@ public class LAPR1TurmaDEFGrupo03 {
 
         for (int i = posdi1; i < posdf1; i++) {
             for (int k = 0; k < 6; k++) {
-                difPer[j][k]=datas[i][k];
+                difPer[j][k] = datas[i][k];
             }
             j++;
         }
 
         for (int i = posdi2; i < posdf2; i++) {
             for (int k = 0; k < 6; k++) {
-                difPer[j][k+6]=datas[i][k];
+                difPer[j][k + 6] = datas[i][k];
             }
             j++;
         }
@@ -595,20 +586,20 @@ public class LAPR1TurmaDEFGrupo03 {
         return difPer;
     }
 
-    public static String[][] mediaPer(String[][] difPer){
+    public static String[][] mediaPer(String[][] difPer) {
         String[][] media = new String[2][17];
         media[0][0] = "Média";
         media[1][0] = "DiasPeríodo1";
         media[1][6] = "DiasPeríodo2";
         for (int i = 1; i < 6; i++) {
-            int soma=0;
+            int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
                 media[1][i] = String.valueOf(soma / difPer.length);
             }
         }
         for (int i = 7; i < difPer[0].length; i++) {
-            int soma=0;
+            int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
                 media[1][i] = String.valueOf(soma / difPer.length);
@@ -667,7 +658,7 @@ public class LAPR1TurmaDEFGrupo03 {
         Calendar data = Calendar.getInstance();
         while (i < matriz.length) {
             data.setTime((format.parse(matriz[i][0])));
-            if (data.equals(date)){
+            if (data.equals(date)) {
                 break;
             }
             i++;
@@ -705,88 +696,57 @@ public class LAPR1TurmaDEFGrupo03 {
         return previsao;
     }
 
-    public static void mostraPrevisaoPandemia(String[] previsao){
-        System.out.println("Previsão da pandemia");
-        System.out.println("Data: " + previsao[0]);
-        System.out.println("Não Infetados: " + previsao[1]);
-        System.out.println("Infetados: " + previsao[2]);
-        System.out.println("Internados: " + previsao[3]);
-        System.out.println("Internados em Unidade Cuidados Intencívos: " + previsao[4]);
+    public static void mostraPrevisaoPandemia(String[] previsao) {
+        System.out.println("PREVISÃO DA PANDEMIA:");
+        System.out.println("Data -> " + previsao[0]);
+        System.out.println("Não Infetados -> " + previsao[1]);
+        System.out.println("Infetados -> " + previsao[2]);
+        System.out.println("Hospitalizados -> " + previsao[3]);
+        System.out.println("Internados em Unidade de Cuidados Intensivos -> " + previsao[4]);
         System.out.println("Óbitos: " + previsao[5]);
     }
 
-    public static double[][] subtracaoMatrizTransicao(double[][] matrizQ, int n) {
+    public static double[][] subtracaoMatrizTransicao(double[][] matrizQ) {
         double I[][] = {{1, 0, 0, 0},
                 {0, 1, 0, 0},
                 {0, 0, 1, 0},
                 {0, 0, 0, 1}};
-        double[][] matrizIQ = new double[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        double[][] matrizIQ = new double[4][4];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 matrizIQ[i][j] = I[i][j] - matrizQ[i][j];
+                System.out.println(matrizIQ[i][j]);
             }
         }
         return matrizIQ;
     }
 
-    public static double[][] decomposicaoLU(double[][] matrizA, int n) {
-        double[][] matrizL = new double[n][n];
-        double[][] matrizU = new double[n][n];
+    public static double[][] decomposicaoLU(double[][] matrizA) {
+        double[][] matrizL = new double[4][4];
+        double[][] matrizU = new double[4][4];
 
-        for (int i = 0; i < n; i++) {
-            for (int k = i; k < n; k++) {
-                int soma = 0;
-                for (int j = 0; j < i; j++) {
-                    soma += (matrizL[i][j] * matrizU[j][k]);
+        for (int coluna = 0; coluna < 4; coluna++) {
+            for (int linha = 0; linha < 4; linha++) {
+                if (linha == coluna)
+                    matrizL[linha][coluna] = 1;
+                if (coluna == 0) {
+                    matrizU[coluna][linha] = matrizA[coluna][linha];
+                    matrizL[linha][coluna] = matrizA[linha][coluna] / matrizA[0][0];
                 }
-                matrizU[i][k] = matrizA[i][k] - soma;
-            }
-            for (int k = i; k < n; k++) {
-                if (i == k) {
-                    matrizL[i][i] = 1;
-                } else {
-                    int soma = 0;
-                    for (int j = 0; j < i; j++) {
-                        soma += (matrizL[k][j] * matrizU[j][i]);
-                    }
-                    matrizL[k][i] = (matrizA[k][i] - soma) / matrizU[i][i];
+                if (coluna == 1) {
+                    matrizU[1][1] = matrizA[1][1] - matrizL[1][0] * matrizU[0][1];
+                    matrizL[2][1] = (matrizA[2][1] - matrizL[2][0] * matrizU[0][1]) / matrizU[1][1];
+                    matrizL[3][1] = (matrizA[3][1] - matrizL[3][0] * matrizU[0][1]) / matrizU[1][1];
                 }
-            }
-        }
-
-        System.out.println("Triangular Inferior");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.println(matrizL[i][j]);
-            }
-            System.out.println();
-        }
-
-        System.out.println("Triangular Superior");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.println(matrizU[i][j] + " ");
-            }
-            System.out.println();
-        }
-
-        for (int i = 0; i < 4; i++) {
-            for (int k = i; k < 4; k++) {
-                int soma = 0;
-                for (int j = 0; j < i; j++) {
-                    soma += (matrizL[i][j] * matrizU[j][k]);
+                if (coluna == 2) {
+                    matrizU[1][2] = matrizA[1][2] - matrizL[1][0] * matrizU[0][2];
+                    matrizU[2][2] = matrizA[2][2] - matrizL[2][0] * matrizU[0][2] - matrizU[1][2] * matrizL[2][1];
+                    matrizL[3][2] = (matrizA[3][2] - matrizL[3][0] * matrizU[0][2] - matrizU[1][2] * matrizL[3][1]) / matrizU[2][2];
                 }
-                matrizU[i][k] = matrizA[i][k] - soma;
-            }
-            for (int k = i; k < 4; k++) {
-                if (i == k) {
-                    matrizL[i][i] = 1;
-                } else {
-                    int soma = 0;
-                    for (int j = 0; j < i; j++) {
-                        soma += (matrizL[k][j] * matrizU[j][i]);
-                    }
-                    matrizL[k][i] = (matrizA[k][i] - soma) / matrizU[i][i];
+                if (coluna == 3) {
+                    matrizU[1][3] = matrizA[1][3] - matrizL[1][0] * matrizU[0][3];
+                    matrizU[2][3] = matrizA[2][3] - matrizL[2][0] * matrizU[0][3] - matrizL[2][1] * matrizU[1][3];
+                    matrizU[3][3] = matrizA[3][3] - matrizL[3][0] * matrizU[0][3] - matrizL[3][2] * matrizU[2][3] - matrizU[1][3] * matrizL[3][1];
                 }
             }
         }
@@ -811,15 +771,15 @@ public class LAPR1TurmaDEFGrupo03 {
         double[][] matrizLinversa = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (i==j) matrizLinversa[i][j] = 1;
-                if (i<j) matrizLinversa[i][j] = 0;
-                if (i>j) {
-                    matrizLinversa[1][0] = - (matrizL[1][0] / matrizL[1][1]);
-                    matrizLinversa[2][0] = - (matrizL[2][0] + (matrizLinversa[1][0] * matrizL[2][1]));
-                    matrizLinversa[3][0] = - (matrizL[3][0] + (matrizL[3][1] * matrizLinversa[1][0]) + (matrizL[3][2] * matrizLinversa[2][0]));
-                    matrizLinversa[2][1] = - matrizL[2][1] / matrizL[2][2];
-                    matrizLinversa[3][1] = - matrizL[3][1] - (matrizL[3][2] * matrizLinversa[2][1]);
-                    matrizLinversa[3][2] = - matrizL[3][2];
+                if (i == j) matrizLinversa[i][j] = 1;
+                if (i < j) matrizLinversa[i][j] = 0;
+                if (i > j) {
+                    matrizLinversa[1][0] = -(matrizL[1][0] / matrizL[1][1]);
+                    matrizLinversa[2][0] = -(matrizL[2][0] + (matrizLinversa[1][0] * matrizL[2][1]));
+                    matrizLinversa[3][0] = -(matrizL[3][0] + (matrizL[3][1] * matrizLinversa[1][0]) + (matrizL[3][2] * matrizLinversa[2][0]));
+                    matrizLinversa[2][1] = -matrizL[2][1] / matrizL[2][2];
+                    matrizLinversa[3][1] = -matrizL[3][1] - (matrizL[3][2] * matrizLinversa[2][1]);
+                    matrizLinversa[3][2] = -matrizL[3][2];
                 }
                 System.out.print(matrizLinversa[i][j] + " ");
             }
@@ -830,18 +790,18 @@ public class LAPR1TurmaDEFGrupo03 {
         double[][] matrizUinversa = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (i>j) matrizUinversa[i][j] = 0;
-                if (i<=j) {
+                if (i > j) matrizUinversa[i][j] = 0;
+                if (i <= j) {
                     matrizUinversa[0][0] = 1 / matrizU[0][0];
                     matrizUinversa[1][1] = 1 / matrizU[1][1];
-                    matrizUinversa[0][1] = -((matrizU[0][1] * matrizUinversa[1][1]))/ matrizU[0][0];
+                    matrizUinversa[0][1] = -((matrizU[0][1] * matrizUinversa[1][1])) / matrizU[0][0];
                     matrizUinversa[2][2] = 1 / matrizU[2][2];
-                    matrizUinversa[1][2] = - (matrizU[1][2] * matrizUinversa[2][2]) / matrizU[1][1];
-                    matrizUinversa[0][2] = (- ((matrizU[0][1] * matrizUinversa[1][2]) + (matrizU[0][2]*matrizUinversa[2][2])))/matrizU[0][0];
+                    matrizUinversa[1][2] = -(matrizU[1][2] * matrizUinversa[2][2]) / matrizU[1][1];
+                    matrizUinversa[0][2] = (-((matrizU[0][1] * matrizUinversa[1][2]) + (matrizU[0][2] * matrizUinversa[2][2]))) / matrizU[0][0];
                     matrizUinversa[3][3] = 1 / matrizU[3][3];
-                    matrizUinversa[2][3] = (- ((matrizU[2][3] * matrizUinversa[3][3])))/matrizU[2][2];
-                    matrizUinversa[1][3] = - ((matrizU[1][2] * matrizUinversa[2][3]) + (matrizU[1][3] * matrizUinversa[3][3]))/matrizU[1][1];
-                    matrizUinversa[0][3] = - ((matrizU[0][1] * matrizUinversa[1][3]) + (matrizU[0][2] * matrizUinversa[2][3]) + (matrizU[0][3] * matrizUinversa[3][3]))/matrizU[0][0];
+                    matrizUinversa[2][3] = (-((matrizU[2][3] * matrizUinversa[3][3]))) / matrizU[2][2];
+                    matrizUinversa[1][3] = -((matrizU[1][2] * matrizUinversa[2][3]) + (matrizU[1][3] * matrizUinversa[3][3])) / matrizU[1][1];
+                    matrizUinversa[0][3] = -((matrizU[0][1] * matrizUinversa[1][3]) + (matrizU[0][2] * matrizUinversa[2][3]) + (matrizU[0][3] * matrizUinversa[3][3])) / matrizU[0][0];
                 }
                 System.out.print(matrizUinversa[i][j] + " ");
             }
@@ -849,42 +809,44 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         System.out.println("I-Q inversa");
         double[][] inversaIQ = new double[4][4];
-        for(int i=0;i<4;i++){
-            for(int j=0;j<4;j++){
-                inversaIQ[i][j]=0;
-                for(int k=0;k<4;k++)
-                {
-                    inversaIQ[i][j]+=matrizLinversa[i][k]*matrizUinversa[k][j];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                inversaIQ[i][j] = 0;
+                for (int k = 0; k < 4; k++) {
+                    inversaIQ[i][j] += matrizUinversa[i][k] * matrizLinversa[k][j];
                 }//end of k loop
-                System.out.print(inversaIQ[i][j]+" ");  //printing matrix element
+                System.out.print(inversaIQ[i][j] + " ");  //printing matrix element
             }//end of j loop
             System.out.println();//new line
         }
         return inversaIQ;
     }
 
-    public static double[][] previsaoDiasAteMorrer(double[][] matrizTransicao) {
-        double matriz1[][] = {{1, 1, 1, 1}};
-        double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizTransicao, 4), 4);
-        double[][] diasAteMorrer = new double[1][4];
-        for (int j = 0; j < 4; j++) {
-            for (int l = 0; l < 4; l++) {
-                diasAteMorrer[0][j] = matriz1[0][l] * matrizInversaIQ[l][j];
+        public static double[][] previsaoDiasAteMorrer (double[][] matrizTransicao) {
+            double matriz1[][] = {{1, 1, 1, 1}};
+            double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizTransicao));
+            double[][] diasAteMorrer = new double[1][4];
+            for (int j = 0; j < 4; j++) {
+                diasAteMorrer[0][j] = matriz1[0][j] * matrizInversaIQ[0][j];
             }
-        }
-        return diasAteMorrer;
-    }
+            System.out.println("DIAS ATÉ UM PACIENTE CHEGAR A ÓBITO:");
+            System.out.println("Não Infetado / Óbito -> " + diasAteMorrer[0][0]);
+            System.out.println("Infetado / Óbito -> " + diasAteMorrer[0][1]);
+            System.out.println("Hospitalizado / Óbito -> " + diasAteMorrer[0][2]);
+            System.out.println("Internado em Unidade de Cuidados Intensivos / Óbito -> " + diasAteMorrer[0][3]);
 
-    public static void guardarFicheiro() {
-        Scanner sc = new Scanner(System.in);
-        String caminho2 = sc.nextLine();
-        try {
-            try (FileWriter fw = new FileWriter(caminho2, true)) {
-                String gravaTeste = "Output\r\n";
-                fw.write(gravaTeste);
+            return diasAteMorrer;
+        }
+        public static void guardarFicheiro () {
+            Scanner sc = new Scanner(System.in);
+            String caminho2 = sc.nextLine();
+            try {
+                try (FileWriter fw = new FileWriter(caminho2, true)) {
+                    String gravaTeste = "Output\r\n";
+                    fw.write(gravaTeste);
+                }
+            } catch (IOException e) {
+                System.out.println("Error: " + e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
         }
     }
-}
