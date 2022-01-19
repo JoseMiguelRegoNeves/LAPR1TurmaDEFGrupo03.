@@ -921,10 +921,10 @@ public class LAPR1TurmaDEFGrupo03 {
                 for(int k=0;k<4;k++)
                 {
                     inversaIQ[i][j]+=matrizLinversa[i][k]*matrizUinversa[k][j];
-                }//end of k loop
-                System.out.print(inversaIQ[i][j]+" ");  //printing matrix element
-            }//end of j loop
-            System.out.println();//new line
+                }
+                System.out.print(inversaIQ[i][j]+" ");
+            }
+            System.out.println();
         }
         return inversaIQ;
     }
