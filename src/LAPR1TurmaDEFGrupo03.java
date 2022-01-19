@@ -3,6 +3,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.Calendar;
+import java.lang.Math;
 
 
 public class LAPR1TurmaDEFGrupo03 {
@@ -271,27 +272,8 @@ public class LAPR1TurmaDEFGrupo03 {
                     calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
                 }
                 break;
-            case 3: //Analisar dados comparativamente a outro periodo de tempo (Total)
-                if (uploadMOD == 0) {
-                    System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
-                    System.exit(0);
-                } else {
-                    System.out.println("Indique a data de início do primeiro período (AAAA-MM-DD): ");
-                    String di1 = recolhaData();
-                    int posDi1 = posicaoDatas(totalMatrix, di1);
-                    System.out.println("Indique a data final do primeiro período (AAAA-MM-DD): ");
-                    String df1 = recolhaData();
-                    int posDf1 = posicaoDatas(totalMatrix, df1);
-                    System.out.println("Indique a data de início do segundo período (AAAA-MM-DD): ");
-                    String di2 = recolhaData();
-                    int posDi2 = posicaoDatas(totalMatrix, di2);
-                    System.out.println("Indique a data final do segundo período (AAAA-MM-DD): ");
-                    String df2 = recolhaData();
-                    int posDf2 = posicaoDatas(totalMatrix, df2);
-                    calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, totalMatrix);
-                }
-                break;
-            case 4:
+
+            case 3:
                 if (uploadMOD == 0 || matrizTransicao == null) {
                     System.out.println("Operação inválida: Ficheiro armazenado não pode ser utilizado para fazer previsões!");
                     System.exit(0);
@@ -303,7 +285,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     mostraPrevisaoPandemia(previsao);
                 }
                 break;
-            case 5:
+            case 4:
                 if (matrizTransicao == null) {
                     System.out.println("Operação inválida: Não foram introduzidos dados suficientes para obter o resultado desejado!");
                     System.exit(0);
@@ -356,9 +338,8 @@ public class LAPR1TurmaDEFGrupo03 {
         System.out.println("0 -> Analisar dados de um determinado dia.");
         System.out.println("1 -> Analisar dados de um período de tempo.");
         System.out.println("2 -> Analisar dados comparativamente a outro período de tempo (Acumulativo).");
-        System.out.println("3 -> Analisar dados comparativamente a outro período de tempo (Total).");
-        System.out.println("4 -> Previsão de casos para um dia específico.");
-        System.out.println("5 -> Previsão de dias até chegar a óbito.");
+        System.out.println("3 -> Previsão de casos para um dia específico.");
+        System.out.println("4 -> Previsão de dias até chegar a óbito.");
         return sc.nextInt();
     }
 
@@ -619,7 +600,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             j++;
         }
-
+            j = 0;
         for (int i = posdi2; i < posdf2; i++) {
             for (int k = 0; k < 6; k++) {
                 difPer[j][k+6]=datas[i][k];
@@ -670,10 +651,37 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         return media;
     }
-/*
-    public static String[][] desvioPadraoPer(String[][] difPer){
+
+    public static String[][] desvioPadraoPer(String[][] difPer, String[][] media){
+        String[][] desvioPadrao = new String[2][17];
+        desvioPadrao[0][0] = "Desvio Padrão";
+        desvioPadrao[1][0] = "DiasPeríodo1";
+        desvioPadrao[1][6] = "DiasPeríodo2";
+        double fracao, x, xMenosMedia, dp;
+        for (int i = 1; i < 6; i++) {
+            double denominador = 0;
+            for (int j = 0; j < difPer.length; j++) {
+                xMenosMedia = Double.parseDouble(difPer[j][i]) - Double.parseDouble(media[1][i]);
+                x = Math.pow(xMenosMedia, 2);
+                denominador = denominador + x;
+            }
+            fracao = denominador / difPer.length;
+            dp = Math.sqrt(fracao);
+            desvioPadrao[1][i] = String.valueOf(dp);
+        }
+        for (int i = 7; i < 17; i++) {
+            double denominador = 0;
+            for (int j = 0; j < difPer.length; j++) {
+                xMenosMedia = Double.parseDouble(difPer[j][i]) - Double.parseDouble(media[1][i]);
+                x = Math.pow(xMenosMedia, 2);
+                denominador = denominador + x;
+            }
+            fracao = denominador / difPer.length;
+            dp = Math.sqrt(fracao);
+            desvioPadrao[1][i] = String.valueOf(dp);
+        }
         return desvioPadrao;
-    }*/
+    }
 
     public static void mostraDeResultados(String[][] matrix) {
         for (int i = 0; i < matrix.length; i++) {
