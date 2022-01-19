@@ -283,7 +283,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
             case 3:
                 if (uploadMOD == 0 || matrizTransicao == null) {
-                    System.out.println("Operação inválida: Ficheiro armazenado não pode ser utilizado para fazer previsões!");
+                    System.out.println("OPERAÇÃO INVÁLIDA: Ficheiro armazenado não pode ser utilizado para fazer previsões!");
                     System.exit(0);
                 } else {
                     System.out.println("Indique o dia para o qual pretende realizar a previsão (DD-MM-AAAA): ");
@@ -295,7 +295,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 break;
             case 4:
                 if (matrizTransicao == null) {
-                    System.out.println("Operação inválida: Não foram introduzidos dados suficientes para obter o resultado desejado!");
+                    System.out.println("OPERAÇÃO INVÁLIDA: Não foram introduzidos dados suficientes para obter o resultado desejado!");
                     System.exit(0);
                 } else {
                     previsaoDiasAteMorrer(matrizTransicao);
@@ -342,12 +342,16 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static int opcoesInterface() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Qual a análise que pretende realizar?");
+        System.out.println("―――――――――――――――   M E N U   P R I N C I P A L   ―――――――――――――――");
+        System.out.println();
+        System.out.println("                  Qual o tipo de análise que pretende realizar?");
+        System.out.println();
         System.out.println("0 -> Analisar dados de um determinado dia.");
         System.out.println("1 -> Analisar dados de um período de tempo.");
         System.out.println("2 -> Analisar dados comparativamente a outro período de tempo (Acumulativo).");
-        System.out.println("3 -> Previsão de casos para um dia específico.");
-        System.out.println("4 -> Previsão de dias até chegar a óbito.");
+        System.out.println("3 -> Analisar dados comparativamente a outro período de tempo (Total).");
+        System.out.println("4 -> Previsão de casos para um dia específico.");
+        System.out.println("5 -> Previsão de dias até chegar a óbito.");
         return sc.nextInt();
     }
 
@@ -366,14 +370,17 @@ public class LAPR1TurmaDEFGrupo03 {
     public static int resolucaoInterface() {
         int resolucao;
         Scanner sc = new Scanner(System.in);
-        System.out.println("Indique a resolução que pretende obter:");
+        System.out.println("―――――――――――――――   M E N U   P R I N C I P A L   ―――――――――――――――");
+        System.out.println();
+        System.out.println("                    Indique a resolução que pretende obter:");
+        System.out.println();
         System.out.println("0 -> Resolução Diária (será apresentada uma diferença diária dos parâmetros a analisar)");
         System.out.println("1 -> Resolução Semanal (será apresentada uma diferença semanal dos parâmetros a analisar)");
         System.out.println("2 -> Resolução Mensal (será apresentada uma diferença mensal dos parâmetros a analisar)");
         resolucao = sc.nextInt();
         if (resolucao != 0 && resolucao != 1 && resolucao != 2) {
             do {
-                System.out.println("Introduza uma opção válida!");
+                System.out.println("ERRO: INTRODUZA UMA OPÇÃO VÁLIDA!");
                 resolucao = sc.nextInt();
             } while (resolucao != 0 && resolucao != 1 && resolucao != 2);
         }
@@ -384,7 +391,7 @@ public class LAPR1TurmaDEFGrupo03 {
         Scanner sc = new Scanner(System.in);
         String data = sc.nextLine();
         while (ValidarData(data) == 0) {
-            System.out.println("Introduza uma data válida (AAAA-MM-DD)");
+            System.out.println("ERRO: INTRODUZA UMA DATA VÁLIDA (AAAA-MM-DD)!");
             data = sc.nextLine();
         }
         return data;
@@ -609,7 +616,7 @@ public class LAPR1TurmaDEFGrupo03 {
             j++;
             if (j > dimComp) break;
         }
-            j = 0;
+        j = 0;
         for (int i = posdi2; i <= posdf2; i++) {
             for (int k = 0; k < 6; k++) {
                 difPer[j][k+6]=datas[i][k];
@@ -773,123 +780,113 @@ public class LAPR1TurmaDEFGrupo03 {
         return previsao;
     }
 
-    public static void mostraPrevisaoPandemia(String[] previsao){
-        System.out.println("Previsão da pandemia");
-        System.out.println("Data: " + previsao[0]);
-        System.out.println("Não Infetados: " + previsao[1]);
-        System.out.println("Infetados: " + previsao[2]);
-        System.out.println("Internados: " + previsao[3]);
-        System.out.println("Internados em Unidade Cuidados Intencívos: " + previsao[4]);
-        System.out.println("Óbitos: " + previsao[5]);
+    public static void mostraPrevisaoPandemia(String[] previsao) {
+        System.out.println("――――――――――   P R E V I S Ã O   D A   P A N D E M I A   ――――――――――");
+        System.out.println();
+        System.out.println("Data da Previsão -> " );
+        System.out.println("Número de Não Infetados -> " + previsao[0]);
+        System.out.println("Número de Infetados -> " + previsao[1]);
+        System.out.println("Número de Hospitalizados -> " + previsao[2]);
+        System.out.println("Número de Internados em Unidade de Cuidados Intensivos -> " + previsao[3]);
+        System.out.println("Número de Óbitos -> " + previsao[4]);
     }
 
-    public static double[][] subtracaoMatrizTransicao(double[][] matrizQ, int n) {
-        double I[][] = {{1, 0, 0, 0},
-                {0, 1, 0, 0},
-                {0, 0, 1, 0},
-                {0, 0, 0, 1}};
-        double[][] matrizIQ = new double[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                matrizIQ[i][j] = I[i][j] - matrizQ[i][j];
+    public static double[][] subtracaoMatrizTransicao(double[][] matrizT) {
+        double[][] matrizQ = new double[4][4];
+        double[][] matrizIQ = new double[4][4];
+        double[][] I = new double[4][4];
+        System.out.println("I");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (i == j) {
+                    I[i][j] = 1;
+                } else {
+                    I[i][j] = 0;
+                }
+                System.out.printf("%.4f ", I[i][j]);
             }
+            System.out.println();
+        }
+        System.out.println("Q");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                matrizQ[i][j] = matrizT[i][j];
+                System.out.printf("%.4f ", matrizQ[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println("I - Q");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                matrizIQ[i][j] = I[i][j] - matrizQ[i][j];
+                System.out.printf("%.4f ", matrizIQ[i][j]);
+            }
+            System.out.println();
         }
         return matrizIQ;
     }
 
-    public static double[][] decomposicaoLU(double[][] matrizA, int n) {
-        double[][] matrizL = new double[n][n];
-        double[][] matrizU = new double[n][n];
-
-        for (int i = 0; i < n; i++) {
-            for (int k = i; k < n; k++) {
-                int soma = 0;
-                for (int j = 0; j < i; j++) {
-                    soma += (matrizL[i][j] * matrizU[j][k]);
+    public static double[][] decomposicaoLU(double[][] matrizIQ) {
+        double[][] matrizL = new double[4][4];
+        double[][] matrizU = new double[4][4];
+        for (int coluna = 0; coluna < 4; coluna++) {
+            for (int linha = 0; linha < 4; linha++) {
+                if (linha == coluna)
+                    matrizL[linha][coluna] = 1;
+                if (coluna == 0) {
+                    matrizU[coluna][linha] = matrizIQ[coluna][linha];
+                    matrizL[linha][coluna] = matrizIQ[linha][coluna] / matrizIQ[0][0];
                 }
-                matrizU[i][k] = matrizA[i][k] - soma;
-            }
-            for (int k = i; k < n; k++) {
-                if (i == k) {
-                    matrizL[i][i] = 1;
-                } else {
-                    int soma = 0;
-                    for (int j = 0; j < i; j++) {
-                        soma += (matrizL[k][j] * matrizU[j][i]);
-                    }
-                    matrizL[k][i] = (matrizA[k][i] - soma) / matrizU[i][i];
+                if (coluna == 1) {
+                    matrizU[1][1] = matrizIQ[1][1] - matrizL[1][0] * matrizU[0][1];
+                    matrizL[2][1] = (matrizIQ[2][1] - matrizL[2][0] * matrizU[0][1]) / matrizU[1][1];
+                    matrizL[3][1] = (matrizIQ[3][1] - matrizL[3][0] * matrizU[0][1]) / matrizU[1][1];
                 }
-            }
-        }
-
-        System.out.println("Triangular Inferior");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.println(matrizL[i][j]);
-            }
-            System.out.println();
-        }
-
-        System.out.println("Triangular Superior");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.println(matrizU[i][j] + " ");
-            }
-            System.out.println();
-        }
-
-        for (int i = 0; i < 4; i++) {
-            for (int k = i; k < 4; k++) {
-                int soma = 0;
-                for (int j = 0; j < i; j++) {
-                    soma += (matrizL[i][j] * matrizU[j][k]);
+                if (coluna == 2) {
+                    matrizU[1][2] = matrizIQ[1][2] - matrizL[1][0] * matrizU[0][2];
+                    matrizU[2][2] = matrizIQ[2][2] - matrizL[2][0] * matrizU[0][2] - matrizU[1][2] * matrizL[2][1];
+                    matrizL[3][2] = (matrizIQ[3][2] - matrizL[3][0] * matrizU[0][2] - matrizU[1][2] * matrizL[3][1]) / matrizU[2][2];
                 }
-                matrizU[i][k] = matrizA[i][k] - soma;
-            }
-            for (int k = i; k < 4; k++) {
-                if (i == k) {
-                    matrizL[i][i] = 1;
-                } else {
-                    int soma = 0;
-                    for (int j = 0; j < i; j++) {
-                        soma += (matrizL[k][j] * matrizU[j][i]);
-                    }
-                    matrizL[k][i] = (matrizA[k][i] - soma) / matrizU[i][i];
+                if (coluna == 3) {
+                    matrizU[1][3] = matrizIQ[1][3] - matrizL[1][0] * matrizU[0][3];
+                    matrizU[2][3] = matrizIQ[2][3] - matrizL[2][0] * matrizU[0][3] - matrizL[2][1] * matrizU[1][3];
+                    matrizU[3][3] = matrizIQ[3][3] - matrizL[3][0] * matrizU[0][3] - matrizL[3][2] * matrizU[2][3] - matrizU[1][3] * matrizL[3][1];
                 }
             }
         }
-
         System.out.println("L");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                System.out.print(matrizL[i][j] + " ");
+                System.out.printf("%.4f ", matrizL[i][j]);
             }
             System.out.println();
         }
-
         System.out.println("U");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                System.out.print(matrizU[i][j] + " ");
+                System.out.printf("%.4f ", matrizU[i][j]);
             }
             System.out.println();
         }
         System.out.println("L inversa");
-
         double[][] matrizLinversa = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (i==j) matrizLinversa[i][j] = 1;
-                if (i<j) matrizLinversa[i][j] = 0;
-                if (i>j) {
-                    matrizLinversa[1][0] = - (matrizL[1][0] / matrizL[1][1]);
-                    matrizLinversa[2][0] = - (matrizL[2][0] + (matrizLinversa[1][0] * matrizL[2][1]));
-                    matrizLinversa[3][0] = - (matrizL[3][0] + (matrizL[3][1] * matrizLinversa[1][0]) + (matrizL[3][2] * matrizLinversa[2][0]));
+                if (i == j) {
+                    matrizLinversa[i][j] = 1;
+                }
+                if (i < j) {
+                    matrizLinversa[i][j] = 0;
+                }
+                if (i > j) {
+                    matrizLinversa[1][0] = -(matrizL[1][0] / matrizL[1][1]);
+                    matrizLinversa[2][0] = -(matrizL[2][0] + (matrizLinversa[1][0] * matrizL[2][1]));
+                    matrizLinversa[3][0] = -(matrizL[3][0] + (matrizL[3][1] * matrizLinversa[1][0]) + (matrizL[3][2] * matrizLinversa[2][0]));
                     matrizLinversa[2][1] = - matrizL[2][1] / matrizL[2][2];
                     matrizLinversa[3][1] = - matrizL[3][1] - (matrizL[3][2] * matrizLinversa[2][1]);
                     matrizLinversa[3][2] = - matrizL[3][2];
                 }
-                System.out.print(matrizLinversa[i][j] + " ");
+                System.out.printf("%.4f ", matrizLinversa[i][j]);
             }
             System.out.println();
         }
@@ -898,61 +895,87 @@ public class LAPR1TurmaDEFGrupo03 {
         double[][] matrizUinversa = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (i>j) matrizUinversa[i][j] = 0;
-                if (i<=j) {
+                if (i > j) {
+                    matrizUinversa[i][j] = 0;
+                }
+                if (i <= j) {
                     matrizUinversa[0][0] = 1 / matrizU[0][0];
                     matrizUinversa[1][1] = 1 / matrizU[1][1];
-                    matrizUinversa[0][1] = -((matrizU[0][1] * matrizUinversa[1][1]))/ matrizU[0][0];
+                    matrizUinversa[0][1] = -((matrizU[0][1] * matrizUinversa[1][1])) / matrizU[0][0];
                     matrizUinversa[2][2] = 1 / matrizU[2][2];
-                    matrizUinversa[1][2] = - (matrizU[1][2] * matrizUinversa[2][2]) / matrizU[1][1];
-                    matrizUinversa[0][2] = (- ((matrizU[0][1] * matrizUinversa[1][2]) + (matrizU[0][2]*matrizUinversa[2][2])))/matrizU[0][0];
+                    matrizUinversa[1][2] = -(matrizU[1][2] * matrizUinversa[2][2]) / matrizU[1][1];
+                    matrizUinversa[0][2] = (-((matrizU[0][1] * matrizUinversa[1][2]) + (matrizU[0][2] * matrizUinversa[2][2]))) / matrizU[0][0];
                     matrizUinversa[3][3] = 1 / matrizU[3][3];
-                    matrizUinversa[2][3] = (- ((matrizU[2][3] * matrizUinversa[3][3])))/matrizU[2][2];
-                    matrizUinversa[1][3] = - ((matrizU[1][2] * matrizUinversa[2][3]) + (matrizU[1][3] * matrizUinversa[3][3]))/matrizU[1][1];
-                    matrizUinversa[0][3] = - ((matrizU[0][1] * matrizUinversa[1][3]) + (matrizU[0][2] * matrizUinversa[2][3]) + (matrizU[0][3] * matrizUinversa[3][3]))/matrizU[0][0];
+                    matrizUinversa[2][3] = (-((matrizU[2][3] * matrizUinversa[3][3]))) / matrizU[2][2];
+                    matrizUinversa[1][3] = -((matrizU[1][2] * matrizUinversa[2][3]) + (matrizU[1][3] * matrizUinversa[3][3])) / matrizU[1][1];
+                    matrizUinversa[0][3] = -((matrizU[0][1] * matrizUinversa[1][3]) + (matrizU[0][2] * matrizUinversa[2][3]) + (matrizU[0][3] * matrizUinversa[3][3])) / matrizU[0][0];
                 }
-                System.out.print(matrizUinversa[i][j] + " ");
+                System.out.printf("%.4f ", matrizUinversa[i][j]);
             }
             System.out.println();
         }
         System.out.println("I-Q inversa");
         double[][] inversaIQ = new double[4][4];
-        for(int i=0;i<4;i++){
-            for(int j=0;j<4;j++){
-                inversaIQ[i][j]=0;
-                for(int k=0;k<4;k++)
-                {
-                    inversaIQ[i][j]+=matrizLinversa[i][k]*matrizUinversa[k][j];
-                }
-                System.out.print(inversaIQ[i][j]+" ");
-            }
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                inversaIQ[i][j] = 0;
+                for (int k = 0; k < 4; k++) {
+                    inversaIQ[i][j] += matrizUinversa[i][k] * matrizLinversa[k][j];
+                }//end of k loop
+                System.out.printf("%.4f ", inversaIQ[i][j]);  //printing matrix element
+            }//end of j loop
             System.out.println();
         }
         return inversaIQ;
     }
 
-    public static double[][] previsaoDiasAteMorrer(double[][] matrizTransicao) {
-        double matriz1[][] = {{1, 1, 1, 1}};
-        double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizTransicao, 4), 4);
+    public static double[][] previsaoDiasAteMorrer(double[][] matrizT) {
+        Scanner sc = new Scanner(System.in);
+        double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         double[][] diasAteMorrer = new double[1][4];
-        for (int j = 0; j < 4; j++) {
-            for (int l = 0; l < 4; l++) {
-                diasAteMorrer[0][j] = matriz1[0][l] * matrizInversaIQ[l][j];
+        diasAteMorrer[0][0] = matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0];
+        diasAteMorrer[0][1] = matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1];
+        diasAteMorrer[0][2] = matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2];
+        diasAteMorrer[0][3] = matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3];
+        System.out.println("――――――――――――   A T É   C H E G A R   A   Ó B I T O   ――――――――――――");
+        System.out.println();
+        System.out.println("Dias de um Não Infetado -> " + diasAteMorrer[0][0]);
+        System.out.println("Dias de um Infetado -> " + diasAteMorrer[0][1]);
+        System.out.println("Dias de um Hospitalizado -> " + diasAteMorrer[0][2]);
+        System.out.println("Dias de um Internado em Unidade de Cuidados Intensivos -> " + diasAteMorrer[0][3]);
+        System.out.println();
+        System.out.println(                   "Deseja guardar os dados em um ficheiro?");
+        System.out.println("0 -> SIM");
+        System.out.println("1 -> NÃO");
+        int resposta = sc.nextInt();
+        if (resposta != 0 && resposta != 1) {
+            System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+        } else {
+            if (resposta == 0) {
+                nomeFicheiroGuardar();
             }
         }
         return diasAteMorrer;
     }
 
-    public static void guardarFicheiro() {
+    public static String nomeFicheiroGuardar() {
         Scanner sc = new Scanner(System.in);
-        String caminho2 = sc.nextLine();
-        try {
-            try (FileWriter fw = new FileWriter(caminho2, true)) {
-                String gravaTeste = "Output\r\n";
-                fw.write(gravaTeste);
-            }
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+        String nomeficheiro = sc.nextLine();
+        while (nomeficheiro.contains("|") || nomeficheiro.contains("\\") || nomeficheiro.contains("?") || nomeficheiro.contains("*") || nomeficheiro.contains("<") || nomeficheiro.contains("'") || nomeficheiro.contains(";") || nomeficheiro.contains(":") || nomeficheiro.contains(">") || nomeficheiro.contains("/") || nomeficheiro.contains(".txt") || nomeficheiro.contains(".csv")) {
+            System.out.println("ERRO: O nome do ficheiro não é válido!");
+            System.out.println();
+            System.out.println("Insira o nome do ficheiro que deseja criar.");
+            nomeficheiro = sc.nextLine();
         }
+        String tipoficheiro = sc.nextLine();
+        while (!tipoficheiro.equalsIgnoreCase(".txt") && !tipoficheiro.equalsIgnoreCase("txt")
+                && !tipoficheiro.equalsIgnoreCase(".csv") && !tipoficheiro.equalsIgnoreCase("csv")) {
+            System.out.println("ERRO: O tipo de ficheiro não é válido!");
+            tipoficheiro = sc.nextLine();
+        }
+        if (tipoficheiro.equalsIgnoreCase(".txt") || tipoficheiro.equalsIgnoreCase(".csv")) {
+            System.out.printf("O ficheiro: %s%s", nomeficheiro, tipoficheiro + " foi criado com sucesso!");
+        }
+        return nomeficheiro.concat(tipoficheiro);
     }
 }
