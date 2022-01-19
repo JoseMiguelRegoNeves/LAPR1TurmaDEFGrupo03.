@@ -974,6 +974,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static String nomeFicheiroGuardar() {
         Scanner sc = new Scanner(System.in);
+        System.out.println("Indique o nome do Ficheiro: ");
         String nomeficheiro = sc.nextLine();
         while (nomeficheiro.contains("|") || nomeficheiro.contains("\\") || nomeficheiro.contains("?") || nomeficheiro.contains("*") || nomeficheiro.contains("<") || nomeficheiro.contains("'") || nomeficheiro.contains(";") || nomeficheiro.contains(":") || nomeficheiro.contains(">") || nomeficheiro.contains("/") || nomeficheiro.contains(".txt") || nomeficheiro.contains(".csv")) {
             System.out.println("ERRO: O nome do ficheiro não é válido!");
@@ -981,6 +982,7 @@ public class LAPR1TurmaDEFGrupo03 {
             System.out.println("Insira o nome do ficheiro que deseja criar.");
             nomeficheiro = sc.nextLine();
         }
+        System.out.println("Indique o tipo de ficheiro pretendido: ");
         String tipoficheiro = sc.nextLine();
         while (!tipoficheiro.equalsIgnoreCase(".txt") && !tipoficheiro.equalsIgnoreCase("txt")
                 && !tipoficheiro.equalsIgnoreCase(".csv") && !tipoficheiro.equalsIgnoreCase("csv")) {
