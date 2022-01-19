@@ -274,7 +274,9 @@ public class LAPR1TurmaDEFGrupo03 {
                     media = mediaPer(difPer);
                     desvioPadrao = desvioPadraoPer(difPer, media);
                     mostraDeResultados(difPer);
+                    System.out.println("Média");
                     mostraDeResultados(media);
+                    System.out.println("Desvio Padrão");
                     mostraDeResultados(desvioPadrao);
                 }
                 break;
@@ -586,8 +588,8 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static String[][] calculoDifPeriodo(int posdi1, int posdf1, int posdi2, int posdf2, String[][] datas) {
-        int dimPer1 = (posdi1 - posdf1) + 1;
-        int dimPer2 = (posdi2 - posdf2) + 1;
+        int dimPer1 = (posdf1 - posdi1) + 1;
+        int dimPer2 = (posdf2 - posdi2) + 1;
         int dimComp = 0;
         int j = 0;
 
@@ -600,18 +602,20 @@ public class LAPR1TurmaDEFGrupo03 {
 
         String[][] difPer = new String[dimComp][17];
 
-        for (int i = posdi1; i < posdf1; i++) {
+        for (int i = posdi1; i <= posdf1; i++) {
             for (int k = 0; k < 6; k++) {
                 difPer[j][k]=datas[i][k];
             }
             j++;
+            if (j > dimComp) break;
         }
             j = 0;
-        for (int i = posdi2; i < posdf2; i++) {
+        for (int i = posdi2; i <= posdf2; i++) {
             for (int k = 0; k < 6; k++) {
                 difPer[j][k+6]=datas[i][k];
             }
             j++;
+            if (j > dimComp) break;
         }
 
         for (int i = 0; i < dimComp; i++) {
@@ -637,54 +641,52 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static String[][] mediaPer(String[][] difPer){
-        String[][] media = new String[2][17];
-        media[0][0] = "Média";
-        media[1][0] = "DiasPeríodo1";
-        media[1][6] = "DiasPeríodo2";
+        String[][] media = new String[1][17];
+        media[0][0] = "DiasPeríodo1";
+        media[0][6] = "DiasPeríodo2";
         for (int i = 1; i < 6; i++) {
             int soma=0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
-                media[1][i] = String.valueOf(soma / difPer.length);
+                media[0][i] = String.valueOf(soma / difPer.length);
             }
         }
         for (int i = 7; i < difPer[0].length; i++) {
             int soma=0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
-                media[1][i] = String.valueOf(soma / difPer.length);
+                media[0][i] = String.valueOf(soma / difPer.length);
             }
         }
         return media;
     }
 
     public static String[][] desvioPadraoPer(String[][] difPer, String[][] media){
-        String[][] desvioPadrao = new String[2][17];
-        desvioPadrao[0][0] = "Desvio Padrão";
-        desvioPadrao[1][0] = "DiasPeríodo1";
-        desvioPadrao[1][6] = "DiasPeríodo2";
+        String[][] desvioPadrao = new String[1][17];
+        desvioPadrao[0][0] = "DiasPeríodo1";
+        desvioPadrao[0][6] = "DiasPeríodo2";
         double fracao, x, xMenosMedia, dp;
         for (int i = 1; i < 6; i++) {
             double denominador = 0;
             for (int j = 0; j < difPer.length; j++) {
-                xMenosMedia = Double.parseDouble(difPer[j][i]) - Double.parseDouble(media[1][i]);
+                xMenosMedia = Double.parseDouble(difPer[j][i]) - Double.parseDouble(media[0][i]);
                 x = Math.pow(xMenosMedia, 2);
                 denominador = denominador + x;
             }
             fracao = denominador / difPer.length;
             dp = Math.sqrt(fracao);
-            desvioPadrao[1][i] = String.valueOf(dp);
+            desvioPadrao[0][i] = String.valueOf(dp);
         }
         for (int i = 7; i < 17; i++) {
             double denominador = 0;
             for (int j = 0; j < difPer.length; j++) {
-                xMenosMedia = Double.parseDouble(difPer[j][i]) - Double.parseDouble(media[1][i]);
+                xMenosMedia = Double.parseDouble(difPer[j][i]) - Double.parseDouble(media[0][i]);
                 x = Math.pow(xMenosMedia, 2);
                 denominador = denominador + x;
             }
             fracao = denominador / difPer.length;
             dp = Math.sqrt(fracao);
-            desvioPadrao[1][i] = String.valueOf(dp);
+            desvioPadrao[0][i] = String.valueOf(dp);
         }
         return desvioPadrao;
     }
