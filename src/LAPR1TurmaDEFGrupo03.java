@@ -161,7 +161,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
                 break;
         }
-        // ficheiro output*/
+        // ficheiro output
     }
 
     public static void modoInterativo() throws IOException, ParseException {
@@ -252,11 +252,12 @@ public class LAPR1TurmaDEFGrupo03 {
                     }
                 }
                 break;
-            case 2: //Analisar dados comparativamente a outro periodo de tempo (Acomulativo)
+            case 2: //Analisar dados comparativamente a outro periodo de tempo
                 if (uploadMOD == 1) {
                     System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
                     System.exit(0);
                 } else {
+                    String[][] difPer, media, desvioPadrao;
                     System.out.println("Indique a data de início (AAAA-MM-DD): ");
                     String di1 = recolhaData();
                     int posDi1 = posicaoDatas(acumulativoMatrix, di1);
@@ -269,7 +270,12 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("Indique a data final (AAAA-MM-DD): ");
                     String df2 = recolhaData();
                     int posDf2 = posicaoDatas(acumulativoMatrix, df2);
-                    calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
+                    difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
+                    media = mediaPer(difPer);
+                    desvioPadrao = desvioPadraoPer(difPer, media);
+                    mostraDeResultados(difPer);
+                    mostraDeResultados(media);
+                    mostraDeResultados(desvioPadrao);
                 }
                 break;
 
