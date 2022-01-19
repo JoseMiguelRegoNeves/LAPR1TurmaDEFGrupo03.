@@ -372,7 +372,7 @@ public class LAPR1TurmaDEFGrupo03 {
         System.out.println();
         System.out.println("0 -> Analisar dados de um determinado dia.");
         System.out.println("1 -> Analisar dados de um período de tempo.");
-        System.out.println("2 -> Analisar dados comparativamente a outro período de tempo.");
+        System.out.println("2 -> Analisar dados de um período de tempo comparativamente a outro período de tempo.");
         System.out.println("3 -> Previsão de casos para um dia específico.");
         System.out.println("4 -> Previsão de dias até chegar a óbito.");
         return sc.nextInt();
