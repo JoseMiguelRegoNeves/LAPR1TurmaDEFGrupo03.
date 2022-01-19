@@ -380,7 +380,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static void casosDia(String[][] matrix, String[] cabecalho) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Indique o dia a analizar: ");
+        System.out.println("Indique o dia a  (AAAA-MM-DD):");
         String dia = sc.nextLine();
         ValidarData(dia);
         int posDia = posicaoDatas(matrix, dia);
@@ -663,8 +663,8 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static String[][] mediaPer(String[][] difPer) {
         String[][] media = new String[1][17];
-        media[0][0] = "DiasPeríodo1";
-        media[0][6] = "DiasPeríodo2";
+        media[0][0] = "DiasPeríodo1: ";
+        media[0][6] = "DiasPeríodo2: ";
         for (int i = 1; i < 6; i++) {
             int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
@@ -684,8 +684,8 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static String[][] desvioPadraoPer(String[][] difPer, String[][] media) {
         String[][] desvioPadrao = new String[1][17];
-        desvioPadrao[0][0] = "DiasPeríodo1";
-        desvioPadrao[0][6] = "DiasPeríodo2";
+        desvioPadrao[0][0] = "DiasPeríodo1: ";
+        desvioPadrao[0][6] = "DiasPeríodo2: ";
         double fracao, x, xMenosMedia, dp;
         for (int i = 1; i < 6; i++) {
             double denominador = 0;
