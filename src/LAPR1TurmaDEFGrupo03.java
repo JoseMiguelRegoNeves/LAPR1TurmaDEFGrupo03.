@@ -706,82 +706,102 @@ public class LAPR1TurmaDEFGrupo03 {
         System.out.println("Óbitos: " + previsao[5]);
     }
 
-    public static double[][] subtracaoMatrizTransicao(double[][] matrizQ) {
-        double I[][] = {{1, 0, 0, 0},
-                {0, 1, 0, 0},
-                {0, 0, 1, 0},
-                {0, 0, 0, 1}};
+    public static double[][] subtracaoMatrizTransicao(double[][] matrizT) {
+        double[][] matrizQ = new double[4][4];
         double[][] matrizIQ = new double[4][4];
+        double[][] I = new double[4][4];
+        System.out.println("I");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (i == j) {
+                    I[i][j] = 1;
+                } else {
+                    I[i][j] = 0;
+                }
+                System.out.printf("%.4f ", I[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println("Q");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                matrizQ[i][j] = matrizT[i][j];
+                System.out.printf("%.4f ", matrizQ[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println("I - Q");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 matrizIQ[i][j] = I[i][j] - matrizQ[i][j];
-                System.out.println(matrizIQ[i][j]);
+                System.out.printf("%.4f ", matrizIQ[i][j]);
             }
+            System.out.println();
         }
         return matrizIQ;
     }
 
-    public static double[][] decomposicaoLU(double[][] matrizA) {
+    public static double[][] decomposicaoLU(double[][] matrizIQ) {
         double[][] matrizL = new double[4][4];
         double[][] matrizU = new double[4][4];
-
         for (int coluna = 0; coluna < 4; coluna++) {
             for (int linha = 0; linha < 4; linha++) {
                 if (linha == coluna)
                     matrizL[linha][coluna] = 1;
                 if (coluna == 0) {
-                    matrizU[coluna][linha] = matrizA[coluna][linha];
-                    matrizL[linha][coluna] = matrizA[linha][coluna] / matrizA[0][0];
+                    matrizU[coluna][linha] = matrizIQ[coluna][linha];
+                    matrizL[linha][coluna] = matrizIQ[linha][coluna] / matrizIQ[0][0];
                 }
                 if (coluna == 1) {
-                    matrizU[1][1] = matrizA[1][1] - matrizL[1][0] * matrizU[0][1];
-                    matrizL[2][1] = (matrizA[2][1] - matrizL[2][0] * matrizU[0][1]) / matrizU[1][1];
-                    matrizL[3][1] = (matrizA[3][1] - matrizL[3][0] * matrizU[0][1]) / matrizU[1][1];
+                    matrizU[1][1] = matrizIQ[1][1] - matrizL[1][0] * matrizU[0][1];
+                    matrizL[2][1] = (matrizIQ[2][1] - matrizL[2][0] * matrizU[0][1]) / matrizU[1][1];
+                    matrizL[3][1] = (matrizIQ[3][1] - matrizL[3][0] * matrizU[0][1]) / matrizU[1][1];
                 }
                 if (coluna == 2) {
-                    matrizU[1][2] = matrizA[1][2] - matrizL[1][0] * matrizU[0][2];
-                    matrizU[2][2] = matrizA[2][2] - matrizL[2][0] * matrizU[0][2] - matrizU[1][2] * matrizL[2][1];
-                    matrizL[3][2] = (matrizA[3][2] - matrizL[3][0] * matrizU[0][2] - matrizU[1][2] * matrizL[3][1]) / matrizU[2][2];
+                    matrizU[1][2] = matrizIQ[1][2] - matrizL[1][0] * matrizU[0][2];
+                    matrizU[2][2] = matrizIQ[2][2] - matrizL[2][0] * matrizU[0][2] - matrizU[1][2] * matrizL[2][1];
+                    matrizL[3][2] = (matrizIQ[3][2] - matrizL[3][0] * matrizU[0][2] - matrizU[1][2] * matrizL[3][1]) / matrizU[2][2];
                 }
                 if (coluna == 3) {
-                    matrizU[1][3] = matrizA[1][3] - matrizL[1][0] * matrizU[0][3];
-                    matrizU[2][3] = matrizA[2][3] - matrizL[2][0] * matrizU[0][3] - matrizL[2][1] * matrizU[1][3];
-                    matrizU[3][3] = matrizA[3][3] - matrizL[3][0] * matrizU[0][3] - matrizL[3][2] * matrizU[2][3] - matrizU[1][3] * matrizL[3][1];
+                    matrizU[1][3] = matrizIQ[1][3] - matrizL[1][0] * matrizU[0][3];
+                    matrizU[2][3] = matrizIQ[2][3] - matrizL[2][0] * matrizU[0][3] - matrizL[2][1] * matrizU[1][3];
+                    matrizU[3][3] = matrizIQ[3][3] - matrizL[3][0] * matrizU[0][3] - matrizL[3][2] * matrizU[2][3] - matrizU[1][3] * matrizL[3][1];
                 }
             }
         }
-
         System.out.println("L");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                System.out.print(matrizL[i][j] + " ");
+                System.out.printf("%.4f ", matrizL[i][j]);
             }
             System.out.println();
         }
-
         System.out.println("U");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                System.out.print(matrizU[i][j] + " ");
+                System.out.printf("%.4f ", matrizU[i][j]);
             }
             System.out.println();
         }
         System.out.println("L inversa");
-
         double[][] matrizLinversa = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (i == j) matrizLinversa[i][j] = 1;
-                if (i < j) matrizLinversa[i][j] = 0;
+                if (i == j) {
+                    matrizLinversa[i][j] = 1;
+                }
+                if (i < j) {
+                    matrizLinversa[i][j] = 0;
+                }
                 if (i > j) {
                     matrizLinversa[1][0] = -(matrizL[1][0] / matrizL[1][1]);
                     matrizLinversa[2][0] = -(matrizL[2][0] + (matrizLinversa[1][0] * matrizL[2][1]));
                     matrizLinversa[3][0] = -(matrizL[3][0] + (matrizL[3][1] * matrizLinversa[1][0]) + (matrizL[3][2] * matrizLinversa[2][0]));
-                    matrizLinversa[2][1] = -matrizL[2][1] / matrizL[2][2];
-                    matrizLinversa[3][1] = -matrizL[3][1] - (matrizL[3][2] * matrizLinversa[2][1]);
-                    matrizLinversa[3][2] = -matrizL[3][2];
+                    matrizLinversa[2][1] = - matrizL[2][1] / matrizL[2][2];
+                    matrizLinversa[3][1] = - matrizL[3][1] - (matrizL[3][2] * matrizLinversa[2][1]);
+                    matrizLinversa[3][2] = - matrizL[3][2];
                 }
-                System.out.print(matrizLinversa[i][j] + " ");
+                System.out.printf("%.4f ", matrizLinversa[i][j]);
             }
             System.out.println();
         }
@@ -790,7 +810,9 @@ public class LAPR1TurmaDEFGrupo03 {
         double[][] matrizUinversa = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (i > j) matrizUinversa[i][j] = 0;
+                if (i > j) {
+                    matrizUinversa[i][j] = 0;
+                }
                 if (i <= j) {
                     matrizUinversa[0][0] = 1 / matrizU[0][0];
                     matrizUinversa[1][1] = 1 / matrizU[1][1];
@@ -803,7 +825,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     matrizUinversa[1][3] = -((matrizU[1][2] * matrizUinversa[2][3]) + (matrizU[1][3] * matrizUinversa[3][3])) / matrizU[1][1];
                     matrizUinversa[0][3] = -((matrizU[0][1] * matrizUinversa[1][3]) + (matrizU[0][2] * matrizUinversa[2][3]) + (matrizU[0][3] * matrizUinversa[3][3])) / matrizU[0][0];
                 }
-                System.out.print(matrizUinversa[i][j] + " ");
+                System.out.printf("%.4f ", matrizUinversa[i][j]);
             }
             System.out.println();
         }
@@ -815,38 +837,39 @@ public class LAPR1TurmaDEFGrupo03 {
                 for (int k = 0; k < 4; k++) {
                     inversaIQ[i][j] += matrizUinversa[i][k] * matrizLinversa[k][j];
                 }//end of k loop
-                System.out.print(inversaIQ[i][j] + " ");  //printing matrix element
+                System.out.printf("%.4f ", inversaIQ[i][j]);  //printing matrix element
             }//end of j loop
-            System.out.println();//new line
+            System.out.println();
         }
         return inversaIQ;
     }
 
-        public static double[][] previsaoDiasAteMorrer (double[][] matrizTransicao) {
-            double matriz1[][] = {{1, 1, 1, 1}};
-            double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizTransicao));
-            double[][] diasAteMorrer = new double[1][4];
-            for (int j = 0; j < 4; j++) {
-                diasAteMorrer[0][j] = matriz1[0][j] * matrizInversaIQ[0][j];
-            }
-            System.out.println("DIAS ATÉ UM PACIENTE CHEGAR A ÓBITO:");
-            System.out.println("Não Infetado / Óbito -> " + diasAteMorrer[0][0]);
-            System.out.println("Infetado / Óbito -> " + diasAteMorrer[0][1]);
-            System.out.println("Hospitalizado / Óbito -> " + diasAteMorrer[0][2]);
-            System.out.println("Internado em Unidade de Cuidados Intensivos / Óbito -> " + diasAteMorrer[0][3]);
+    public static double[][] previsaoDiasAteMorrer(double[][] matrizT) {
+        double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
+        double[][] diasAteMorrer = new double[1][4];
+        diasAteMorrer[0][0] = matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0];
+        diasAteMorrer[0][1] = matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1];
+        diasAteMorrer[0][2] = matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2];
+        diasAteMorrer[0][3] = matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3];
+        System.out.println("DIAS ATÉ UM PACIENTE CHEGAR A ÓBITO:");
+        System.out.println("Não Infetado / Óbito -> " + diasAteMorrer[0][0]);
+        System.out.println("Infetado / Óbito -> " + diasAteMorrer[0][1]);
+        System.out.println("Hospitalizado / Óbito -> " + diasAteMorrer[0][2]);
+        System.out.println("Internado em Unidade de Cuidados Intensivos / Óbito -> " + diasAteMorrer[0][3]);
 
-            return diasAteMorrer;
-        }
-        public static void guardarFicheiro () {
-            Scanner sc = new Scanner(System.in);
-            String caminho2 = sc.nextLine();
-            try {
-                try (FileWriter fw = new FileWriter(caminho2, true)) {
-                    String gravaTeste = "Output\r\n";
-                    fw.write(gravaTeste);
-                }
-            } catch (IOException e) {
-                System.out.println("Error: " + e.getMessage());
+        return diasAteMorrer;
+    }
+
+    public static void guardarFicheiro() {
+        Scanner sc = new Scanner(System.in);
+        String caminho2 = sc.nextLine();
+        try {
+            try (FileWriter fw = new FileWriter(caminho2, true)) {
+                String gravaTeste = "Output\r\n";
+                fw.write(gravaTeste);
             }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
+}
