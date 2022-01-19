@@ -348,7 +348,7 @@ public class LAPR1TurmaDEFGrupo03 {
         System.out.println();
         System.out.println("0 -> Analisar dados de um determinado dia.");
         System.out.println("1 -> Analisar dados de um período de tempo.");
-        System.out.println("2 -> Analisar dados comparativamente a outro período de tempo (Acumulativo).");
+        System.out.println("2 -> Analisar dados comparativamente a outro período de tempo.");
         System.out.println("3 -> Previsão de casos para um dia específico.");
         System.out.println("4 -> Previsão de dias até chegar a óbito.");
         return sc.nextInt();
@@ -700,7 +700,7 @@ public class LAPR1TurmaDEFGrupo03 {
     public static void mostraDeResultados(String[][] matrix) {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                System.out.println(matrix[i][j] + " ");
+                System.out.printf(matrix[i][j] + " ");
             }
             System.out.println();
         }
