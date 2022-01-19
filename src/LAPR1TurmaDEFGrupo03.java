@@ -234,6 +234,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
+                    if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                     break;
                 case 1: //Analisar periodo de tempo
                     int res = resolucaoInterface();
@@ -262,6 +263,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
+                    if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                     break;
                 case 2: //Analisar dados comparativamente a outro periodo de tempo
                     if (uploadMOD == 1) {
@@ -294,6 +296,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
+                    if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                     break;
 
                 case 3:
@@ -311,6 +314,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
+                    if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                     break;
                 case 4:
                     if (matrizTransicao == null) {
