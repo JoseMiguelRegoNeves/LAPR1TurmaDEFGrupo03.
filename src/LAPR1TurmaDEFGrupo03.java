@@ -290,7 +290,6 @@ public class LAPR1TurmaDEFGrupo03 {
                 case 3 -> {
                     if (uploadMOD == 0 || (matrizTransicao[0][0] == 0 && matrizTransicao[1][1] == 0 && matrizTransicao[2][2] == 0 && matrizTransicao[3][3] == 0 && matrizTransicao[4][4] == 0)) {
                         System.out.println("OPERAÇÃO INVÁLIDA: Ficheiro armazenado não pode ser utilizado para fazer previsões!");
-                        System.exit(0);
                     } else {
                         System.out.println("Indique o dia para o qual pretende realizar a previsão (DD-MM-AAAA): ");
                         String data = sc.nextLine();
@@ -307,7 +306,6 @@ public class LAPR1TurmaDEFGrupo03 {
                 case 4 -> {
                     if (matrizTransicao[0][0] == 0 && matrizTransicao[1][1] == 0 && matrizTransicao[2][2] == 0 && matrizTransicao[3][3] == 0 && matrizTransicao[4][4] == 0) {
                         System.out.println("OPERAÇÃO INVÁLIDA: Não foram introduzidos dados suficientes para obter o resultado desejado!");
-                        System.exit(0);
                     } else {
                         previsaoDiasAteMorrer(matrizTransicao);
                     }
