@@ -19,11 +19,11 @@ public class LAPR1TurmaDEFGrupo03 {
         int MOD = verificacaoModo(args);
         switch (MOD) {
             case 0 -> {
-                System.out.println("Modo interativo");
+                System.out.println("M O D O  I N T E R A T I V O \uD83D\uDC4B");
                 modoInterativo();
             }
             case 1 -> {
-                System.out.println("Modo não interativo");
+                System.out.println("M O D O  N Ã O  I N T E R A T I V O \uD83D\uDDA5");
                 modoNaoInterativo(args);
             }
         }
@@ -179,7 +179,7 @@ public class LAPR1TurmaDEFGrupo03 {
         int linhasAcumulativoMatrix = 0;
         switch (uploadMOD) {
             case 0 -> {
-                System.out.println("Indique o caminho para o ficheiro com os dados Acumulativos:");
+                System.out.println("\uD83D\uDCC1 Indique o caminho para o ficheiro com os dados Acumulativos:");
                 caminho = acumulativo = uploadFicheiro();
                 linhasAcumulativoMatrix = Scann(acumulativo, acumulativoMatrix);
                 String[][] acumulativoTemp = new String[linhasAcumulativoMatrix][6];
@@ -187,7 +187,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 acumulativoMatrix = acumulativoTemp;
             }
             case 1 -> {
-                System.out.println("Indique o caminho para o ficheiro com os dados Totais:");
+                System.out.println("\uD83D\uDCC1 Indique o caminho para o ficheiro com os dados Totais:");
                 caminho = total = uploadFicheiro();
                 linhasTotalMatrix = Scann(total, totalMatrix);
                 String[][] totalTemp = new String[linhasTotalMatrix][6];
@@ -195,13 +195,13 @@ public class LAPR1TurmaDEFGrupo03 {
                 totalMatrix = totalTemp;
             }
             case 2 -> {
-                System.out.println("Indique o caminho para o ficheiro com os dados Acumulativos:");
+                System.out.println("\uD83D\uDCC1 Indique o caminho para o ficheiro com os dados Acumulativos:");
                 caminho = acumulativo = uploadFicheiro();
                 linhasAcumulativoMatrix = Scann(acumulativo, acumulativoMatrix);
                 String[][] acumulativoTemp = new String[linhasAcumulativoMatrix][6];
                 System.arraycopy(acumulativoMatrix, 0, acumulativoTemp, 0, linhasAcumulativoMatrix);
                 acumulativoMatrix = acumulativoTemp;
-                System.out.println("Indique o caminho para o ficheiro com os dados Totais:");
+                System.out.println("\uD83D\uDCC1 Indique o caminho para o ficheiro com os dados Totais:");
                 total = uploadFicheiro();
                 linhasTotalMatrix = Scann(total, totalMatrix);
                 String[][] totalTemp = new String[linhasTotalMatrix][6];
@@ -265,29 +265,29 @@ public class LAPR1TurmaDEFGrupo03 {
                     break;
                 case 2: //Analisar dados comparativamente a outro periodo de tempo
                     if (uploadMOD == 1) {
-                        System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
+                        System.out.println("OPERAÇÃO INVÁLIDA: Ficheiro armazenado não possui dados suficientes!");
                         System.exit(0);
                     } else {
                         String[][] difPer, media, desvioPadrao;
-                        System.out.println("Indique a data de início do 1º Periodo(AAAA-MM-DD): ");
+                        System.out.println("Indique a data de início do 1º Periodo (AAAA-MM-DD): ");
                         String di1 = recolhaData();
                         int posDi1 = posicaoDatas(acumulativoMatrix, di1);
-                        System.out.println("Indique a data final do 1º Periodo(AAAA-MM-DD): ");
+                        System.out.println("Indique a data final do 1º Periodo (AAAA-MM-DD): ");
                         String df1 = recolhaData();
                         int posDf1 = posicaoDatas(acumulativoMatrix, df1);
-                        System.out.println("Indique a data de início do 2º Periodo(AAAA-MM-DD): ");
+                        System.out.println("Indique a data de início do 2º Periodo (AAAA-MM-DD): ");
                         String di2 = recolhaData();
                         int posDi2 = posicaoDatas(acumulativoMatrix, di2);
-                        System.out.println("Indique a data final do 2º Periodo(AAAA-MM-DD): ");
+                        System.out.println("Indique a data final do 2º Periodo (AAAA-MM-DD): ");
                         String df2 = recolhaData();
                         int posDf2 = posicaoDatas(acumulativoMatrix, df2);
                         difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
                         media = mediaPer(difPer);
                         desvioPadrao = desvioPadraoPer(difPer, media);
                         mostraDeResultados(difPer);
-                        System.out.println("Média");
+                        System.out.println("MÉDIA ↓");
                         mostraDeResultados(media);
-                        System.out.println("Desvio Padrão");
+                        System.out.println("DESVIO PADRÃO ↓");
                         mostraDeResultados(desvioPadrao);
                     }
                     System.out.println();
@@ -331,7 +331,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static int upload() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Selecione o tipo de ficheiro que pretende carregar:");
+        System.out.println("\uD83D\uDCC1 Selecione o tipo de ficheiro que pretende carregar:");
         System.out.println("0 -> Casos Covid19 Acumulativo");
         System.out.println("1 -> Casos Covid19 Total");
         System.out.println("2 -> Ambos os ficheiros");
@@ -354,7 +354,7 @@ public class LAPR1TurmaDEFGrupo03 {
         switch (sn) {
             case 0:
                 sc.nextLine();
-                System.out.println("Indique o caminho para o ficheiro TXT:");
+                System.out.println("\uD83D\uDCC1 Indique o caminho para o ficheiro TXT:");
                 TXT = sc.nextLine();
                 matrizT = matrizTransicao(TXT);
                 break;
@@ -974,15 +974,15 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static String nomeFicheiroGuardar() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Indique o nome do Ficheiro: ");
+        System.out.println("\uD83D\uDCC1 Indique o nome do Ficheiro: ");
         String nomeficheiro = sc.nextLine();
         while (nomeficheiro.contains("|") || nomeficheiro.contains("\\") || nomeficheiro.contains("?") || nomeficheiro.contains("*") || nomeficheiro.contains("<") || nomeficheiro.contains("'") || nomeficheiro.contains(";") || nomeficheiro.contains(":") || nomeficheiro.contains(">") || nomeficheiro.contains("/") || nomeficheiro.contains(".txt") || nomeficheiro.contains(".csv")) {
             System.out.println("ERRO: O nome do ficheiro não é válido!");
             System.out.println();
-            System.out.println("Insira o nome do ficheiro que deseja criar.");
+            System.out.println("\uD83D\uDCC1 Insira o nome do ficheiro que deseja criar.");
             nomeficheiro = sc.nextLine();
         }
-        System.out.println("Indique o tipo de ficheiro pretendido: ");
+        System.out.println("\uD83D\uDCC1 Indique o tipo de ficheiro pretendido: ");
         String tipoficheiro = sc.nextLine();
         while (!tipoficheiro.equalsIgnoreCase(".txt") && !tipoficheiro.equalsIgnoreCase("txt")
                 && !tipoficheiro.equalsIgnoreCase(".csv") && !tipoficheiro.equalsIgnoreCase("csv")) {
