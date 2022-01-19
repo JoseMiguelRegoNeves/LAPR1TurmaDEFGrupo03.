@@ -258,16 +258,16 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.exit(0);
                 } else {
                     String[][] difPer, media, desvioPadrao;
-                    System.out.println("Indique a data de início (AAAA-MM-DD): ");
+                    System.out.println("Indique a data de início do 1º Periodo(AAAA-MM-DD): ");
                     String di1 = recolhaData();
                     int posDi1 = posicaoDatas(acumulativoMatrix, di1);
-                    System.out.println("Indique a data final (AAAA-MM-DD): ");
+                    System.out.println("Indique a data final do 1º Periodo(AAAA-MM-DD): ");
                     String df1 = recolhaData();
                     int posDf1 = posicaoDatas(acumulativoMatrix, df1);
-                    System.out.println("Indique a data de início (AAAA-MM-DD): ");
+                    System.out.println("Indique a data de início do 2º Periodo(AAAA-MM-DD): ");
                     String di2 = recolhaData();
                     int posDi2 = posicaoDatas(acumulativoMatrix, di2);
-                    System.out.println("Indique a data final (AAAA-MM-DD): ");
+                    System.out.println("Indique a data final do 2º Periodo(AAAA-MM-DD): ");
                     String df2 = recolhaData();
                     int posDf2 = posicaoDatas(acumulativoMatrix, df2);
                     difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
@@ -349,9 +349,8 @@ public class LAPR1TurmaDEFGrupo03 {
         System.out.println("0 -> Analisar dados de um determinado dia.");
         System.out.println("1 -> Analisar dados de um período de tempo.");
         System.out.println("2 -> Analisar dados comparativamente a outro período de tempo (Acumulativo).");
-        System.out.println("3 -> Analisar dados comparativamente a outro período de tempo (Total).");
-        System.out.println("4 -> Previsão de casos para um dia específico.");
-        System.out.println("5 -> Previsão de dias até chegar a óbito.");
+        System.out.println("3 -> Previsão de casos para um dia específico.");
+        System.out.println("4 -> Previsão de dias até chegar a óbito.");
         return sc.nextInt();
     }
 
