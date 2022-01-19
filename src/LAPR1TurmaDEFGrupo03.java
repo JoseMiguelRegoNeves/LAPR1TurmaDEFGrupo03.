@@ -1,3 +1,4 @@
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,11 +19,11 @@ public class LAPR1TurmaDEFGrupo03 {
         int MOD = verificacaoModo(args);
         switch (MOD) {
             case 0 -> {
-                System.out.println("Modo interativo");
+                System.out.println("MODO INTERATIVO");
                 modoInterativo();
             }
             case 1 -> {
-                System.out.println("Modo não interativo");
+                System.out.println("MODO NÃO INTERATIVO");
                 modoNaoInterativo(args);
             }
         }
@@ -161,7 +162,7 @@ public class LAPR1TurmaDEFGrupo03 {
         switch (opcao) {
             case 0: //Analizar dados de um dia
                 System.out.println("Indique o tipo de dados que pretende analisar:");
-                System.out.println("0 -> Casos Covid19 Acumulativo");
+                System.out.println("0 -> Casos Acumulativos Covid19");
                 System.out.println("1 -> Novos Casos Covid19");
                 int tipoDados = sc.nextInt();
                 switch (tipoDados) {
@@ -199,7 +200,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 break;
             case 2: //Analisar dados comparativamente a outro periodo de tempo (Acomulativo)
                 if (uploadMOD == 1) {
-                    System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
+                    System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não possui dados suficientes!");
                     System.exit(0);
                 } else {
                     System.out.println("Indique a data de início (AAAA-MM-DD): ");
@@ -219,7 +220,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 break;
             case 3: //Analisar dados comparativamente a outro periodo de tempo (Total)
                 if (uploadMOD == 0) {
-                    System.out.println("Operação inválida: Ficheiro armazenado não possui dados suficientes!");
+                    System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não possui dados suficientes!");
                     System.exit(0);
                 } else {
                     System.out.println("Indique a data de início do primeiro período (AAAA-MM-DD): ");
@@ -239,7 +240,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 break;
             case 4:
                 if (uploadMOD == 0 || matrizTransicao == null) {
-                    System.out.println("Operação inválida: Ficheiro armazenado não pode ser utilizado para fazer previsões!");
+                    System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não pode ser utilizado para realizar previsões!");
                     System.exit(0);
                 } else {
                     System.out.println("Indique o dia para o qual pretende realizar a previsão (DD-MM-AAAA): ");
@@ -251,7 +252,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 break;
             case 5:
                 if (matrizTransicao == null) {
-                    System.out.println("Operação inválida: Não foram introduzidos dados suficientes para obter o resultado desejado!");
+                    System.out.println("OPERAÇÃO INVÁLIDA: Não foram introduzidos dados suficientes para obter o resultado desejado!");
                     System.exit(0);
                 } else {
                     previsaoDiasAteMorrer(matrizTransicao);
@@ -298,7 +299,10 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static int opcoesInterface() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Qual a análise que pretende realizar?");
+        System.out.println("―――――――――――――――   M E N U   P R I N C I P A L   ―――――――――――――――");
+        System.out.println();
+        System.out.println("                  Qual o tipo de análise que pretende realizar?");
+        System.out.println();
         System.out.println("0 -> Analisar dados de um determinado dia.");
         System.out.println("1 -> Analisar dados de um período de tempo.");
         System.out.println("2 -> Analisar dados comparativamente a outro período de tempo (Acumulativo).");
@@ -310,7 +314,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static void casosDia(String[][] matrix, String[] cabecalho) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Indique o dia a analizar: ");
+        System.out.println("Indique o dia a analisar: ");
         String dia = sc.nextLine();
         ValidarData(dia);
         int posDia = posicaoDatas(matrix, dia);
@@ -323,14 +327,17 @@ public class LAPR1TurmaDEFGrupo03 {
     public static int resolucaoInterface() {
         int resolucao;
         Scanner sc = new Scanner(System.in);
-        System.out.println("Indique a resolução que pretende obter:");
+        System.out.println("―――――――――――――――   M E N U   P R I N C I P A L   ―――――――――――――――");
+        System.out.println();
+        System.out.println("                    Indique a resolução que pretende obter:");
+        System.out.println();
         System.out.println("0 -> Resolução Diária (será apresentada uma diferença diária dos parâmetros a analisar)");
         System.out.println("1 -> Resolução Semanal (será apresentada uma diferença semanal dos parâmetros a analisar)");
         System.out.println("2 -> Resolução Mensal (será apresentada uma diferença mensal dos parâmetros a analisar)");
         resolucao = sc.nextInt();
         if (resolucao != 0 && resolucao != 1 && resolucao != 2) {
             do {
-                System.out.println("Introduza uma opção válida!");
+                System.out.println("ERRO: INTRODUZA UMA OPÇÃO VÁLIDA!");
                 resolucao = sc.nextInt();
             } while (resolucao != 0 && resolucao != 1 && resolucao != 2);
         }
@@ -341,7 +348,7 @@ public class LAPR1TurmaDEFGrupo03 {
         Scanner sc = new Scanner(System.in);
         String data = sc.nextLine();
         while (ValidarData(data) == 0) {
-            System.out.println("Introduza uma data válida (AAAA-MM-DD)");
+            System.out.println("ERRO: INTRODUZA UMA DATA VÁLIDA (AAAA-MM-DD)!");
             data = sc.nextLine();
         }
         return data;
@@ -408,7 +415,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 a = posicaoDatas(matrizDatas, data.toString());
                 break;
         }
-        while (j <= df && a <= df) {
+        while (j <= df) {
             matrizDiferenca[aux][0] = matrizDatas[a][0];
             for (int i = 1; i <= 5; i++) {
                 matrizDiferenca[aux][i] = String.valueOf(Integer.parseInt(matrizDatas[a][i]) - Integer.parseInt(matrizDatas[j][i]));
@@ -652,8 +659,8 @@ public class LAPR1TurmaDEFGrupo03 {
     public static String[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date, int max) throws ParseException {
         String formatString = "dd-MM-yyyy";
         int i = 0, k;
-        String[] previsao = new String[6];
-        double[][] matrizP = new double[6][6];
+        String[] previsao = new String[5];
+        double[][] matrizP = new double[5][5];
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         Calendar data = Calendar.getInstance();
         while (i < matriz.length) {
@@ -675,9 +682,6 @@ public class LAPR1TurmaDEFGrupo03 {
             i--;
             k = 1;
         }
-        for (int j = 0; j < 5; j++) {
-            matrizP[j][j] = 1;
-        }
         for (int p = 1; p <= k; p++) {
             for (int j = 0; j < matrizT.length; j++) {
                 for (int l = 0; l < matrizT[0].length; l++) {
@@ -687,23 +691,23 @@ public class LAPR1TurmaDEFGrupo03 {
                 }
             }
         }
-        for (int j = 1; j <= 5; j++) {
-            for (int l = 1; l <= 5; l++) {
+        for (int j = 0; j < 5; j++) {
+            for (int l = 0; l < 5; l++) {
                 previsao[j] = String.valueOf(Double.parseDouble(matriz[i][l]) * matrizP[l][j]);
             }
         }
-        previsao[0] = date;
         return previsao;
     }
 
     public static void mostraPrevisaoPandemia(String[] previsao) {
-        System.out.println("PREVISÃO DA PANDEMIA:");
-        System.out.println("Data -> " + previsao[0]);
-        System.out.println("Não Infetados -> " + previsao[1]);
-        System.out.println("Infetados -> " + previsao[2]);
-        System.out.println("Hospitalizados -> " + previsao[3]);
-        System.out.println("Internados em Unidade de Cuidados Intensivos -> " + previsao[4]);
-        System.out.println("Óbitos: " + previsao[5]);
+        System.out.println("――――――――――   P R E V I S Ã O   D A   P A N D E M I A   ――――――――――");
+        System.out.println();
+        System.out.println("Data da Previsão -> " );
+        System.out.println("Número de Não Infetados -> " + previsao[0]);
+        System.out.println("Número de Infetados -> " + previsao[1]);
+        System.out.println("Número de Hospitalizados -> " + previsao[2]);
+        System.out.println("Número de Internados em Unidade de Cuidados Intensivos -> " + previsao[3]);
+        System.out.println("Número de Óbitos -> " + previsao[4]);
     }
 
     public static double[][] subtracaoMatrizTransicao(double[][] matrizT) {
@@ -845,31 +849,51 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static double[][] previsaoDiasAteMorrer(double[][] matrizT) {
+        Scanner sc = new Scanner(System.in);
         double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         double[][] diasAteMorrer = new double[1][4];
         diasAteMorrer[0][0] = matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0];
         diasAteMorrer[0][1] = matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1];
         diasAteMorrer[0][2] = matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2];
         diasAteMorrer[0][3] = matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3];
-        System.out.println("DIAS ATÉ UM PACIENTE CHEGAR A ÓBITO:");
-        System.out.println("Não Infetado / Óbito -> " + diasAteMorrer[0][0]);
-        System.out.println("Infetado / Óbito -> " + diasAteMorrer[0][1]);
-        System.out.println("Hospitalizado / Óbito -> " + diasAteMorrer[0][2]);
-        System.out.println("Internado em Unidade de Cuidados Intensivos / Óbito -> " + diasAteMorrer[0][3]);
-
+        System.out.println("――――――――――――   A T É   C H E G A R   A   Ó B I T O   ――――――――――――");
+        System.out.println();
+        System.out.println("Dias de um Não Infetado -> " + diasAteMorrer[0][0]);
+        System.out.println("Dias de um Infetado -> " + diasAteMorrer[0][1]);
+        System.out.println("Dias de um Hospitalizado -> " + diasAteMorrer[0][2]);
+        System.out.println("Dias de um Internado em Unidade de Cuidados Intensivos -> " + diasAteMorrer[0][3]);
+        System.out.println();
+        System.out.println(                   "Deseja guardar os dados em um ficheiro?");
+        System.out.println("0 -> SIM");
+        System.out.println("1 -> NÃO");
+        int resposta = sc.nextInt();
+        if (resposta != 0 && resposta != 1) {
+            System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+        } else {
+            if (resposta == 0) {
+                nomeFicheiroGuardar();
+            }
+        }
         return diasAteMorrer;
     }
-
-    public static void guardarFicheiro() {
+    public static String nomeFicheiroGuardar() {
         Scanner sc = new Scanner(System.in);
-        String caminho2 = sc.nextLine();
-        try {
-            try (FileWriter fw = new FileWriter(caminho2, true)) {
-                String gravaTeste = "Output\r\n";
-                fw.write(gravaTeste);
-            }
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+        String nomeficheiro = sc.nextLine();
+        while (nomeficheiro.contains("|") || nomeficheiro.contains("\\") || nomeficheiro.contains("?") || nomeficheiro.contains("*") || nomeficheiro.contains("<") || nomeficheiro.contains("'") || nomeficheiro.contains(";") || nomeficheiro.contains(":") || nomeficheiro.contains(">") || nomeficheiro.contains("/") || nomeficheiro.contains(".txt") || nomeficheiro.contains(".csv")) {
+            System.out.println("ERRO: O nome do ficheiro não é válido!");
+            System.out.println();
+            System.out.println("Insira o nome do ficheiro que deseja criar.");
+            nomeficheiro = sc.nextLine();
         }
+        String tipoficheiro = sc.nextLine();
+        while (!tipoficheiro.equalsIgnoreCase(".txt") && !tipoficheiro.equalsIgnoreCase("txt")
+                && !tipoficheiro.equalsIgnoreCase(".csv") && !tipoficheiro.equalsIgnoreCase("csv")) {
+            System.out.println("ERRO: O tipo de ficheiro não é válido!");
+            tipoficheiro = sc.nextLine();
+        }
+        if (tipoficheiro.equalsIgnoreCase(".txt") || tipoficheiro.equalsIgnoreCase(".csv")) {
+            System.out.printf("O ficheiro: %s%s", nomeficheiro, tipoficheiro + " foi criado com sucesso!");
+        }
+        return nomeficheiro.concat(tipoficheiro);
     }
 }
