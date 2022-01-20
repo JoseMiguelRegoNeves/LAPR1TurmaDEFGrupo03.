@@ -913,6 +913,23 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         System.out.println("L inversa");
         double[][] matrizLinversa = new double[4][4];
+        matrizLinversa[0][1] = matrizLinversa[0][2] = matrizLinversa[1][2] = matrizLinversa[0][3] = matrizLinversa[1][3] = matrizLinversa[2][3] = 0;
+        for (int i = 0; i < 4; i++) {
+            matrizLinversa[i][i] = 1 / matrizL[i][i];
+        }
+        matrizLinversa[1][0] = - (matrizL[1][0] * matrizLinversa[0][0]) / matrizL[1][1];
+        matrizLinversa[2][0] = - (matrizL[2][0] * matrizLinversa[0][0] + matrizL[2][1] * matrizLinversa[1][0]) / matrizL[2][2];
+        matrizLinversa[3][0] = - (matrizL[3][0] * matrizLinversa[0][0] + matrizL[3][1] * matrizLinversa[1][0] + matrizL[3][2] * matrizLinversa[2][0]) / matrizL[3][3];
+        matrizLinversa[2][1] = - (matrizL[2][1] * matrizLinversa[1][1]) / matrizL[2][2];
+        matrizLinversa[3][1] = - (matrizL[3][1] * matrizLinversa[1][1] + matrizL[3][2] * matrizLinversa[2][1]) / matrizL[3][3];
+        matrizLinversa[3][2] = - (matrizL[3][2] * matrizLinversa[2][2]) / matrizL[3][3];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.printf("%.4f ", matrizLinversa[i][j]);
+            }
+            System.out.println();
+        }
+        /*
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (i == j) {
@@ -933,6 +950,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             System.out.println();
         }
+        */
         System.out.println("U inversa");
 
         double[][] matrizUinversa = new double[4][4];
