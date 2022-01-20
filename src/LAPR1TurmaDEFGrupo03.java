@@ -41,7 +41,7 @@ public class LAPR1TurmaDEFGrupo03 {
         // java -jar nome programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA -di1 DD-MMAAAA -df1 DD-MM-AAAA -di2 DD-MM-AAAA -df2 DD-MM-AAAA -T DD-MM-AAAA
         // registoNumeroTotalCovid19.csv registoNumerosAcumuladosCovid19.csv matrizTransicao.txt nome_ficheiro_saida.txt.
         int res = -1, linhasTotalMatrix, linhasAcumulativoMatrix, posDi, posDi1, posDi2, posDf, posDf1, posDf2;
-        String di = null, df = null, di1 = null, df1 = null, di2 = null, df2 = null, dia = null;
+        String di = null, df = null, di1 = null, df1 = null, di2 = null, df2 = null, dia = null, output = null;
         String[] cabecalho;
         String[] previsao;
         String[][] acumulativoMatrix = new String[9999][6];
@@ -60,6 +60,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 case "-df2" -> df2 = args[i + 1];
                 case "-T" -> dia = args[i + 1];
             }
+            if(i == (args.length - 1)) output = args[i];
         }
         switch (args.length) {
             case 5 -> {                                                                                                     //COMPLETO
@@ -317,6 +318,9 @@ public class LAPR1TurmaDEFGrupo03 {
                     endOrNot = sc.nextInt();
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
+                case 5 -> {
+                    testesUnitários();
+                }
             }
             // ficheiro output
         }
@@ -368,6 +372,7 @@ public class LAPR1TurmaDEFGrupo03 {
         System.out.println("2 -> Analisar dados de um período de tempo comparativamente a outro período de tempo.");
         System.out.println("3 -> Previsão de casos para um dia específico.");
         System.out.println("4 -> Previsão de dias até chegar a óbito.");
+        System.out.println("5 -> Testar Funcionamento dos métodos desenvolvidos.");
         return sc.nextInt();
     }
 
@@ -920,7 +925,7 @@ public class LAPR1TurmaDEFGrupo03 {
         return inversaIQ;
     }
 
-    public static void previsaoDiasAteMorrer(double[][] matrizT) {
+    public static void previsaoDiasAteMorrer(double[][] matrizT) throws FileNotFoundException {
         Scanner sc = new Scanner(System.in);
         double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         double[][] diasAteMorrer = new double[1][4];
@@ -943,12 +948,13 @@ public class LAPR1TurmaDEFGrupo03 {
             System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
         } else {
             if (resposta == 0) {
-                nomeFicheiroGuardar();
+                String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                guardarFicheiro(nomeTipoFicheiro);
             }
         }
     }
 
-    public static String nomeFicheiroGuardar() {
+    public static String nomeTipoFicheiroGuardar() {
         Scanner sc = new Scanner(System.in);
         System.out.println("\uD83D\uDCC1 Indique o nome do Ficheiro: ");
         String nomeficheiro = sc.nextLine();
@@ -969,5 +975,24 @@ public class LAPR1TurmaDEFGrupo03 {
             System.out.printf("O ficheiro: %s%s", nomeficheiro, tipoficheiro + " foi criado com sucesso!");
         }
         return nomeficheiro.concat(tipoficheiro);
+    }
+
+    public static void guardarFicheiro(String output) throws FileNotFoundException {
+        PrintWriter outputFile = new PrintWriter(output);
+
+        /*for (int i = 0; i < ; i++) {
+            outputFile.println();
+        }*/
+
+        outputFile.close();
+    }
+
+    public static void testesUnitários(){
+        System.out.println("Bom-vindo aos testes unitários!");
+        if (ValidarData("2020-04-01") == 0 | ValidarData("2020-04-01") == 1){
+            System.out.println("ValidarData: WORKING");
+        }else {
+            System.out.println("ValidarData: NOT WORKING");
+        }
     }
 }
