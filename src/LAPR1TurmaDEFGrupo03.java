@@ -19,11 +19,11 @@ public class LAPR1TurmaDEFGrupo03 {
         int MOD = verificacaoModo(args);
         switch (MOD) {
             case 0 -> {
-                System.out.println("M O D O  I N T E R A T I V O \uD83D\uDC4B");
+                System.out.println("―――――――――― M O D O  I N T E R A T I V O \uD83D\uDC4B ――――――――――");
                 modoInterativo();
             }
             case 1 -> {
-                System.out.println("M O D O  N Ã O  I N T E R A T I V O \uD83D\uDDA5");
+                System.out.println("―――――――――― M O D O  N Ã O  I N T E R A T I V O \uD83D\uDDA5 ――――――――――");
                 modoNaoInterativo(args);
             }
         }
@@ -240,51 +240,54 @@ public class LAPR1TurmaDEFGrupo03 {
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
                 case 1 -> { //Analisar periodo de tempo
-                    int res = resolucaoInterface();
-                    System.out.println("Indique a data de início (AAAA-MM-DD): ");
-                    String di = recolhaData();
-                    int posDi = posicaoDatas(acumulativoMatrix, di);
-                    System.out.println("Indique a data final (AAAA-MM-DD): ");
-                    String df = recolhaData();
-                    int posDf = posicaoDatas(acumulativoMatrix, df);
-                    String[][] resultadosPeriodo;
-                    switch (res) {
-                        case 0 -> {
-                            resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf, res);
-                            mostraDeResultados(resultadosPeriodo);
-                        }
-                        case 1 -> {
-                            resultadosPeriodo = calculoDiferencaPeriodicaSemana(acumulativoMatrix, posDi, posDf);
-                            mostraDeResultados(resultadosPeriodo);
-                        }
-                        case 2 -> {
-                            resultadosPeriodo = calculoDiferencaPeriodicaMes(acumulativoMatrix, posDi, posDf);
-                            mostraDeResultados(resultadosPeriodo);
-                        }
-                    }
-                    System.out.println();
-                    System.out.println("Deseja guardar os dados em um ficheiro?");
-                    System.out.println("0 -> SIM");
-                    System.out.println("1 -> NÃO");
-                    int resposta = sc.nextInt();
-                    if (resposta != 0 && resposta != 1) {
-                        System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+                    if (uploadMOD == 1) {
+                        System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não é o indicado para a operação escolhida!");
                     } else {
-                        if (resposta == 0) {
-                            String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
-                            guardarFicheiro(nomeTipoFicheiro);
+                        int res = resolucaoInterface();
+                        System.out.println("Indique a data de início (AAAA-MM-DD): ");
+                        String di = recolhaData();
+                        int posDi = posicaoDatas(acumulativoMatrix, di);
+                        System.out.println("Indique a data final (AAAA-MM-DD): ");
+                        String df = recolhaData();
+                        int posDf = posicaoDatas(acumulativoMatrix, df);
+                        String[][] resultadosPeriodo;
+                        switch (res) {
+                            case 0 -> {
+                                resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf, res);
+                                mostraDeResultados(resultadosPeriodo);
+                            }
+                            case 1 -> {
+                                resultadosPeriodo = calculoDiferencaPeriodicaSemana(acumulativoMatrix, posDi, posDf);
+                                mostraDeResultados(resultadosPeriodo);
+                            }
+                            case 2 -> {
+                                resultadosPeriodo = calculoDiferencaPeriodicaMes(acumulativoMatrix, posDi, posDf);
+                                mostraDeResultados(resultadosPeriodo);
+                            }
+                        }
+                        System.out.println();
+                        System.out.println("Deseja guardar os dados em um ficheiro?");
+                        System.out.println("0 -> SIM");
+                        System.out.println("1 -> NÃO");
+                        int resposta = sc.nextInt();
+                        if (resposta != 0 && resposta != 1) {
+                            System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+                        } else {
+                            if (resposta == 0) {
+                                String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                                guardarFicheiro(nomeTipoFicheiro);
+                            }
                         }
                     }
-                    System.out.println();
-                    System.out.println("VOLTAR AO MENU -> 0");
-                    System.out.println("FECHAR APLICAÇÃO -> 1");
-                    endOrNot = sc.nextInt();
-                    if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
+                        System.out.println();
+                        System.out.println("0 -> VOLTAR AO MENU");
+                        System.out.println("1 -> FECHAR APLICAÇÃO");
+                        endOrNot = sc.nextInt();
+                        if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
                 case 2 -> { //Analisar dados comparativamente a outro periodo de tempo
                     if (uploadMOD == 1) {
-                        System.out.println("OPERAÇÃO INVÁLIDA: Ficheiro armazenado não possui dados suficientes!");
-                        System.exit(0);
+                        System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não possui dados suficientes!");
                     } else {
                         String[][] difPer, media, desvioPadrao;
                         System.out.println("Indique a data de início do 1º Periodo (AAAA-MM-DD): ");
@@ -322,8 +325,8 @@ public class LAPR1TurmaDEFGrupo03 {
                         }
                     }
                     System.out.println();
-                    System.out.println("VOLTAR AO MENU -> 0");
-                    System.out.println("FECHAR APLICAÇÃO -> 1");
+                    System.out.println("0 -> VOLTAR AO MENU");
+                    System.out.println("1 -> FECHAR APLICAÇÃO");
                     endOrNot = sc.nextInt();
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
@@ -351,8 +354,8 @@ public class LAPR1TurmaDEFGrupo03 {
                         }
                     }
                     System.out.println();
-                    System.out.println("VOLTAR AO MENU -> 0");
-                    System.out.println("FECHAR APLICAÇÃO -> 1");
+                    System.out.println("0 -> VOLTAR AO MENU");
+                    System.out.println("1 -> FECHAR APLICAÇÃO");
                     endOrNot = sc.nextInt();
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
@@ -363,8 +366,8 @@ public class LAPR1TurmaDEFGrupo03 {
                         previsaoDiasAteMorrer(matrizTransicao);
                     }
                     System.out.println();
-                    System.out.println("VOLTAR AO MENU -> 0");
-                    System.out.println("FECHAR APLICAÇÃO -> 1");
+                    System.out.println("0 -> VOLTAR AO MENU");
+                    System.out.println("1 -> FECHAR APLICAÇÃO");
                     endOrNot = sc.nextInt();
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
@@ -778,17 +781,22 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static String[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date, int max) throws ParseException {
         String formatString = "dd-MM-yyyy";
-        int i = 0, k;
+        int i = 0, k = 0;
         String[] previsao = new String[6];
         double[][] matrizP = new double[6][6];
+        System.arraycopy(matrizT, 0, matrizP, 0, 5);
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         Calendar data = Calendar.getInstance();
-        while (i < matriz.length) {
+        data.setTime((format.parse(matriz[i][0])));
+        while (i < matriz.length && (String.valueOf(data) != date)) {
+            i++;
+            if ( i >= matriz.length){
+                break;
+            }
             data.setTime((format.parse(matriz[i][0])));
             if (String.valueOf(data).equals(date)) {
                 break;
             }
-            i++;
         }
         if (i == max + 1) {
             i = max;
@@ -798,14 +806,14 @@ public class LAPR1TurmaDEFGrupo03 {
                 k++;
                 data.add(Calendar.DATE, 1);
             }
+        } else if (i == 0) {
+            System.out.println("Não há dias antecedentes.");
+
         } else {
             i--;
             k = 1;
         }
-        for (int j = 0; j < 5; j++) {
-            matrizP[j][j] = 1;
-        }
-        for (int p = 1; p <= k; p++) {
+        for (int p = 2; p <= k; p++) {
             for (int j = 0; j < matrizT.length; j++) {
                 for (int l = 0; l < matrizT[0].length; l++) {
                     for (int m = 0; m < matrizT[0].length; m++) {
@@ -814,9 +822,9 @@ public class LAPR1TurmaDEFGrupo03 {
                 }
             }
         }
-        for (int j = 1; j <= 5; j++) {
-            for (int l = 1; l <= 5; l++) {
-                previsao[j] = String.valueOf(Double.parseDouble(matriz[i][l]) * matrizP[l][j]);
+        for (int j = 0; j < 5; j++) {
+            for (int l = 0; l < 5; l++) {
+                previsao[j+1] = String.valueOf((Double.parseDouble(matriz[i][l+1]) * matrizP[l][j]));
             }
         }
         previsao[0] = date;
@@ -826,12 +834,12 @@ public class LAPR1TurmaDEFGrupo03 {
     public static void mostraPrevisaoPandemia(String[] previsao) {
         System.out.println("――――――――――   P R E V I S Ã O   D A   P A N D E M I A   ――――――――――");
         System.out.println();
-        System.out.println("Data da Previsão -> ");
-        System.out.println("Número de Não Infetados -> " + previsao[0]);
-        System.out.println("Número de Infetados -> " + previsao[1]);
-        System.out.println("Número de Hospitalizados -> " + previsao[2]);
-        System.out.println("Número de Internados em Unidade de Cuidados Intensivos -> " + previsao[3]);
-        System.out.println("Número de Óbitos -> " + previsao[4]);
+        System.out.println("Data da Previsão -> " + previsao[0]);
+        System.out.println("Número de Não Infetados -> " + previsao[1]);
+        System.out.println("Número de Infetados -> " + previsao[2]);
+        System.out.println("Número de Hospitalizados -> " + previsao[3]);
+        System.out.println("Número de Internados em Unidade de Cuidados Intensivos -> " + previsao[4]);
+        System.out.println("Número de Óbitos -> " + previsao[5]);
     }
 
     public static double[][] subtracaoMatrizTransicao(double[][] matrizT) {
@@ -976,6 +984,7 @@ public class LAPR1TurmaDEFGrupo03 {
         Scanner sc = new Scanner(System.in);
         double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         double[][] diasAteMorrer = new double[1][4];
+        double[][] vetor = new double [1][4];
         diasAteMorrer[0][0] = matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0];
         diasAteMorrer[0][1] = matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1];
         diasAteMorrer[0][2] = matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2];
@@ -1035,7 +1044,7 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static void testesUnitarios(){
-        System.out.println("Bom-vindo aos testes unitários!");
+        System.out.println("Bem-vindo aos testes unitários!");
         if (ValidarData("2020-04-01") == 0 | ValidarData("2020-04-01") == 1){
             System.out.println("ValidarData: WORKING");
         }else {
