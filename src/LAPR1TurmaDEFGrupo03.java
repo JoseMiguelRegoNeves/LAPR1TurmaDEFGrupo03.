@@ -429,7 +429,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
     public static void casosDia(String[][] matrix, String[] cabecalho) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Indique o dia a  (AAAA-MM-DD):");
+        System.out.println("Indique o dia (AAAA-MM-DD):");
         String dia = sc.nextLine();
         ValidarData(dia);
         int posDia = posicaoDatas(matrix, dia);
@@ -869,25 +869,19 @@ public class LAPR1TurmaDEFGrupo03 {
                 } else {
                     I[i][j] = 0;
                 }
-                System.out.printf("%.4f ", I[i][j]);
             }
-            System.out.println();
         }
-        System.out.println("Q");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 matrizQ[i][j] = matrizT[i][j];
-                System.out.printf("%.4f ", matrizQ[i][j]);
+
             }
-            System.out.println();
+
         }
-        System.out.println("I - Q");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 matrizIQ[i][j] = I[i][j] - matrizQ[i][j];
-                System.out.printf("%.4f ", matrizIQ[i][j]);
             }
-            System.out.println();
         }
         return matrizIQ;
     }
@@ -900,36 +894,20 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         for (int k = 0; k < matrizIQ.length; k++) {
             for (int i = k; i < matrizIQ.length; i++) {
-                double temp = 0;
-                for (int r = 0; r < k; r++) {
-                    temp += matrizL[i][r] * matrizU[r][k];
+                double aux = 0;
+                for (int l = 0; l < k; l++) {
+                    aux += matrizL[i][l] * matrizU[l][k];
                 }
-                matrizL[i][k] = matrizIQ[i][k] - temp;
+                matrizL[i][k] = matrizIQ[i][k] - aux;
             }
             for (int j = k + 1; j < matrizIQ.length; j++) {
-                double temp = 0;
-                for (int r = 0; r < k; r++) {
-                    temp += matrizL[k][r] * matrizU[r][j];
+                double aux = 0;
+                for (int l = 0; l < k; l++) {
+                    aux += matrizL[k][l] * matrizU[l][j];
                 }
-                matrizU[k][j] = (matrizIQ[k][j] - temp) / matrizL[k][k];
+                matrizU[k][j] = (matrizIQ[k][j] - aux) / matrizL[k][k];
             }
         }
-        System.out.println("L");
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.printf("%.4f ", matrizL[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println("U");
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.printf("%.4f ", matrizU[i][j]);
-            }
-            System.out.println();
-        }
-
-        System.out.println("L inversa");
 
         double[][] matrizLinversa = new double[4][4];
         matrizLinversa[0][1] = matrizLinversa[0][2] = matrizLinversa[1][2] = matrizLinversa[0][3] = matrizLinversa[1][3] = matrizLinversa[2][3] = 0;
@@ -942,14 +920,7 @@ public class LAPR1TurmaDEFGrupo03 {
         matrizLinversa[2][1] = - (matrizL[2][1] * matrizLinversa[1][1]) / matrizL[2][2];
         matrizLinversa[3][1] = - (matrizL[3][1] * matrizLinversa[1][1] + matrizL[3][2] * matrizLinversa[2][1]) / matrizL[3][3];
         matrizLinversa[3][2] = - (matrizL[3][2] * matrizLinversa[2][2]) / matrizL[3][3];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.printf("%.4f ", matrizLinversa[i][j]);
-            }
-            System.out.println();
-        }
 
-        System.out.println("U inversa");
 
         double[][] matrizUinversa = new double[4][4];
         for (int i = 0; i < 4; i++) {
@@ -969,21 +940,17 @@ public class LAPR1TurmaDEFGrupo03 {
                     matrizUinversa[1][3] = -((matrizU[1][2] * matrizUinversa[2][3]) + (matrizU[1][3] * matrizUinversa[3][3])) / matrizU[1][1];
                     matrizUinversa[0][3] = -((matrizU[0][1] * matrizUinversa[1][3]) + (matrizU[0][2] * matrizUinversa[2][3]) + (matrizU[0][3] * matrizUinversa[3][3])) / matrizU[0][0];
                 }
-                System.out.printf("%.4f ", matrizUinversa[i][j]);
             }
-            System.out.println();
         }
-        System.out.println("I-Q inversa");
         double[][] inversaIQ = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 inversaIQ[i][j] = 0;
                 for (int k = 0; k < 4; k++) {
                     inversaIQ[i][j] += matrizUinversa[i][k] * matrizLinversa[k][j];
-                }//end of k loop
-                System.out.printf("%.4f ", inversaIQ[i][j]);  //printing matrix element
-            }//end of j loop
-            System.out.println();
+                }
+            }
+
         }
         return inversaIQ;
     }
