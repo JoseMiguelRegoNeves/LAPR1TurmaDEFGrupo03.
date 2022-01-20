@@ -221,6 +221,19 @@ public class LAPR1TurmaDEFGrupo03 {
                         case 1 -> casosDia(totalMatrix, cabecalho);
                     }
                     System.out.println();
+                    System.out.println("Deseja guardar os dados em um ficheiro?");
+                    System.out.println("0 -> SIM");
+                    System.out.println("1 -> NÃO");
+                    int resposta = sc.nextInt();
+                    if (resposta != 0 && resposta != 1) {
+                        System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+                    } else {
+                        if (resposta == 0) {
+                            String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                            guardarFicheiro(nomeTipoFicheiro);
+                        }
+                    }
+                    System.out.println();
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
@@ -247,6 +260,19 @@ public class LAPR1TurmaDEFGrupo03 {
                         case 2 -> {
                             resultadosPeriodo = calculoDiferencaPeriodicaMes(acumulativoMatrix, posDi, posDf);
                             mostraDeResultados(resultadosPeriodo);
+                        }
+                    }
+                    System.out.println();
+                    System.out.println("Deseja guardar os dados em um ficheiro?");
+                    System.out.println("0 -> SIM");
+                    System.out.println("1 -> NÃO");
+                    int resposta = sc.nextInt();
+                    if (resposta != 0 && resposta != 1) {
+                        System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+                    } else {
+                        if (resposta == 0) {
+                            String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                            guardarFicheiro(nomeTipoFicheiro);
                         }
                     }
                     System.out.println();
@@ -283,6 +309,19 @@ public class LAPR1TurmaDEFGrupo03 {
                         mostraDeResultados(desvioPadrao);
                     }
                     System.out.println();
+                    System.out.println("Deseja guardar os dados em um ficheiro?");
+                    System.out.println("0 -> SIM");
+                    System.out.println("1 -> NÃO");
+                    int resposta = sc.nextInt();
+                    if (resposta != 0 && resposta != 1) {
+                        System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+                    } else {
+                        if (resposta == 0) {
+                            String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                            guardarFicheiro(nomeTipoFicheiro);
+                        }
+                    }
+                    System.out.println();
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
@@ -299,6 +338,19 @@ public class LAPR1TurmaDEFGrupo03 {
                         mostraPrevisaoPandemia(previsao);
                     }
                     System.out.println();
+                    System.out.println("Deseja guardar os dados em um ficheiro?");
+                    System.out.println("0 -> SIM");
+                    System.out.println("1 -> NÃO");
+                    int resposta = sc.nextInt();
+                    if (resposta != 0 && resposta != 1) {
+                        System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+                    } else {
+                        if (resposta == 0) {
+                            String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                            guardarFicheiro(nomeTipoFicheiro);
+                        }
+                    }
+                    System.out.println();
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
@@ -311,6 +363,19 @@ public class LAPR1TurmaDEFGrupo03 {
                         previsaoDiasAteMorrer(matrizTransicao);
                     }
                     System.out.println();
+                    System.out.println("Deseja guardar os dados em um ficheiro?");
+                    System.out.println("0 -> SIM");
+                    System.out.println("1 -> NÃO");
+                    int resposta = sc.nextInt();
+                    if (resposta != 0 && resposta != 1) {
+                        System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+                    } else {
+                        if (resposta == 0) {
+                            String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                            guardarFicheiro(nomeTipoFicheiro);
+                        }
+                    }
+                    System.out.println();
                     System.out.println("VOLTAR AO MENU -> 0");
                     System.out.println("FECHAR APLICAÇÃO -> 1");
                     endOrNot = sc.nextInt();
@@ -318,7 +383,6 @@ public class LAPR1TurmaDEFGrupo03 {
                 }
                 case 5 -> testesUnitarios();
             }
-            // ficheiro output
         }
     }
 
