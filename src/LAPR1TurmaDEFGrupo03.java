@@ -42,7 +42,6 @@ public class LAPR1TurmaDEFGrupo03 {
         // registoNumeroTotalCovid19.csv registoNumerosAcumuladosCovid19.csv matrizTransicao.txt nome_ficheiro_saida.txt.
         int res = -1, linhasTotalMatrix, linhasAcumulativoMatrix, posDi, posDi1, posDi2, posDf, posDf1, posDf2;
         String di = null, df = null, di1 = null, df1 = null, di2 = null, df2 = null, dia = null, output = null;
-        String[] cabecalho;
         String[] previsao;
         String[][] acumulativoMatrix = new String[9999][6];
         String[][] totalMatrix = new String[9999][6];
@@ -800,7 +799,6 @@ public class LAPR1TurmaDEFGrupo03 {
         }
         if (i == max + 1) {
             i = max;
-            k = 0;
             data.setTime((format.parse(matriz[i][0])));
             while (!String.valueOf(data).equals(date)) {
                 k++;
@@ -880,29 +878,23 @@ public class LAPR1TurmaDEFGrupo03 {
     public static double[][] decomposicaoLU(double[][] matrizIQ) {
         double[][] matrizL = new double[4][4];
         double[][] matrizU = new double[4][4];
-        for (int coluna = 0; coluna < 4; coluna++) {
-            for (int linha = 0; linha < 4; linha++) {
-                if (linha == coluna)
-                    matrizL[linha][coluna] = 1;
-                if (coluna == 0) {
-                    matrizU[coluna][linha] = matrizIQ[coluna][linha];
-                    matrizL[linha][coluna] = matrizIQ[linha][coluna] / matrizIQ[0][0];
+        for (int i = 0; i < matrizIQ.length; i++) {
+            matrizU[i][i] = 1;
+        }
+        for (int k = 0; k < matrizIQ.length; k++) {
+            for (int i = k; i < matrizIQ.length; i++) {
+                double temp = 0;
+                for (int r = 0; r < k; r++) {
+                    temp += matrizL[i][r] * matrizU[r][k];
                 }
-                if (coluna == 1) {
-                    matrizU[1][1] = matrizIQ[1][1] - matrizL[1][0] * matrizU[0][1];
-                    matrizL[2][1] = (matrizIQ[2][1] - matrizL[2][0] * matrizU[0][1]) / matrizU[1][1];
-                    matrizL[3][1] = (matrizIQ[3][1] - matrizL[3][0] * matrizU[0][1]) / matrizU[1][1];
+                matrizL[i][k] = matrizIQ[i][k] - temp;
+            }
+            for (int j = k + 1; j < matrizIQ.length; j++) {
+                double temp = 0;
+                for (int r = 0; r < k; r++) {
+                    temp += matrizL[k][r] * matrizU[r][j];
                 }
-                if (coluna == 2) {
-                    matrizU[1][2] = matrizIQ[1][2] - matrizL[1][0] * matrizU[0][2];
-                    matrizU[2][2] = matrizIQ[2][2] - matrizL[2][0] * matrizU[0][2] - matrizU[1][2] * matrizL[2][1];
-                    matrizL[3][2] = (matrizIQ[3][2] - matrizL[3][0] * matrizU[0][2] - matrizU[1][2] * matrizL[3][1]) / matrizU[2][2];
-                }
-                if (coluna == 3) {
-                    matrizU[1][3] = matrizIQ[1][3] - matrizL[1][0] * matrizU[0][3];
-                    matrizU[2][3] = matrizIQ[2][3] - matrizL[2][0] * matrizU[0][3] - matrizL[2][1] * matrizU[1][3];
-                    matrizU[3][3] = matrizIQ[3][3] - matrizL[3][0] * matrizU[0][3] - matrizL[3][2] * matrizU[2][3] - matrizU[1][3] * matrizL[3][1];
-                }
+                matrizU[k][j] = (matrizIQ[k][j] - temp) / matrizL[k][k];
             }
         }
         System.out.println("L");
