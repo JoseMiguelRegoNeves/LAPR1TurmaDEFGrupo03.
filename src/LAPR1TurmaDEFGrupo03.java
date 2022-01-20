@@ -1,9 +1,11 @@
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.Calendar;
 import java.lang.Math;
+import java.util.concurrent.TimeUnit;
 
 
 public class LAPR1TurmaDEFGrupo03 {
@@ -42,7 +44,7 @@ public class LAPR1TurmaDEFGrupo03 {
         // registoNumeroTotalCovid19.csv registoNumerosAcumuladosCovid19.csv matrizTransicao.txt nome_ficheiro_saida.txt.
         int res = -1, linhasTotalMatrix, linhasAcumulativoMatrix, posDi, posDi1, posDi2, posDf, posDf1, posDf2;
         String di = null, df = null, di1 = null, df1 = null, di2 = null, df2 = null, dia = null, output = null;
-        String[] previsao;
+        double[] previsao;
         String[][] acumulativoMatrix = new String[9999][6];
         String[][] totalMatrix = new String[9999][6];
         String[][] totalTemp, acumulativoTemp, difPer, resultadosPeriodo;
@@ -75,7 +77,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
                 //Previsão evolução da pandemia
                 previsao = previsaoPandemia(totalMatrix, matrizT, dia, linhasTotalMatrix);
-                mostraPrevisaoPandemia(previsao);
+                mostraPrevisaoPandemia(previsao, dia);
 
                 //Previsão dias até morrer
                 previsaoDiasAteMorrer(matrizT);
@@ -149,7 +151,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
                 //Previsão evolução da pandemia
                 previsao = previsaoPandemia(totalMatrix, matrizT, dia, linhasTotalMatrix);
-                mostraPrevisaoPandemia(previsao);
+                mostraPrevisaoPandemia(previsao, dia);
 
                 //Previsão dias até morrer
                 previsaoDiasAteMorrer(matrizT);
@@ -335,9 +337,9 @@ public class LAPR1TurmaDEFGrupo03 {
                     } else {
                         System.out.println("Indique o dia para o qual pretende realizar a previsão (DD-MM-AAAA): ");
                         String data = sc.nextLine();
-                        String[] previsao;
+                        double[] previsao;
                         previsao = previsaoPandemia(totalMatrix, matrizTransicao, data, linhasTotalMatrix);
-                        mostraPrevisaoPandemia(previsao);
+                        mostraPrevisaoPandemia(previsao, data);
                     }
                     System.out.println();
                     System.out.println("Deseja guardar os dados em um ficheiro?");
@@ -778,66 +780,81 @@ public class LAPR1TurmaDEFGrupo03 {
         return matrizT;
     }
 
-    public static String[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date, int max) throws ParseException {
-        String formatString = "dd-MM-yyyy";
-        int i = 0, k = 0;
-        String[] previsao = new String[6];
-        double[][] matrizP = new double[6][6];
-        System.arraycopy(matrizT, 0, matrizP, 0, 5);
-        SimpleDateFormat format = new SimpleDateFormat(formatString);
-        Calendar data = Calendar.getInstance();
-        data.setTime((format.parse(matriz[i][0])));
-        while (i < matriz.length && (String.valueOf(data) != date)) {
-            i++;
-            if ( i >= matriz.length){
-                break;
-            }
-            data.setTime((format.parse(matriz[i][0])));
-            if (String.valueOf(data).equals(date)) {
-                break;
-            }
-        }
-        if (i == max + 1) {
-            i = max;
-            data.setTime((format.parse(matriz[i][0])));
-            while (!String.valueOf(data).equals(date)) {
-                k++;
-                data.add(Calendar.DATE, 1);
-            }
-        } else if (i == 0) {
-            System.out.println("Não há dias antecedentes.");
+    public static double[][] produtoMatrizes(double[][] matriz1, double[][] matriz2, int tamanho) {
 
-        } else {
-            i--;
-            k = 1;
-        }
-        for (int p = 2; p <= k; p++) {
-            for (int j = 0; j < matrizT.length; j++) {
-                for (int l = 0; l < matrizT[0].length; l++) {
-                    for (int m = 0; m < matrizT[0].length; m++) {
-                        matrizP[j][l] = matrizP[j][m] * matrizT[m][l];
-                    }
+        double[][] matrizProduto = new double[tamanho][tamanho];
+
+        for (int l = 0; l < tamanho; l++) {
+            for (int c = 0; c < tamanho; c++) {
+                double soma = 0;
+                for (int i = 0; i < tamanho; i++) {
+                    double produto = matriz1[l][i] * matriz2[i][c];
+                    soma += produto;
                 }
+                matrizProduto[l][c] = soma;
             }
         }
-        for (int j = 0; j < 5; j++) {
-            for (int l = 0; l < 5; l++) {
-                previsao[j+1] = String.valueOf((Double.parseDouble(matriz[i][l+1]) * matrizP[l][j]));
+
+        return matrizProduto;
+    }
+
+    public static double[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date, int max) throws ParseException {
+        String formatString = "dd-MM-yyyy";
+        int last = -1;
+        double soma;
+        double[] previsao = new double[5];
+        double[][] matrizP = new double[6][6];
+        double[][] matrizAux;
+        double[] lastDate = new double[6];
+
+        for (int i = 0; i < matriz.length; i++) {
+            if(date.equals(matriz[i][0])) {
+                last = i-1;
             }
         }
-        previsao[0] = date;
+        if(last==-1){
+            last = matriz.length;
+        }
+
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        Date dataAnterior = format.parse(matriz[last][0]);
+        Date dataPrev = format.parse(date);
+
+
+        long dif = Math.abs(dataPrev.getTime() - dataAnterior.getTime());
+        long k = TimeUnit.DAYS.convert(dif, TimeUnit.MILLISECONDS);
+
+        for (int i = 1; i < matriz[0].length; i++) {
+            lastDate[i-1] = Double.parseDouble(matriz[last][i]);
+        }
+
+        matrizP = matrizT;
+
+        for (int linha = 0; linha < k - 1; linha++) {
+            matrizAux= produtoMatrizes(matrizP, matrizT, 6);
+            matrizP = matrizAux;
+        }
+
+        for (int l = 0; l < matrizP.length; l++) {
+            soma = 0;
+            for (int c = 0; c < matrizP.length; c++) {
+                soma += matrizP[l][c] * lastDate[c];
+            }
+            previsao[l] =soma;
+        }
+
         return previsao;
     }
 
-    public static void mostraPrevisaoPandemia(String[] previsao) {
+    public static void mostraPrevisaoPandemia(double[] previsao, String data) {
         System.out.println("――――――――――   P R E V I S Ã O   D A   P A N D E M I A   ――――――――――");
         System.out.println();
-        System.out.println("Data da Previsão -> " + previsao[0]);
-        System.out.println("Número de Não Infetados -> " + previsao[1]);
-        System.out.println("Número de Infetados -> " + previsao[2]);
-        System.out.println("Número de Hospitalizados -> " + previsao[3]);
-        System.out.println("Número de Internados em Unidade de Cuidados Intensivos -> " + previsao[4]);
-        System.out.println("Número de Óbitos -> " + previsao[5]);
+        System.out.println("Data da Previsão -> " + data);
+        System.out.println("Número de Não Infetados -> " + previsao[0]);
+        System.out.println("Número de Infetados -> " + previsao[1]);
+        System.out.println("Número de Hospitalizados -> " + previsao[2]);
+        System.out.println("Número de Internados em Unidade de Cuidados Intensivos -> " + previsao[3]);
+        System.out.println("Número de Óbitos -> " + previsao[4]);
     }
 
     public static double[][] subtracaoMatrizTransicao(double[][] matrizT) {
@@ -911,7 +928,9 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             System.out.println();
         }
+
         System.out.println("L inversa");
+
         double[][] matrizLinversa = new double[4][4];
         matrizLinversa[0][1] = matrizLinversa[0][2] = matrizLinversa[1][2] = matrizLinversa[0][3] = matrizLinversa[1][3] = matrizLinversa[2][3] = 0;
         for (int i = 0; i < 4; i++) {
@@ -929,28 +948,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             System.out.println();
         }
-        /*
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (i == j) {
-                    matrizLinversa[i][j] = 1;
-                }
-                if (i < j) {
-                    matrizLinversa[i][j] = 0;
-                }
-                if (i > j) {
-                    matrizLinversa[1][0] = -(matrizL[1][0] / matrizL[1][1]);
-                    matrizLinversa[2][0] = -(matrizL[2][0] + (matrizLinversa[1][0] * matrizL[2][1]));
-                    matrizLinversa[3][0] = -(matrizL[3][0] + (matrizL[3][1] * matrizLinversa[1][0]) + (matrizL[3][2] * matrizLinversa[2][0]));
-                    matrizLinversa[2][1] = -matrizL[2][1] / matrizL[2][2];
-                    matrizLinversa[3][1] = -matrizL[3][1] - (matrizL[3][2] * matrizLinversa[2][1]);
-                    matrizLinversa[3][2] = -matrizL[3][2];
-                }
-                System.out.printf("%.4f ", matrizLinversa[i][j]);
-            }
-            System.out.println();
-        }
-        */
+
         System.out.println("U inversa");
 
         double[][] matrizUinversa = new double[4][4];
