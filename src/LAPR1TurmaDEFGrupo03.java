@@ -506,7 +506,7 @@ public class LAPR1TurmaDEFGrupo03 {
     public static String[][] calculoDiferencaPeriodicaDiaria(String[][] matrizDatas, int di, int df, int step) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
-        String[][] matrizDiferenca = new String[(df - di) + 1][6];
+        String[][] matrizDiferenca = new String[(df - di)][6];
         int aux = 0;
         int j = di;
         int a = 0;
