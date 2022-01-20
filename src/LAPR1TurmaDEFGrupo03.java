@@ -316,9 +316,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     endOrNot = sc.nextInt();
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
-                case 5 -> {
-                    testesUnitários();
-                }
+                case 5 -> testesUnitarios();
             }
             // ficheiro output
         }
@@ -736,7 +734,7 @@ public class LAPR1TurmaDEFGrupo03 {
         Calendar data = Calendar.getInstance();
         while (i < matriz.length) {
             data.setTime((format.parse(matriz[i][0])));
-            if (data.equals(date)) {
+            if (String.valueOf(data).equals(date)) {
                 break;
             }
             i++;
@@ -745,7 +743,7 @@ public class LAPR1TurmaDEFGrupo03 {
             i = max;
             k = 0;
             data.setTime((format.parse(matriz[i][0])));
-            while (!data.equals(date)) {
+            while (!String.valueOf(data).equals(date)) {
                 k++;
                 data.add(Calendar.DATE, 1);
             }
@@ -985,7 +983,7 @@ public class LAPR1TurmaDEFGrupo03 {
         outputFile.close();
     }
 
-    public static void testesUnitários(){
+    public static void testesUnitarios(){
         System.out.println("Bom-vindo aos testes unitários!");
         if (ValidarData("2020-04-01") == 0 | ValidarData("2020-04-01") == 1){
             System.out.println("ValidarData: WORKING");
