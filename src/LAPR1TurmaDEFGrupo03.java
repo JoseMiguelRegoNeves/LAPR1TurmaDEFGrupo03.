@@ -7,13 +7,10 @@ import java.util.concurrent.TimeUnit;
 
 
 public class LAPR1TurmaDEFGrupo03 {
-    //CAMINHO JOANA C:\\Users\\joana\\OneDrive\\Ambiente de Trabalho\\exemploRegistoNumerosCovid19.csv
 
     //CAMINHOS MIGUEL ACOMULATIVO C:\Users\Miguel\IdeaProjects\LAPR1_TurmaDEF_Grupo03\src\exemploRegistoNumerosCovid19.csv
     //CAMINHOS MIGUEL TOTAL C:\Users\Miguel\IdeaProjects\LAPR1_TurmaDEF_Grupo03\src\totalPorEstadoCovid19EmCadaDia.csv
     //CAMINHOS MIGUEL TRANSIÇÃO C:\Users\Miguel\IdeaProjects\LAPR1_TurmaDEF_Grupo03\src\MatrizTransicao.txt
-
-    //CAMINHO BRUNA C:\Users\Bruna\Downloads\exemploRegistoNumerosCovid19.csv
 
     public static void main(String[] args) throws IOException, ParseException {
 
@@ -39,18 +36,16 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static void modoNaoInterativo(String[] args) throws ParseException, IOException {
-        // java -jar nome programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA -di1 DD-MMAAAA -df1 DD-MM-AAAA -di2 DD-MM-AAAA -df2 DD-MM-AAAA -T DD-MM-AAAA
-        // registoNumeroTotalCovid19.csv registoNumerosAcumuladosCovid19.csv matrizTransicao.txt nome_ficheiro_saida.txt.
         int res = -1, linhasTotalMatrix, linhasAcumulativoMatrix, posDi, posDi1, posDi2, posDf, posDf1, posDf2;
-        int difComp = 0;
+        int difComp;
         String di = null, df = null, di1 = null, df1 = null, di2 = null, df2 = null, dia = null, output = null;
         String[] previsao, previsaoDiaMorte;
         String[][] acumulativoMatrix = new String[9999][6];
         String[][] totalMatrix = new String[9999][6];
         String[][] totalTemp, acumulativoTemp, difPer;
         String[] data = new String[1];
-        String[][] desvioPadrao = new String[1][17];
-        String[][] media = new String[1][17];
+        String[][] desvioPadrao;
+        String[][] media;
         String[][] cabecalhoCompPer = new String[1][17];
         cabecalhoCompPer[0][0] = "DataPer1"; cabecalhoCompPer[0][1] = "NãoInfetados"; cabecalhoCompPer[0][2] = "Infetados"; cabecalhoCompPer[0][3] = "Internados"; cabecalhoCompPer[0][4] = "UCI"; cabecalhoCompPer[0][5] = "Óbitos";
         cabecalhoCompPer[0][6] = "DataPer2"; cabecalhoCompPer[0][7] = "NãoInfetados"; cabecalhoCompPer[0][8] = "Infetados"; cabecalhoCompPer[0][9] = "Internados"; cabecalhoCompPer[0][10] = "UCI"; cabecalhoCompPer[0][11] = "Óbitos";
@@ -72,7 +67,7 @@ public class LAPR1TurmaDEFGrupo03 {
             if (i == (args.length - 1)) output = args[i];
         }
         switch (args.length) {
-            case 5 -> {                                                                                                 //COMPLETO
+            case 5 -> {
                 //Recolha Matrizes
                 //Rgisto Numeros Total Covid19.
                 linhasTotalMatrix = Scann(args[2], totalMatrix);
@@ -94,7 +89,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 previsaoDiaMorte = previsaoDiasAteMorrer(matrizT);
                 guardarFicheiro(output, previsaoDiaMorte);
             }
-            case 16 -> {                                                                                                //INCOMPLETO
+            case 16 -> {
                 //Recolha Matrizes
                 //Registo Numeros Acumulados Covid19.
                 linhasAcumulativoMatrix = Scann(args[14], acumulativoMatrix);
@@ -159,8 +154,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     guardarFicheiro(output, desvioPadrao[i]);
                 }
             }
-            case 20 -> {                                                                                                //INCOMPLETO
-                //Recolha Matrizes
+            case 20 -> {
                 //Rgisto Numeros Total Covid19.
                 linhasTotalMatrix = Scann(args[16], totalMatrix);
                 totalTemp = new String[linhasTotalMatrix][6];
@@ -204,7 +198,6 @@ public class LAPR1TurmaDEFGrupo03 {
                 posDf1 = posicaoDatas(acumulativoMatrix, df1);
                 posDi2 = posicaoDatas(acumulativoMatrix, di2);
                 posDf2 = posicaoDatas(acumulativoMatrix, df2);
-                difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
 
                 if (posDf1 - posDi1 > posDf2 - posDi2) {
                     difComp = posDf2 - posDi2;
@@ -628,7 +621,7 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static int Scann(String caminho, String[][] ficheiro) throws FileNotFoundException {
-        Scanner sc = new Scanner(new File(caminho));         // Verificar o número de linhas
+        Scanner sc = new Scanner(new File(caminho));
         String line;
         int j = 0;
         sc.nextLine();
