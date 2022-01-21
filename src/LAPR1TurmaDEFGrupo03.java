@@ -1,9 +1,7 @@
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.Calendar;
+import java.util.*;
 import java.lang.Math;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +16,7 @@ public class LAPR1TurmaDEFGrupo03 {
     //CAMINHO BRUNA C:\Users\Bruna\Downloads\exemploRegistoNumerosCovid19.csv
 
     public static void main(String[] args) throws IOException, ParseException {
+
         int MOD = verificacaoModo(args);
         switch (MOD) {
             case 0 -> {
@@ -44,7 +43,7 @@ public class LAPR1TurmaDEFGrupo03 {
         // registoNumeroTotalCovid19.csv registoNumerosAcumuladosCovid19.csv matrizTransicao.txt nome_ficheiro_saida.txt.
         int res = -1, linhasTotalMatrix, linhasAcumulativoMatrix, posDi, posDi1, posDi2, posDf, posDf1, posDf2;
         String di = null, df = null, di1 = null, df1 = null, di2 = null, df2 = null, dia = null, output = null;
-        double[] previsao;
+        String[] previsao;
         String[][] acumulativoMatrix = new String[9999][6];
         String[][] totalMatrix = new String[9999][6];
         String[][] totalTemp, acumulativoTemp, difPer, resultadosPeriodo;
@@ -217,14 +216,15 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("0 -> Casos Covid19 Acumulativo");
                     System.out.println("1 -> Novos Casos Covid19");
                     int tipoDados = sc.nextInt();
+                    String[] casosD = new String[6];
                     switch (tipoDados) {
                         case 0: {
                             String formato = "yyyy-MM-dd";
-                            casosDia(acumulativoMatrix, cabecalho, formato);
+                            casosD = casosDia(acumulativoMatrix, cabecalho, formato);
                         }
                         case 1: {
                             String formato = "dd-MM-yyy";
-                            casosDia(totalMatrix, cabecalho, formato);
+                            casosD = casosDia(totalMatrix, cabecalho, formato);
                         }
                     }
                     System.out.println();
@@ -237,7 +237,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     } else {
                         if (resposta == 0) {
                             String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
-                            guardarFicheiro(nomeTipoFicheiro);
+                            guardarFicheiro(nomeTipoFicheiro, casosD);
                         }
                     }
                     System.out.println();
@@ -283,7 +283,7 @@ public class LAPR1TurmaDEFGrupo03 {
                         } else {
                             if (resposta == 0) {
                                 String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
-                                guardarFicheiro(nomeTipoFicheiro);
+                                guardarFicheiro(nomeTipoFicheiro, resultadosPeriodo);
                             }
                         }
                     }
@@ -294,11 +294,13 @@ public class LAPR1TurmaDEFGrupo03 {
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
                 case 2 -> { //Analisar dados comparativamente a outro periodo de tempo
+                    String formato = "yyyy-MM-dd";
+                    String[][] difPer;
+                    String[][] desvioPadrao = new String[1][17];
+                    String[][] media = new String[1][17];
                     if (uploadMOD == 1) {
                         System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não possui dados suficientes!");
                     } else {
-                        String formato = "yyyy-MM-dd";
-                        String[][] difPer, media, desvioPadrao;
                         System.out.println("Indique a data de início do 1º Periodo (AAAA-MM-DD): ");
                         String di1 = recolhaData(formato);
                         int posDi1 = posicaoDatas(acumulativoMatrix, di1);
@@ -330,7 +332,21 @@ public class LAPR1TurmaDEFGrupo03 {
                     } else {
                         if (resposta == 0) {
                             String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
-                            guardarFicheiro(nomeTipoFicheiro);
+                            for (int i = 0; i < difPer.length; i++) {
+                                guardarFicheiro(nomeTipoFicheiro,difPer[i]);
+                            }
+                            String[] mediaCabecalho = new String[media.length];
+                            mediaCabecalho[0] = "MÉDIA ↓";
+                            guardarFicheiro(nomeTipoFicheiro,mediaCabecalho);
+                            for (int i = 0; i < media.length; i++) {
+                                guardarFicheiro(nomeTipoFicheiro,media[i]);
+                            }
+                            String[] mediaDP = new String[desvioPadrao.length];
+                            mediaDP[0] = "DESVIO PADRÃO ↓";
+                            guardarFicheiro(nomeTipoFicheiro, mediaDP);
+                            for (int i = 0; i < desvioPadrao.length; i++) {
+                                guardarFicheiro(nomeTipoFicheiro,desvioPadrao[i]);
+                            }
                         }
                     }
                     System.out.println();
@@ -340,14 +356,15 @@ public class LAPR1TurmaDEFGrupo03 {
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
                 case 3 -> {
+                    String[] data = new String[1];
+                    String[] previsao = new String[5];
                     if (uploadMOD == 0 || (matrizTransicao[0][0] == 0 && matrizTransicao[1][1] == 0 && matrizTransicao[2][2] == 0 && matrizTransicao[3][3] == 0 && matrizTransicao[4][4] == 0)) {
                         System.out.println("OPERAÇÃO INVÁLIDA: Ficheiro armazenado não pode ser utilizado para fazer previsões!");
                     } else {
                         System.out.println("Indique o dia para o qual pretende realizar a previsão (DD-MM-AAAA): ");
-                        String data = sc.nextLine();
-                        double[] previsao;
-                        previsao = previsaoPandemia(totalMatrix, matrizTransicao, data);
-                        mostraPrevisaoPandemia(previsao, data);
+                        data[0] = sc.nextLine();
+                        previsao = previsaoPandemia(totalMatrix, matrizTransicao, data[0]);
+                        mostraPrevisaoPandemia(previsao, data[0]);
                     }
                     System.out.println();
                     System.out.println("Deseja guardar os dados em um ficheiro?");
@@ -359,7 +376,8 @@ public class LAPR1TurmaDEFGrupo03 {
                     } else {
                         if (resposta == 0) {
                             String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
-                            guardarFicheiro(nomeTipoFicheiro);
+                            guardarFicheiro(nomeTipoFicheiro, data);
+                            guardarFicheiro(nomeTipoFicheiro, previsao);
                         }
                     }
                     System.out.println();
@@ -369,10 +387,25 @@ public class LAPR1TurmaDEFGrupo03 {
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
                 case 4 -> {
+                    String[] previsao = new String[5];
                     if (matrizTransicao[0][0] == 0 && matrizTransicao[1][1] == 0 && matrizTransicao[2][2] == 0 && matrizTransicao[3][3] == 0 && matrizTransicao[4][4] == 0) {
                         System.out.println("OPERAÇÃO INVÁLIDA: Não foram introduzidos dados suficientes para obter o resultado desejado!");
                     } else {
-                        previsaoDiasAteMorrer(matrizTransicao);
+                        previsao = previsaoDiasAteMorrer(matrizTransicao);
+                        mostrarDiasAteMorrer(previsao);
+                    }
+                    System.out.println();
+                    System.out.println("Deseja guardar os dados em um ficheiro?");
+                    System.out.println("0 -> SIM");
+                    System.out.println("1 -> NÃO");
+                    int resposta = sc.nextInt();
+                    if (resposta != 0 && resposta != 1) {
+                        System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
+                    } else {
+                        if (resposta == 0) {
+                            String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                            guardarFicheiro(nomeTipoFicheiro, previsao);
+                        }
                     }
                     System.out.println();
                     System.out.println("0 -> VOLTAR AO MENU");
@@ -435,7 +468,7 @@ public class LAPR1TurmaDEFGrupo03 {
         return sc.nextInt();
     }
 
-    public static void casosDia(String[][] matrix, String[] cabecalho, String formato) {
+    public static String[] casosDia(String[][] matrix, String[] cabecalho, String formato) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Indique o dia (" + formato + "):");
         String dia = sc.nextLine();
@@ -445,6 +478,7 @@ public class LAPR1TurmaDEFGrupo03 {
             System.out.print(cabecalho[i] + " -> " + matrix[posDia][i]);
             System.out.println();
         }
+        return matrix[posDia];
     }
 
     public static int resolucaoInterface() {
@@ -659,34 +693,36 @@ public class LAPR1TurmaDEFGrupo03 {
 
         for (int i = posdi1; i <= posdf1; i++) {
             System.arraycopy(datas[i], 0, difPer[j], 0, 6);
-            j++;
+            String.format("%.4", difPer[j]);
+                    j++;
             if (j > dimComp) break;
         }
         j = 0;
         for (int i = posdi2; i <= posdf2; i++) {
             System.arraycopy(datas[i], 0, difPer[j], 6, 6);
+            String.format("%.4", difPer[j]);
             j++;
             if (j > dimComp) break;
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][12] = String.valueOf(Integer.parseInt(difPer[i][7]) - Integer.parseInt(difPer[i][1]));
+            difPer[i][12] = String.format("%.4", Integer.parseInt(difPer[i][7]) - Integer.parseInt(difPer[i][1]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][13] = String.valueOf(Integer.parseInt(difPer[i][8]) - Integer.parseInt(difPer[i][2]));
+            difPer[i][13] = String.format("%.4", Integer.parseInt(difPer[i][8]) - Integer.parseInt(difPer[i][2]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][14] = String.valueOf(Integer.parseInt(difPer[i][9]) - Integer.parseInt(difPer[i][3]));
+            difPer[i][14] = String.format("%.4", Integer.parseInt(difPer[i][9]) - Integer.parseInt(difPer[i][3]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][15] = String.valueOf(Integer.parseInt(difPer[i][10]) - Integer.parseInt(difPer[i][4]));
+            difPer[i][15] = String.format("%.4", Integer.parseInt(difPer[i][10]) - Integer.parseInt(difPer[i][4]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][16] = String.valueOf(Integer.parseInt(difPer[i][11]) - Integer.parseInt(difPer[i][5]));
+            difPer[i][16] = String.format("%.4", Integer.parseInt(difPer[i][11]) - Integer.parseInt(difPer[i][5]));
         }
         return difPer;
     }
@@ -699,14 +735,14 @@ public class LAPR1TurmaDEFGrupo03 {
             int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
-                media[0][i] = String.valueOf(soma / difPer.length);
+                media[0][i] = String.format("%.4", soma / difPer.length);
             }
         }
         for (int i = 7; i < difPer[0].length; i++) {
             int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
-                media[0][i] = String.valueOf(soma / difPer.length);
+                media[0][i] = String.format("%.4", soma / difPer.length);
             }
         }
         return media;
@@ -737,7 +773,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             fracao = denominador / difPer.length;
             dp = Math.sqrt(fracao);
-            desvioPadrao[0][i] = String.valueOf(dp);
+            desvioPadrao[0][i] = String.format("%.4", dp);
         }
         return desvioPadrao;
     }
@@ -826,10 +862,10 @@ public class LAPR1TurmaDEFGrupo03 {
         return pot;
     }
 
-    public static double[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date) throws ParseException {
+    public static String[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date) throws ParseException {
         int existe = 0, pos = 0, k;
         double soma;
-        double[] previsao = new double[5];
+        String[] previsao = new String[5];
         double[][] matrizP = new double[5][5];
         double[][] matrizDados = new double[matriz.length][matriz[0].length - 1];
 
@@ -858,7 +894,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 for (int j = 0; j < matrizP[0].length; j++) {
                     soma = soma + matrizDia[j] * matrizP[i][j];
                 }
-                previsao[i] = soma;
+                previsao[i] = String.format("%.4", soma);
             }
         } else {
             System.arraycopy(matrizDados[matriz.length - 1], 0, matrizDia, 0, 5);
@@ -869,13 +905,13 @@ public class LAPR1TurmaDEFGrupo03 {
                 for (int j = 0; j < pot[0].length; j++) {
                     soma += matrizDia[j] * pot[i][j];
                 }
-                previsao[i]=soma;
+                previsao[i] = String.format("%.4", soma);
             }
         }
         return previsao;
     }
 
-    public static void mostraPrevisaoPandemia(double[] previsao, String data) {
+    public static void mostraPrevisaoPandemia(String[] previsao, String data) {
         System.out.println("――――――――――   P R E V I S Ã O   D A   P A N D E M I A   ――――――――――");
         System.out.println();
         System.out.println("Data da Previsão -> " + data);
@@ -980,34 +1016,26 @@ public class LAPR1TurmaDEFGrupo03 {
         return inversaIQ;
     }
 
-    public static void previsaoDiasAteMorrer(double[][] matrizT) throws FileNotFoundException {
-        Scanner sc = new Scanner(System.in);
-        double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
-        double[][] diasAteMorrer = new double[1][4];
+    public static String[] previsaoDiasAteMorrer(double[][] matrizT) {
 
-        diasAteMorrer[0][0] = matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0];
-        diasAteMorrer[0][1] = matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1];
-        diasAteMorrer[0][2] = matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2];
-        diasAteMorrer[0][3] = matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3];
+        double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
+        String[] diasAteMorrer = new String[4];
+
+        diasAteMorrer[0] = String.format("%.4", matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0]);
+        diasAteMorrer[1] = String.format("%.4", matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1]);
+        diasAteMorrer[2] = String.format("%.4", matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2]);
+        diasAteMorrer[3] = String.format("%.4", matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3]);
+         return diasAteMorrer;
+    }
+
+    public static void mostrarDiasAteMorrer (String[] diasAteMorrer) throws FileNotFoundException {
+        Scanner sc = new Scanner(System.in);
         System.out.println("――――――――――――   A T É   C H E G A R   A   Ó B I T O   ――――――――――――");
         System.out.println();
-        System.out.println("Dias de um Não Infetado -> " + diasAteMorrer[0][0]);
-        System.out.println("Dias de um Infetado -> " + diasAteMorrer[0][1]);
-        System.out.println("Dias de um Hospitalizado -> " + diasAteMorrer[0][2]);
-        System.out.println("Dias de um Internado em Unidade de Cuidados Intensivos -> " + diasAteMorrer[0][3]);
-        System.out.println();
-        System.out.println("Deseja guardar os dados em um ficheiro?");
-        System.out.println("0 -> SIM");
-        System.out.println("1 -> NÃO");
-        int resposta = sc.nextInt();
-        if (resposta != 0 && resposta != 1) {
-            System.out.println("OPERAÇÃO INVÁLIDA: Selecione outra opção.");
-        } else {
-            if (resposta == 0) {
-                String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
-                guardarFicheiro(nomeTipoFicheiro);
-            }
-        }
+        System.out.println("Dias de um Não Infetado -> " + diasAteMorrer[0]);
+        System.out.println("Dias de um Infetado -> " + diasAteMorrer[1]);
+        System.out.println("Dias de um Hospitalizado -> " + diasAteMorrer[2]);
+        System.out.println("Dias de um Internado em Unidade de Cuidados Intensivos -> " + diasAteMorrer[3]);
     }
 
     public static String nomeTipoFicheiroGuardar() {
@@ -1033,14 +1061,19 @@ public class LAPR1TurmaDEFGrupo03 {
         return nomeficheiro.concat(tipoficheiro);
     }
 
-    public static void guardarFicheiro(String output) throws FileNotFoundException {
-        PrintWriter outputFile = new PrintWriter(output);
+    public static void guardarFicheiro(String output, String[] imprimir) throws IOException {
+       FileWriter fich = new FileWriter(new File(output), true);
+        String linha = null;
+//        for (int i = 0; i < ; i++) {
+//            outputFile.println();
+//        }
+        for (int i = 0; i < imprimir.length; i++) {
 
-        /*for (int i = 0; i < ; i++) {
-            outputFile.println();
-        }*/
+        }
 
-        outputFile.close();
+        fich.write(linha);
+
+        fich.close();
     }
 
     public static void testesUnitarios() {
