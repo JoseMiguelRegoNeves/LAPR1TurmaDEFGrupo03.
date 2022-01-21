@@ -76,7 +76,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 matrizT = matrizTransicao(args[3]);
 
                 //Previsão evolução da pandemia
-                previsao = previsaoPandemia(totalMatrix, matrizT, dia, linhasTotalMatrix);
+                previsao = previsaoPandemia(totalMatrix, matrizT, dia);
                 mostraPrevisaoPandemia(previsao, dia);
 
                 //Previsão dias até morrer
@@ -150,7 +150,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
 
                 //Previsão evolução da pandemia
-                previsao = previsaoPandemia(totalMatrix, matrizT, dia, linhasTotalMatrix);
+                previsao = previsaoPandemia(totalMatrix, matrizT, dia);
                 mostraPrevisaoPandemia(previsao, dia);
 
                 //Previsão dias até morrer
@@ -170,7 +170,7 @@ public class LAPR1TurmaDEFGrupo03 {
         String[] cabecalho;
         String[][] acumulativoMatrix = new String[9999][6];
         String[][] totalMatrix = new String[9999][6];
-        int linhasTotalMatrix = 0;
+        int linhasTotalMatrix;
         int linhasAcumulativoMatrix;
         switch (uploadMOD) {
             case 0 -> {
@@ -346,7 +346,7 @@ public class LAPR1TurmaDEFGrupo03 {
                         System.out.println("Indique o dia para o qual pretende realizar a previsão (DD-MM-AAAA): ");
                         String data = sc.nextLine();
                         double[] previsao;
-                        previsao = previsaoPandemia(totalMatrix, matrizTransicao, data, linhasTotalMatrix);
+                        previsao = previsaoPandemia(totalMatrix, matrizTransicao, data);
                         mostraPrevisaoPandemia(previsao, data);
                     }
                     System.out.println();
@@ -496,9 +496,7 @@ public class LAPR1TurmaDEFGrupo03 {
         while (sc.hasNextLine()) {
             line = sc.nextLine();
             String[] vetline = line.split(",");
-            for (int i = 0; i < 6; i++) {
-                ficheiro[j][i] = vetline[i];
-            }
+            System.arraycopy(vetline, 0, ficheiro[j], 0, 6);
             j++;
         }
         return j;
@@ -591,9 +589,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
         }
         if (domingos[0] < segundas[0]) {
-            for (int j = 0; j < auxd - 1; j++) {
-                domingos[j] = domingos[j + 1];
-            }
+            if (auxd - 1 >= 0) System.arraycopy(domingos, 1, domingos, 0, auxd - 1);
             countDomingos--;
         }
         max = Math.min(countDomingos, countSegundas);
@@ -637,9 +633,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
         }
         if (ultDias[0] < primDias[0]) {
-            for (int j = 0; j < auxud - 1; j++) {
-                ultDias[j] = primDias[j + 1];
-            }
+            if (auxud - 1 >= 0) System.arraycopy(primDias, 1, ultDias, 0, auxud - 1);
             countUltDias--;
         }
         max = Math.min(countUltDias, countPrimDias);
@@ -664,17 +658,13 @@ public class LAPR1TurmaDEFGrupo03 {
         String[][] difPer = new String[dimComp][17];
 
         for (int i = posdi1; i <= posdf1; i++) {
-            for (int k = 0; k < 6; k++) {
-                difPer[j][k] = datas[i][k];
-            }
+            System.arraycopy(datas[i], 0, difPer[j], 0, 6);
             j++;
             if (j > dimComp) break;
         }
         j = 0;
         for (int i = posdi2; i <= posdf2; i++) {
-            for (int k = 0; k < 6; k++) {
-                difPer[j][k + 6] = datas[i][k];
-            }
+            System.arraycopy(datas[i], 0, difPer[j], 6, 6);
             j++;
             if (j > dimComp) break;
         }
@@ -787,23 +777,6 @@ public class LAPR1TurmaDEFGrupo03 {
         return matrizT;
     }
 
-    /*public static double[][] produtoMatrizes(double[][] matriz1, double[][] matriz2, int tamanho) {
-
-        double[][] matrizProduto = new double[tamanho][tamanho];
-
-        for (int l = 0; l < tamanho; l++) {
-            for (int c = 0; c < tamanho; c++) {
-                double soma = 0;
-                for (int i = 0; i < tamanho; i++) {
-                    double produto = matriz1[l][i] * matriz2[i][c];
-                    soma += produto;
-                }
-                matrizProduto[l][c] = soma;
-            }
-        }
-
-        return matrizProduto;
-    }*/
     public static int diasAteData(String dataInicial, String dataFinal) throws ParseException {
         String formatString = "dd-MM-yyyy";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
@@ -838,9 +811,7 @@ public class LAPR1TurmaDEFGrupo03 {
         final int LINHAS = matriz.length, COLUNAS = matriz[0].length;
         double[][] copia = new double[LINHAS][COLUNAS];
         for (int linha = 0; linha < LINHAS; linha++) {
-            for (int coluna = 0; coluna < COLUNAS; coluna++) {
-                copia[linha][coluna] = matriz[linha][coluna];
-            }
+            System.arraycopy(matriz[linha], 0, copia[linha], 0, COLUNAS);
         }
         return copia;
     }
@@ -856,9 +827,7 @@ public class LAPR1TurmaDEFGrupo03 {
         return pot;
     }
 
-    public static double[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date, int max) throws ParseException {
-        String formatString = "dd-MM-yyyy";
-        SimpleDateFormat format = new SimpleDateFormat(formatString);
+    public static double[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date) throws ParseException {
         int existe = 0, pos = 0, k;
         double soma;
         double[] previsao = new double[5];
@@ -872,9 +841,7 @@ public class LAPR1TurmaDEFGrupo03 {
         }
 
         for (int l = 0; l < matrizT.length; l++) {
-            for (int c = 0; c < matrizT[0].length; c++) {
-                matrizP[l][c] = matrizT[l][c];
-            }
+            System.arraycopy(matrizT[l], 0, matrizP[l], 0, matrizT[0].length);
         }
 
         for (int i = 0; i < matriz.length; i++) {
@@ -884,11 +851,9 @@ public class LAPR1TurmaDEFGrupo03 {
             }
         }
 
+        double[] matrizDia = new double[5];
         if (existe == 1) {
-            double[] matrizDia = new double[5];
-            for (int i = 0; i < 5; i++) {
-                matrizDia[i] = matrizDados[pos - 1][i];
-            }
+            System.arraycopy(matrizDados[pos - 1], 0, matrizDia, 0, 5);
             for (int i = 0; i < matrizP.length; i++) {
                 soma = 0;
                 for (int j = 0; j < matrizP[0].length; j++) {
@@ -897,10 +862,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 previsao[i] = soma;
             }
         } else {
-            double[] matrizDia = new double[5];
-            for (int i = 0; i < 5; i++) {
-                matrizDia[i] = matrizDados[matriz.length - 1][i];
-            }
+            System.arraycopy(matrizDados[matriz.length - 1], 0, matrizDia, 0, 5);
             k = diasAteData(matriz[0][matriz.length - 1], date);
             double[][] pot = matrixCopy(potencia(matrizP, k));
             for (int i = 0; i < pot.length; i++) {
@@ -940,10 +902,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
         }
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                matrizQ[i][j] = matrizT[i][j];
-
-            }
+            System.arraycopy(matrizT[i], 0, matrizQ[i], 0, 4);
 
         }
         for (int i = 0; i < 4; i++) {
@@ -1027,7 +986,7 @@ public class LAPR1TurmaDEFGrupo03 {
         Scanner sc = new Scanner(System.in);
         double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         double[][] diasAteMorrer = new double[1][4];
-        double[][] vetor = new double[1][4];
+
         diasAteMorrer[0][0] = matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0];
         diasAteMorrer[0][1] = matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1];
         diasAteMorrer[0][2] = matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2];
