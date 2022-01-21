@@ -907,7 +907,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 for (int j = 0; j < matrizP[0].length; j++) {
                     soma = soma + matrizDia[j] * matrizP[i][j];
                 }
-                previsao[i] = String.format(Locale.US, "%.4s", soma);
+                previsao[i] = String.format(Locale.US, "%.1f", soma);
             }
         } else {
             System.arraycopy(matrizDados[matriz.length - 1], 0, matrizDia, 0, 5);
@@ -918,7 +918,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 for (int j = 0; j < pot[0].length; j++) {
                     soma += matrizDia[j] * pot[i][j];
                 }
-                previsao[i] = String.format(Locale.US, "%.4s", soma);
+                previsao[i] = String.format(Locale.US, "%.1f", soma);
             }
         }
         return previsao;
