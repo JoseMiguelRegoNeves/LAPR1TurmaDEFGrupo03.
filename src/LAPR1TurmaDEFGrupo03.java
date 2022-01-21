@@ -38,15 +38,24 @@ public class LAPR1TurmaDEFGrupo03 {
             return 1;
     }
 
-    public static void modoNaoInterativo(String[] args) throws ParseException, FileNotFoundException {
+    public static void modoNaoInterativo(String[] args) throws ParseException, IOException {
         // java -jar nome programa.jar -r X -di DD-MM-AAAA -df DD-MM-AAAA -di1 DD-MMAAAA -df1 DD-MM-AAAA -di2 DD-MM-AAAA -df2 DD-MM-AAAA -T DD-MM-AAAA
         // registoNumeroTotalCovid19.csv registoNumerosAcumuladosCovid19.csv matrizTransicao.txt nome_ficheiro_saida.txt.
         int res = -1, linhasTotalMatrix, linhasAcumulativoMatrix, posDi, posDi1, posDi2, posDf, posDf1, posDf2;
+        int difComp = 0;
         String di = null, df = null, di1 = null, df1 = null, di2 = null, df2 = null, dia = null, output = null;
-        String[] previsao;
+        String[] previsao, previsaoDiaMorte;
         String[][] acumulativoMatrix = new String[9999][6];
         String[][] totalMatrix = new String[9999][6];
-        String[][] totalTemp, acumulativoTemp, difPer, resultadosPeriodo;
+        String[][] totalTemp, acumulativoTemp, difPer;
+        String[] data = new String[1];
+        String[][] desvioPadrao = new String[1][17];
+        String[][] media = new String[1][17];
+        String[][] cabecalhoCompPer = new String[1][17];
+        cabecalhoCompPer[0][0] = "DataPer1"; cabecalhoCompPer[0][1] = "Não Infetados"; cabecalhoCompPer[0][2] = "Infetados"; cabecalhoCompPer[0][3] = "Internados"; cabecalhoCompPer[0][4] = "UCI"; cabecalhoCompPer[0][5] = "Óbitos";
+        cabecalhoCompPer[0][6] = "DataPer2"; cabecalhoCompPer[0][7] = "Não Infetados"; cabecalhoCompPer[0][8] = "Infetados"; cabecalhoCompPer[0][9] = "Internados"; cabecalhoCompPer[0][10] = "UCI"; cabecalhoCompPer[0][11] = "Óbitos";
+        cabecalhoCompPer[0][12] = "Não Infetados"; cabecalhoCompPer[0][13] = "Infetados"; cabecalhoCompPer[0][14] = "Internados"; cabecalhoCompPer[0][15] = "UCI"; cabecalhoCompPer[0][16] = "Óbitos";
+
 
         double[][] matrizT;
         for (int i = 0; i < args.length; i++) {
@@ -63,7 +72,7 @@ public class LAPR1TurmaDEFGrupo03 {
             if (i == (args.length - 1)) output = args[i];
         }
         switch (args.length) {
-            case 5 -> {                                                                                                     //COMPLETO
+            case 5 -> {                                                                                                 //COMPLETO
                 //Recolha Matrizes
                 //Rgisto Numeros Total Covid19.
                 linhasTotalMatrix = Scann(args[2], totalMatrix);
@@ -76,23 +85,29 @@ public class LAPR1TurmaDEFGrupo03 {
 
                 //Previsão evolução da pandemia
                 previsao = previsaoPandemia(totalMatrix, matrizT, dia);
-                mostraPrevisaoPandemia(previsao, dia);
+                data[0] = dia;
+                guardarFicheiro(output, data);
+                guardarFicheiro(output, previsao);
+
 
                 //Previsão dias até morrer
-                previsaoDiasAteMorrer(matrizT);
+                previsaoDiaMorte = previsaoDiasAteMorrer(matrizT);
+                guardarFicheiro(output, previsaoDiaMorte);
             }
-            case 16 -> {                                                                                                    //INCOMPLETO
+            case 16 -> {                                                                                                //INCOMPLETO
                 //Recolha Matrizes
                 //Registo Numeros Acumulados Covid19.
                 linhasAcumulativoMatrix = Scann(args[14], acumulativoMatrix);
                 acumulativoTemp = new String[linhasAcumulativoMatrix][6];
                 System.arraycopy(acumulativoMatrix, 0, acumulativoTemp, 0, linhasAcumulativoMatrix);
                 acumulativoMatrix = acumulativoTemp;
+
                 posDi = posicaoDatas(acumulativoMatrix, di);
                 posDf = posicaoDatas(acumulativoMatrix, df);
+                String[][] resultadosPeriodo = new String[posDf - posDi][6];
                 switch (res) {
                     case 0 -> {
-                        resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf, res);
+                        resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf);
                         mostraDeResultados(resultadosPeriodo);
                     }
                     case 1 -> {
@@ -104,13 +119,44 @@ public class LAPR1TurmaDEFGrupo03 {
                         mostraDeResultados(resultadosPeriodo);
                     }
                 }
+
+                for (int i = 0; i < resultadosPeriodo.length; i++) {
+                    guardarFicheiro(output, resultadosPeriodo[i]);
+                }
+
                 posDi1 = posicaoDatas(acumulativoMatrix, di1);
                 posDf1 = posicaoDatas(acumulativoMatrix, df1);
                 posDi2 = posicaoDatas(acumulativoMatrix, di2);
                 posDf2 = posicaoDatas(acumulativoMatrix, df2);
                 difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
+
+                if (posDf1 - posDi1 > posDf2 - posDi2) {
+                    difComp = posDf2 - posDi2;
+                } else {
+                    difComp = posDf1 - posDi2;
+                }
+
+                media = mediaPer(difPer);
+                desvioPadrao = desvioPadraoPer(difPer, media);
+
+                for (int i = 0; i < difComp; i++) {
+                    guardarFicheiro(output, difPer[i]);
+                }
+
+                String[] mediaCabecalho = new String[media.length];
+                mediaCabecalho[0] = "MÉDIA ↓";
+                guardarFicheiro(output, mediaCabecalho);
+                for (int i = 0; i < media.length; i++) {
+                    guardarFicheiro(output, media[i]);
+                }
+                String[] mediaDP = new String[desvioPadrao.length];
+                mediaDP[0] = "DESVIO PADRÃO ↓";
+                guardarFicheiro(output, mediaDP);
+                for (int i = 0; i < desvioPadrao.length; i++) {
+                    guardarFicheiro(output, desvioPadrao[i]);
+                }
             }
-            case 20 -> {                                                                                                    //INCOMPLETO
+            case 20 -> {                                                                                                //INCOMPLETO
                 //Recolha Matrizes
                 //Rgisto Numeros Total Covid19.
                 linhasTotalMatrix = Scann(args[16], totalMatrix);
@@ -126,11 +172,14 @@ public class LAPR1TurmaDEFGrupo03 {
 
                 //Matriz Transição
                 matrizT = matrizTransicao(args[18]);
+
+                //Calculo Diferença Periodo
                 posDi = posicaoDatas(acumulativoMatrix, di);
                 posDf = posicaoDatas(acumulativoMatrix, df);
+                String[][] resultadosPeriodo = new String[posDf - posDi][6];
                 switch (res) {
                     case 0 -> {
-                        resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf, res);
+                        resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf);
                         mostraDeResultados(resultadosPeriodo);
                     }
                     case 1 -> {
@@ -142,21 +191,54 @@ public class LAPR1TurmaDEFGrupo03 {
                         mostraDeResultados(resultadosPeriodo);
                     }
                 }
+
+                for (int i = 0; i < resultadosPeriodo.length; i++) {
+                    guardarFicheiro(output, resultadosPeriodo[i]);
+                }
+
+                //Calculo Diferença entre Periodos
                 posDi1 = posicaoDatas(acumulativoMatrix, di1);
                 posDf1 = posicaoDatas(acumulativoMatrix, df1);
                 posDi2 = posicaoDatas(acumulativoMatrix, di2);
                 posDf2 = posicaoDatas(acumulativoMatrix, df2);
                 difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
 
+                if (posDf1 - posDi1 > posDf2 - posDi2) {
+                    difComp = posDf2 - posDi2;
+                } else {
+                    difComp = posDf1 - posDi2;
+                }
+                difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
+                media = mediaPer(difPer);
+                desvioPadrao = desvioPadraoPer(difPer, media);
+
+                for (int i = 0; i < difComp; i++) {
+                    guardarFicheiro(output, difPer[i]);
+                }
+                String[] mediaCabecalho = new String[media.length];
+                mediaCabecalho[0] = "MÉDIA ↓";
+                guardarFicheiro(output, mediaCabecalho);
+                for (int i = 0; i < media.length; i++) {
+                    guardarFicheiro(output, media[i]);
+                }
+                String[] mediaDP = new String[desvioPadrao.length];
+                mediaDP[0] = "DESVIO PADRÃO ↓";
+                guardarFicheiro(output, mediaDP);
+                for (int i = 0; i < desvioPadrao.length; i++) {
+                    guardarFicheiro(output, desvioPadrao[i]);
+                }
+
                 //Previsão evolução da pandemia
                 previsao = previsaoPandemia(totalMatrix, matrizT, dia);
-                mostraPrevisaoPandemia(previsao, dia);
+                data[0] = dia;
+                guardarFicheiro(output, data);
+                guardarFicheiro(output, previsao);
 
                 //Previsão dias até morrer
-                previsaoDiasAteMorrer(matrizT);
+                previsaoDiaMorte = previsaoDiasAteMorrer(matrizT);
+                guardarFicheiro(output, previsaoDiaMorte);
             }
         }
-        // ficheiro output
     }
 
     public static void modoInterativo() throws IOException, ParseException {
@@ -262,7 +344,7 @@ public class LAPR1TurmaDEFGrupo03 {
                         String[][] resultadosPeriodo = new String[posDf - posDi][6];
                         switch (res) {
                             case 0 -> {
-                                resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf, res);
+                                resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf);
                                 mostraDeResultados(resultadosPeriodo);
                             }
                             case 1 -> {
@@ -301,6 +383,10 @@ public class LAPR1TurmaDEFGrupo03 {
                     String[][] desvioPadrao = new String[1][17];
                     String[][] media = new String[1][17];
                     String[][] difPer = new String[9999][6];
+                    String[][]cabecalhoCompPer = new String[1][17];
+                    cabecalhoCompPer[0][0] = "DataPer1"; cabecalhoCompPer[0][1] = "Não Infetados"; cabecalhoCompPer[0][2] = "Infetados"; cabecalhoCompPer[0][3] = "Internados"; cabecalhoCompPer[0][4] = "UCI"; cabecalhoCompPer[0][5] = "Óbitos";
+                    cabecalhoCompPer[0][6] = "DataPer2"; cabecalhoCompPer[0][7] = "Não Infetados"; cabecalhoCompPer[0][8] = "Infetados"; cabecalhoCompPer[0][9] = "Internados"; cabecalhoCompPer[0][10] = "UCI"; cabecalhoCompPer[0][11] = "Óbitos";
+                    cabecalhoCompPer[0][12] = "Não Infetados"; cabecalhoCompPer[0][13] = "Infetados"; cabecalhoCompPer[0][14] = "Internados"; cabecalhoCompPer[0][15] = "UCI"; cabecalhoCompPer[0][16] = "Óbitos";
                     int difComp = 0;
                     if (uploadMOD == 1) {
                         System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não possui dados suficientes!");
@@ -320,11 +406,12 @@ public class LAPR1TurmaDEFGrupo03 {
                         if (posDf1 - posDi1 > posDf2 - posDi2) {
                             difComp = posDf2 - posDi2;
                         } else {
-                            difComp = posDf1 - posDi2;
+                            difComp = posDf1 - posDi1;
                         }
                         difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
                         media = mediaPer(difPer);
                         desvioPadrao = desvioPadraoPer(difPer, media);
+                        mostraDeResultados(cabecalhoCompPer);
                         mostraDeResultados(difPer);
                         System.out.println("MÉDIA ↓");
                         mostraDeResultados(media);
@@ -344,6 +431,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     } else {
                         if (resposta == 0) {
                             String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
+                            guardarFicheiro(nomeTipoFicheiro, cabecalhoCompPer[0]);
                             for (int i = 0; i < difComp; i++) {
                                 guardarFicheiro(nomeTipoFicheiro, difPer[i]);
                             }
@@ -558,27 +646,17 @@ public class LAPR1TurmaDEFGrupo03 {
         return i;
     }
 
-    public static String[][] calculoDiferencaPeriodicaDiaria(String[][] matrizDatas, int di, int df, int step) throws ParseException {
+    public static String[][] calculoDiferencaPeriodicaDiaria(String[][] matrizDatas, int di, int df) throws ParseException {
         String formatString = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         String[][] matrizDiferenca = new String[(df - di)][6];
         int aux = 0;
         int j = di;
-        int a = 0;
+        int a = j + 1;
         String dt = matrizDatas[j][0];
         Calendar data = Calendar.getInstance();
         data.setTime(format.parse(dt));
-        switch (step) {
-            case 0 -> a = j + 1;
-            case 1 -> {
-                data.add(Calendar.WEEK_OF_YEAR, +1);
-                a = posicaoDatas(matrizDatas, data.toString());
-            }
-            case 2 -> {
-                data.add(Calendar.MONTH, +1);
-                a = posicaoDatas(matrizDatas, data.toString());
-            }
-        }
+
         while (j <= df && a <= df) {
             matrizDiferenca[aux][0] = matrizDatas[a][0];
             for (int i = 1; i <= 5; i++) {
@@ -588,17 +666,7 @@ public class LAPR1TurmaDEFGrupo03 {
             data = Calendar.getInstance();
             data.setTime(format.parse(dt));
             j = a;
-            switch (step) {
-                case 0 -> a++;
-                case 1 -> {
-                    data.add(Calendar.WEEK_OF_YEAR, +1);
-                    a = posicaoDatas(matrizDatas, data.toString());
-                }
-                case 2 -> {
-                    data.add(Calendar.MONTH, +1);
-                    a = posicaoDatas(matrizDatas, data.toString());
-                }
-            }
+            a++;
             aux++;
         }
         return matrizDiferenca;
