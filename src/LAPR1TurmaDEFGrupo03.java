@@ -755,7 +755,6 @@ public class LAPR1TurmaDEFGrupo03 {
         double[][] matrizT = new double[5][5];
         int linhas = 0;
         String line;
-        String avancarLinha;
         try {
             Scanner sc = new Scanner(new FileReader(TXT));
             while ((sc.hasNextLine())) {
@@ -767,7 +766,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 }
                 linhas++;
                 if (sc.hasNextLine()) {
-                    avancarLinha = sc.nextLine();
+                    sc.nextLine();
                 }
             }
             sc.close();
@@ -891,7 +890,6 @@ public class LAPR1TurmaDEFGrupo03 {
         double[][] matrizQ = new double[4][4];
         double[][] matrizIQ = new double[4][4];
         double[][] I = new double[4][4];
-        System.out.println("I");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (i == j) {
