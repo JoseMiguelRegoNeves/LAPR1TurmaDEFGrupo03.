@@ -1,4 +1,5 @@
 import java.io.*;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1029,15 +1030,24 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static String[] previsaoDiasAteMorrer(double[][] matrizT) {
-
+        DecimalFormat df = new DecimalFormat("###.#");
         double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         String[] diasAteMorrer = new String[4];
+        double [] aux = new double[4];
+        double [][] vetor1 = {{1,1,1,1}};
+        for (int i = 0; i < 4; i++) {
+            double somaColunas = 0;
+            for (int j = 0; j < 4; j++) {
+                somaColunas = vetor1[0][i] * (somaColunas + matrizInversaIQ[j][i]);
+                aux[i] = somaColunas;
+            }
+        }
 
-        diasAteMorrer[0] = String.format(Locale.US, "%.4s", matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0]);
-        diasAteMorrer[1] = String.format(Locale.US, "%.4s", matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1]);
-        diasAteMorrer[2] = String.format(Locale.US, "%.4s", matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2]);
-        diasAteMorrer[3] = String.format(Locale.US, "%.4s", matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3]);
-         return diasAteMorrer;
+        diasAteMorrer[0] = df.format(aux[0]).replace(",", ".");
+        diasAteMorrer[1] = df.format(aux[1]).replace(",", ".");
+        diasAteMorrer[2] = df.format(aux[2]).replace(",", ".");
+        diasAteMorrer[3] = df.format(aux[3]).replace(",", ".");
+        return diasAteMorrer;
     }
 
     public static void mostrarDiasAteMorrer (String[] diasAteMorrer) throws FileNotFoundException {
