@@ -258,7 +258,7 @@ public class LAPR1TurmaDEFGrupo03 {
                         System.out.println("Indique a data final (AAAA-MM-DD): ");
                         String df = recolhaData(formato);
                         int posDf = posicaoDatas(acumulativoMatrix, df);
-                        String[][] resultadosPeriodo;
+                        String[][] resultadosPeriodo = new String[posDf-posDi][6];
                         switch (res) {
                             case 0 -> {
                                 resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf, res);
@@ -283,7 +283,9 @@ public class LAPR1TurmaDEFGrupo03 {
                         } else {
                             if (resposta == 0) {
                                 String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
-                                guardarFicheiro(nomeTipoFicheiro, resultadosPeriodo);
+                                for (int i = 0; i < resultadosPeriodo.length; i++) {
+                                    guardarFicheiro(nomeTipoFicheiro, resultadosPeriodo[i]);
+                                }
                             }
                         }
                     }
@@ -295,9 +297,10 @@ public class LAPR1TurmaDEFGrupo03 {
                 }
                 case 2 -> { //Analisar dados comparativamente a outro periodo de tempo
                     String formato = "yyyy-MM-dd";
-                    String[][] difPer;
                     String[][] desvioPadrao = new String[1][17];
                     String[][] media = new String[1][17];
+                    String[][] difPer = new String[9999][6];
+                    int difComp = 0;
                     if (uploadMOD == 1) {
                         System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não possui dados suficientes!");
                     } else {
@@ -313,6 +316,12 @@ public class LAPR1TurmaDEFGrupo03 {
                         System.out.println("Indique a data final do 2º Periodo (AAAA-MM-DD): ");
                         String df2 = recolhaData(formato);
                         int posDf2 = posicaoDatas(acumulativoMatrix, df2);
+                        if(posDf1 - posDi1 > posDf2 - posDi2){
+                            difComp = posDf2 - posDi2;
+                        }
+                        else {
+                            difComp = posDf1 - posDi2;
+                        }
                         difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
                         media = mediaPer(difPer);
                         desvioPadrao = desvioPadraoPer(difPer, media);
@@ -322,6 +331,9 @@ public class LAPR1TurmaDEFGrupo03 {
                         System.out.println("DESVIO PADRÃO ↓");
                         mostraDeResultados(desvioPadrao);
                     }
+                    String[][] difTemp = new String[difComp][6];
+                    System.arraycopy(difPer, 0, difTemp, 0, difComp);
+                    difPer = difTemp;
                     System.out.println();
                     System.out.println("Deseja guardar os dados em um ficheiro?");
                     System.out.println("0 -> SIM");
@@ -332,7 +344,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     } else {
                         if (resposta == 0) {
                             String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
-                            for (int i = 0; i < difPer.length; i++) {
+                            for (int i = 0; i < difComp; i++) {
                                 guardarFicheiro(nomeTipoFicheiro,difPer[i]);
                             }
                             String[] mediaCabecalho = new String[media.length];
@@ -693,36 +705,36 @@ public class LAPR1TurmaDEFGrupo03 {
 
         for (int i = posdi1; i <= posdf1; i++) {
             System.arraycopy(datas[i], 0, difPer[j], 0, 6);
-            String.format("%.4", difPer[j]);
+            String.format(Locale.US, "%.4s", difPer[j]);
                     j++;
             if (j > dimComp) break;
         }
         j = 0;
         for (int i = posdi2; i <= posdf2; i++) {
             System.arraycopy(datas[i], 0, difPer[j], 6, 6);
-            String.format("%.4", difPer[j]);
+            String.format(Locale.US, "%.4s", difPer[j]);
             j++;
             if (j > dimComp) break;
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][12] = String.format("%.4", Integer.parseInt(difPer[i][7]) - Integer.parseInt(difPer[i][1]));
+            difPer[i][12] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][7]) - Integer.parseInt(difPer[i][1]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][13] = String.format("%.4", Integer.parseInt(difPer[i][8]) - Integer.parseInt(difPer[i][2]));
+            difPer[i][13] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][8]) - Integer.parseInt(difPer[i][2]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][14] = String.format("%.4", Integer.parseInt(difPer[i][9]) - Integer.parseInt(difPer[i][3]));
+            difPer[i][14] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][9]) - Integer.parseInt(difPer[i][3]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][15] = String.format("%.4", Integer.parseInt(difPer[i][10]) - Integer.parseInt(difPer[i][4]));
+            difPer[i][15] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][10]) - Integer.parseInt(difPer[i][4]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][16] = String.format("%.4", Integer.parseInt(difPer[i][11]) - Integer.parseInt(difPer[i][5]));
+            difPer[i][16] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][11]) - Integer.parseInt(difPer[i][5]));
         }
         return difPer;
     }
@@ -735,14 +747,14 @@ public class LAPR1TurmaDEFGrupo03 {
             int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
-                media[0][i] = String.format("%.4", soma / difPer.length);
+                media[0][i] = String.format(Locale.US, "%.4s", soma / difPer.length);
             }
         }
         for (int i = 7; i < difPer[0].length; i++) {
             int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
-                media[0][i] = String.format("%.4", soma / difPer.length);
+                media[0][i] = String.format(Locale.US, "%.4s", soma / difPer.length);
             }
         }
         return media;
@@ -773,7 +785,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             fracao = denominador / difPer.length;
             dp = Math.sqrt(fracao);
-            desvioPadrao[0][i] = String.format("%.4", dp);
+            desvioPadrao[0][i] = String.format(Locale.US, "%.4s", dp);
         }
         return desvioPadrao;
     }
@@ -894,7 +906,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 for (int j = 0; j < matrizP[0].length; j++) {
                     soma = soma + matrizDia[j] * matrizP[i][j];
                 }
-                previsao[i] = String.format("%.4", soma);
+                previsao[i] = String.format(Locale.US, "%.4s", soma);
             }
         } else {
             System.arraycopy(matrizDados[matriz.length - 1], 0, matrizDia, 0, 5);
@@ -905,7 +917,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 for (int j = 0; j < pot[0].length; j++) {
                     soma += matrizDia[j] * pot[i][j];
                 }
-                previsao[i] = String.format("%.4", soma);
+                previsao[i] = String.format(Locale.US, "%.4s", soma);
             }
         }
         return previsao;
@@ -1021,10 +1033,10 @@ public class LAPR1TurmaDEFGrupo03 {
         double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         String[] diasAteMorrer = new String[4];
 
-        diasAteMorrer[0] = String.format("%.4", matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0]);
-        diasAteMorrer[1] = String.format("%.4", matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1]);
-        diasAteMorrer[2] = String.format("%.4", matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2]);
-        diasAteMorrer[3] = String.format("%.4", matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3]);
+        diasAteMorrer[0] = String.format(Locale.US, "%.4s", matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0]);
+        diasAteMorrer[1] = String.format(Locale.US, "%.4s", matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1]);
+        diasAteMorrer[2] = String.format(Locale.US, "%.4s", matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2]);
+        diasAteMorrer[3] = String.format(Locale.US, "%.4s", matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3]);
          return diasAteMorrer;
     }
 
