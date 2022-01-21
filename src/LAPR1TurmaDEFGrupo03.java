@@ -52,9 +52,9 @@ public class LAPR1TurmaDEFGrupo03 {
         String[][] desvioPadrao = new String[1][17];
         String[][] media = new String[1][17];
         String[][] cabecalhoCompPer = new String[1][17];
-        cabecalhoCompPer[0][0] = "DataPer1"; cabecalhoCompPer[0][1] = "Não Infetados"; cabecalhoCompPer[0][2] = "Infetados"; cabecalhoCompPer[0][3] = "Internados"; cabecalhoCompPer[0][4] = "UCI"; cabecalhoCompPer[0][5] = "Óbitos";
-        cabecalhoCompPer[0][6] = "DataPer2"; cabecalhoCompPer[0][7] = "Não Infetados"; cabecalhoCompPer[0][8] = "Infetados"; cabecalhoCompPer[0][9] = "Internados"; cabecalhoCompPer[0][10] = "UCI"; cabecalhoCompPer[0][11] = "Óbitos";
-        cabecalhoCompPer[0][12] = "Não Infetados"; cabecalhoCompPer[0][13] = "Infetados"; cabecalhoCompPer[0][14] = "Internados"; cabecalhoCompPer[0][15] = "UCI"; cabecalhoCompPer[0][16] = "Óbitos";
+        cabecalhoCompPer[0][0] = "DataPer1"; cabecalhoCompPer[0][1] = "NãoInfetados"; cabecalhoCompPer[0][2] = "Infetados"; cabecalhoCompPer[0][3] = "Internados"; cabecalhoCompPer[0][4] = "UCI"; cabecalhoCompPer[0][5] = "Óbitos";
+        cabecalhoCompPer[0][6] = "DataPer2"; cabecalhoCompPer[0][7] = "NãoInfetados"; cabecalhoCompPer[0][8] = "Infetados"; cabecalhoCompPer[0][9] = "Internados"; cabecalhoCompPer[0][10] = "UCI"; cabecalhoCompPer[0][11] = "Óbitos";
+        cabecalhoCompPer[0][12] = "NãoInfetados"; cabecalhoCompPer[0][13] = "Infetados"; cabecalhoCompPer[0][14] = "Internados"; cabecalhoCompPer[0][15] = "UCI"; cabecalhoCompPer[0][16] = "Óbitos";
 
 
         double[][] matrizT;
@@ -120,6 +120,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     }
                 }
 
+
                 for (int i = 0; i < resultadosPeriodo.length; i++) {
                     guardarFicheiro(output, resultadosPeriodo[i]);
                 }
@@ -138,6 +139,8 @@ public class LAPR1TurmaDEFGrupo03 {
 
                 media = mediaPer(difPer);
                 desvioPadrao = desvioPadraoPer(difPer, media);
+
+                guardarFicheiro(output, cabecalhoCompPer[0]);
 
                 for (int i = 0; i < difComp; i++) {
                     guardarFicheiro(output, difPer[i]);
@@ -211,6 +214,8 @@ public class LAPR1TurmaDEFGrupo03 {
                 difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
                 media = mediaPer(difPer);
                 desvioPadrao = desvioPadraoPer(difPer, media);
+
+                guardarFicheiro(output, cabecalhoCompPer[0]);
 
                 for (int i = 0; i < difComp; i++) {
                     guardarFicheiro(output, difPer[i]);
