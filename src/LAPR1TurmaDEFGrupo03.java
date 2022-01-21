@@ -61,7 +61,7 @@ public class LAPR1TurmaDEFGrupo03 {
                 case "-df2" -> df2 = args[i + 1];
                 case "-T" -> dia = args[i + 1];
             }
-            if(i == (args.length - 1)) output = args[i];
+            if (i == (args.length - 1)) output = args[i];
         }
         switch (args.length) {
             case 5 -> {                                                                                                     //COMPLETO
@@ -218,8 +218,14 @@ public class LAPR1TurmaDEFGrupo03 {
                     System.out.println("1 -> Novos Casos Covid19");
                     int tipoDados = sc.nextInt();
                     switch (tipoDados) {
-                        case 0 -> casosDia(acumulativoMatrix, cabecalho);
-                        case 1 -> casosDia(totalMatrix, cabecalho);
+                        case 0: {
+                            String formato = "yyyy-MM-dd";
+                            casosDia(acumulativoMatrix, cabecalho, formato);
+                        }
+                        case 1: {
+                            String formato = "dd-MM-yyy";
+                            casosDia(totalMatrix, cabecalho, formato);
+                        }
                     }
                     System.out.println();
                     System.out.println("Deseja guardar os dados em um ficheiro?");
@@ -244,12 +250,13 @@ public class LAPR1TurmaDEFGrupo03 {
                     if (uploadMOD == 1) {
                         System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não é o indicado para a operação escolhida!");
                     } else {
+                        String formato = "yyyy-MM-dd";
                         int res = resolucaoInterface();
                         System.out.println("Indique a data de início (AAAA-MM-DD): ");
-                        String di = recolhaData();
+                        String di = recolhaData(formato);
                         int posDi = posicaoDatas(acumulativoMatrix, di);
                         System.out.println("Indique a data final (AAAA-MM-DD): ");
-                        String df = recolhaData();
+                        String df = recolhaData(formato);
                         int posDf = posicaoDatas(acumulativoMatrix, df);
                         String[][] resultadosPeriodo;
                         switch (res) {
@@ -280,28 +287,29 @@ public class LAPR1TurmaDEFGrupo03 {
                             }
                         }
                     }
-                        System.out.println();
-                        System.out.println("0 -> VOLTAR AO MENU");
-                        System.out.println("1 -> FECHAR APLICAÇÃO");
-                        endOrNot = sc.nextInt();
-                        if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
+                    System.out.println();
+                    System.out.println("0 -> VOLTAR AO MENU");
+                    System.out.println("1 -> FECHAR APLICAÇÃO");
+                    endOrNot = sc.nextInt();
+                    if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
                 case 2 -> { //Analisar dados comparativamente a outro periodo de tempo
                     if (uploadMOD == 1) {
                         System.out.println("OPERAÇÃO INVÁLIDA: O ficheiro armazenado não possui dados suficientes!");
                     } else {
+                        String formato = "yyyy-MM-dd";
                         String[][] difPer, media, desvioPadrao;
                         System.out.println("Indique a data de início do 1º Periodo (AAAA-MM-DD): ");
-                        String di1 = recolhaData();
+                        String di1 = recolhaData(formato);
                         int posDi1 = posicaoDatas(acumulativoMatrix, di1);
                         System.out.println("Indique a data final do 1º Periodo (AAAA-MM-DD): ");
-                        String df1 = recolhaData();
+                        String df1 = recolhaData(formato);
                         int posDf1 = posicaoDatas(acumulativoMatrix, df1);
                         System.out.println("Indique a data de início do 2º Periodo (AAAA-MM-DD): ");
-                        String di2 = recolhaData();
+                        String di2 = recolhaData(formato);
                         int posDi2 = posicaoDatas(acumulativoMatrix, di2);
                         System.out.println("Indique a data final do 2º Periodo (AAAA-MM-DD): ");
-                        String df2 = recolhaData();
+                        String df2 = recolhaData(formato);
                         int posDf2 = posicaoDatas(acumulativoMatrix, df2);
                         difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
                         media = mediaPer(difPer);
@@ -427,11 +435,11 @@ public class LAPR1TurmaDEFGrupo03 {
         return sc.nextInt();
     }
 
-    public static void casosDia(String[][] matrix, String[] cabecalho) {
+    public static void casosDia(String[][] matrix, String[] cabecalho, String formato) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Indique o dia (AAAA-MM-DD):");
+        System.out.println("Indique o dia (" + formato + "):");
         String dia = sc.nextLine();
-        ValidarData(dia);
+        ValidarData(dia, formato);
         int posDia = posicaoDatas(matrix, dia);
         for (int i = 0; i < 6; i++) {
             System.out.print(cabecalho[i] + " -> " + matrix[posDia][i]);
@@ -459,18 +467,17 @@ public class LAPR1TurmaDEFGrupo03 {
         return resolucao;
     }
 
-    public static String recolhaData() {
+    public static String recolhaData(String formato) {
         Scanner sc = new Scanner(System.in);
         String data = sc.nextLine();
-        while (ValidarData(data) == 0) {
+        while (ValidarData(data , formato) == 0) {
             System.out.println("ERRO: INTRODUZA UMA DATA VÁLIDA (AAAA-MM-DD)!");
             data = sc.nextLine();
         }
         return data;
     }
 
-    public static int ValidarData(String input) {
-        String formatString = "yyyy-MM-dd";
+    public static int ValidarData(String input, String formatString) {
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
             format.setLenient(false);
@@ -780,7 +787,7 @@ public class LAPR1TurmaDEFGrupo03 {
         return matrizT;
     }
 
-    public static double[][] produtoMatrizes(double[][] matriz1, double[][] matriz2, int tamanho) {
+    /*public static double[][] produtoMatrizes(double[][] matriz1, double[][] matriz2, int tamanho) {
 
         double[][] matrizProduto = new double[tamanho][tamanho];
 
@@ -796,53 +803,114 @@ public class LAPR1TurmaDEFGrupo03 {
         }
 
         return matrizProduto;
+    }*/
+    public static int diasAteData(String dataInicial, String dataFinal) throws ParseException {
+        String formatString = "dd-MM-yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        Date data1 = format.parse(dataInicial);
+        Date data2 = format.parse(dataFinal);
+        long differenceMil = Math.abs(data2.getTime() - data1.getTime());
+        return (int) TimeUnit.DAYS.convert(differenceMil, TimeUnit.MILLISECONDS);
+    }
+
+    public static double[][] matrixXmatrix(double[][] matriz1, double[][] matriz2) {
+        int matriz1L = matriz1.length, matrix1C = matriz1[0].length, matrix2L = matriz2.length, matrix2C = matriz2[0].length;
+        if (matrix1C == matrix2L) {
+            double[][] prodMatrix = new double[matriz1L][matrix2C];
+            for (int i = 0; i < matriz1L; i++) {
+                for (int j = 0; j < matrix2C; j++) {
+                    double soma = 0;
+                    for (int k = 0; k < matrix1C; k++) {
+                        double prod = matriz1[i][k] * matriz2[k][j];
+                        soma += prod;
+                        prodMatrix[i][j] = soma;
+                    }
+                }
+            }
+            return prodMatrix;
+        } else {
+            System.out.println("ERRO!! Impossível Realizar Produto de Matrizes Quando o número de Colunas da Primeira não é igual ao número de Linahas da Segunda!!");
+            return new double[1][1];
+        }
+    }
+
+    public static double[][] matrixCopy(double[][] matriz) {
+        final int LINHAS = matriz.length, COLUNAS = matriz[0].length;
+        double[][] copia = new double[LINHAS][COLUNAS];
+        for (int linha = 0; linha < LINHAS; linha++) {
+            for (int coluna = 0; coluna < COLUNAS; coluna++) {
+                copia[linha][coluna] = matriz[linha][coluna];
+            }
+        }
+        return copia;
+    }
+
+    public static double[][] potencia(double[][] matriz, int expoente) {
+        double[][] copiaMatriz = matrixCopy(matriz);
+        double[][] pot = new double[5][5];
+        double[][] backupMatrix = matrixCopy(matriz);
+        for (int i = 1; i < expoente; i++) {
+            pot = matrixCopy(matrixXmatrix(copiaMatriz, backupMatrix));
+            copiaMatriz = matrixCopy(pot);
+        }
+        return pot;
     }
 
     public static double[] previsaoPandemia(String[][] matriz, double[][] matrizT, String date, int max) throws ParseException {
         String formatString = "dd-MM-yyyy";
-        int last = -1;
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        int existe = 0, pos = 0, k;
         double soma;
         double[] previsao = new double[5];
-        double[][] matrizP = new double[6][6];
-        double[][] matrizAux;
-        double[] lastDate = new double[6];
+        double[][] matrizP = new double[5][5];
+        double[][] matrizDados = new double[matriz.length][matriz[0].length - 1];
 
         for (int i = 0; i < matriz.length; i++) {
-            if(date.equals(matriz[i][0])) {
-                last = i-1;
+            for (int j = 1; j < matriz[0].length; j++) {
+                matrizDados[i][j-1] = Double.parseDouble(matriz[i][j]);
             }
         }
-        if(last==-1){
-            last = matriz.length;
-        }
 
-        SimpleDateFormat format = new SimpleDateFormat(formatString);
-        Date dataAnterior = format.parse(matriz[last][0]);
-        Date dataPrev = format.parse(date);
-
-
-        long dif = Math.abs(dataPrev.getTime() - dataAnterior.getTime());
-        long k = TimeUnit.DAYS.convert(dif, TimeUnit.MILLISECONDS);
-
-        for (int i = 1; i < matriz[0].length; i++) {
-            lastDate[i-1] = Double.parseDouble(matriz[last][i]);
-        }
-
-        matrizP = matrizT;
-
-        for (int linha = 0; linha < k - 1; linha++) {
-            matrizAux= produtoMatrizes(matrizP, matrizT, 6);
-            matrizP = matrizAux;
-        }
-
-        for (int l = 0; l < matrizP.length; l++) {
-            soma = 0;
-            for (int c = 0; c < matrizP.length; c++) {
-                soma += matrizP[l][c] * lastDate[c];
+        for (int l = 0; l < matrizT.length; l++) {
+            for (int c = 0; c < matrizT[0].length; c++) {
+                matrizP[l][c] = matrizT[l][c];
             }
-            previsao[l] =soma;
         }
 
+        for (int i = 0; i < matriz.length; i++) {
+            if(date.equals(matriz[i][0])){
+                existe = 1;
+                pos = i;
+            }
+        }
+
+        if (existe == 1) {
+            double[] matrizDia = new double[5];
+            for (int i = 0; i < 5; i++) {
+                matrizDia[i] = matrizDados[pos - 1][i];
+            }
+            for (int i = 0; i < matrizP.length; i++) {
+                soma = 0;
+                for (int j = 0; j < matrizP[0].length; j++) {
+                    soma = soma + matrizDia[j] * matrizP[i][j];
+                }
+                previsao[i] = soma;
+            }
+        } else {
+            double[] matrizDia = new double[5];
+            for (int i = 0; i < 5; i++) {
+                matrizDia[i] = matrizDados[matriz.length - 1][i];
+            }
+            k = diasAteData(matriz[0][matriz.length - 1], date);
+            double[][] pot = matrixCopy(potencia(matrizP, k));
+            for (int i = 0; i < pot.length; i++) {
+                soma=0;
+                for (int j = 0; j < pot[0].length; j++) {
+                    soma += matrizDia[j] * pot[i][j];
+                }
+                previsao[i]=soma;
+            }
+        }
         return previsao;
     }
 
@@ -914,12 +982,12 @@ public class LAPR1TurmaDEFGrupo03 {
         for (int i = 0; i < 4; i++) {
             matrizLinversa[i][i] = 1 / matrizL[i][i];
         }
-        matrizLinversa[1][0] = - (matrizL[1][0] * matrizLinversa[0][0]) / matrizL[1][1];
-        matrizLinversa[2][0] = - (matrizL[2][0] * matrizLinversa[0][0] + matrizL[2][1] * matrizLinversa[1][0]) / matrizL[2][2];
-        matrizLinversa[3][0] = - (matrizL[3][0] * matrizLinversa[0][0] + matrizL[3][1] * matrizLinversa[1][0] + matrizL[3][2] * matrizLinversa[2][0]) / matrizL[3][3];
-        matrizLinversa[2][1] = - (matrizL[2][1] * matrizLinversa[1][1]) / matrizL[2][2];
-        matrizLinversa[3][1] = - (matrizL[3][1] * matrizLinversa[1][1] + matrizL[3][2] * matrizLinversa[2][1]) / matrizL[3][3];
-        matrizLinversa[3][2] = - (matrizL[3][2] * matrizLinversa[2][2]) / matrizL[3][3];
+        matrizLinversa[1][0] = -(matrizL[1][0] * matrizLinversa[0][0]) / matrizL[1][1];
+        matrizLinversa[2][0] = -(matrizL[2][0] * matrizLinversa[0][0] + matrizL[2][1] * matrizLinversa[1][0]) / matrizL[2][2];
+        matrizLinversa[3][0] = -(matrizL[3][0] * matrizLinversa[0][0] + matrizL[3][1] * matrizLinversa[1][0] + matrizL[3][2] * matrizLinversa[2][0]) / matrizL[3][3];
+        matrizLinversa[2][1] = -(matrizL[2][1] * matrizLinversa[1][1]) / matrizL[2][2];
+        matrizLinversa[3][1] = -(matrizL[3][1] * matrizLinversa[1][1] + matrizL[3][2] * matrizLinversa[2][1]) / matrizL[3][3];
+        matrizLinversa[3][2] = -(matrizL[3][2] * matrizLinversa[2][2]) / matrizL[3][3];
 
 
         double[][] matrizUinversa = new double[4][4];
@@ -959,7 +1027,7 @@ public class LAPR1TurmaDEFGrupo03 {
         Scanner sc = new Scanner(System.in);
         double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         double[][] diasAteMorrer = new double[1][4];
-        double[][] vetor = new double [1][4];
+        double[][] vetor = new double[1][4];
         diasAteMorrer[0][0] = matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0];
         diasAteMorrer[0][1] = matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1];
         diasAteMorrer[0][2] = matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2];
@@ -1018,11 +1086,11 @@ public class LAPR1TurmaDEFGrupo03 {
         outputFile.close();
     }
 
-    public static void testesUnitarios(){
+    public static void testesUnitarios() {
         System.out.println("Bem-vindo aos testes unitários!");
-        if (ValidarData("2020-04-01") == 0 | ValidarData("2020-04-01") == 1){
+        if (ValidarData("2020-04-01", "yyyy-MM-dd") == 0 | ValidarData("2020-04-01", "yyyy-MM-dd") == 1) {
             System.out.println("ValidarData: WORKING");
-        }else {
+        } else {
             System.out.println("ValidarData: NOT WORKING");
         }
     }
