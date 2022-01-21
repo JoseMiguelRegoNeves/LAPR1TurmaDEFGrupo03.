@@ -1,5 +1,4 @@
 import java.io.*;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -211,6 +210,7 @@ public class LAPR1TurmaDEFGrupo03 {
         int endOrNot = 0;
         while (endOrNot == 0) {
             int opcao = opcoesInterface();
+            sc.nextLine();
             switch (opcao) {
                 case 0 -> { //Analizar dados de um dia
                     System.out.println("Indique o tipo de dados que pretende analisar:");
@@ -259,7 +259,7 @@ public class LAPR1TurmaDEFGrupo03 {
                         System.out.println("Indique a data final (AAAA-MM-DD): ");
                         String df = recolhaData(formato);
                         int posDf = posicaoDatas(acumulativoMatrix, df);
-                        String[][] resultadosPeriodo = new String[posDf-posDi][6];
+                        String[][] resultadosPeriodo = new String[posDf - posDi][6];
                         switch (res) {
                             case 0 -> {
                                 resultadosPeriodo = calculoDiferencaPeriodicaDiaria(acumulativoMatrix, posDi, posDf, res);
@@ -317,10 +317,9 @@ public class LAPR1TurmaDEFGrupo03 {
                         System.out.println("Indique a data final do 2º Periodo (AAAA-MM-DD): ");
                         String df2 = recolhaData(formato);
                         int posDf2 = posicaoDatas(acumulativoMatrix, df2);
-                        if(posDf1 - posDi1 > posDf2 - posDi2){
+                        if (posDf1 - posDi1 > posDf2 - posDi2) {
                             difComp = posDf2 - posDi2;
-                        }
-                        else {
+                        } else {
                             difComp = posDf1 - posDi2;
                         }
                         difPer = calculoDifPeriodo(posDi1, posDf1, posDi2, posDf2, acumulativoMatrix);
@@ -346,19 +345,19 @@ public class LAPR1TurmaDEFGrupo03 {
                         if (resposta == 0) {
                             String nomeTipoFicheiro = nomeTipoFicheiroGuardar();
                             for (int i = 0; i < difComp; i++) {
-                                guardarFicheiro(nomeTipoFicheiro,difPer[i]);
+                                guardarFicheiro(nomeTipoFicheiro, difPer[i]);
                             }
                             String[] mediaCabecalho = new String[media.length];
                             mediaCabecalho[0] = "MÉDIA ↓";
-                            guardarFicheiro(nomeTipoFicheiro,mediaCabecalho);
+                            guardarFicheiro(nomeTipoFicheiro, mediaCabecalho);
                             for (int i = 0; i < media.length; i++) {
-                                guardarFicheiro(nomeTipoFicheiro,media[i]);
+                                guardarFicheiro(nomeTipoFicheiro, media[i]);
                             }
                             String[] mediaDP = new String[desvioPadrao.length];
                             mediaDP[0] = "DESVIO PADRÃO ↓";
                             guardarFicheiro(nomeTipoFicheiro, mediaDP);
                             for (int i = 0; i < desvioPadrao.length; i++) {
-                                guardarFicheiro(nomeTipoFicheiro,desvioPadrao[i]);
+                                guardarFicheiro(nomeTipoFicheiro, desvioPadrao[i]);
                             }
                         }
                     }
@@ -517,7 +516,7 @@ public class LAPR1TurmaDEFGrupo03 {
     public static String recolhaData(String formato) {
         Scanner sc = new Scanner(System.in);
         String data = sc.nextLine();
-        while (ValidarData(data , formato) == 0) {
+        while (ValidarData(data, formato) == 0) {
             System.out.println("ERRO: INTRODUZA UMA DATA VÁLIDA (AAAA-MM-DD)!");
             data = sc.nextLine();
         }
@@ -706,36 +705,36 @@ public class LAPR1TurmaDEFGrupo03 {
 
         for (int i = posdi1; i <= posdf1; i++) {
             System.arraycopy(datas[i], 0, difPer[j], 0, 6);
-            String.format(Locale.US, "%.4s", difPer[j]);
-                    j++;
+            String.format(Locale.US, "%s", difPer[j]);
+            j++;
             if (j > dimComp) break;
         }
         j = 0;
         for (int i = posdi2; i <= posdf2; i++) {
             System.arraycopy(datas[i], 0, difPer[j], 6, 6);
-            String.format(Locale.US, "%.4s", difPer[j]);
+            String.format(Locale.US, "%s", difPer[j]);
             j++;
             if (j > dimComp) break;
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][12] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][7]) - Integer.parseInt(difPer[i][1]));
+            difPer[i][12] = String.format(Locale.US, "%s", Integer.parseInt(difPer[i][7]) - Integer.parseInt(difPer[i][1]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][13] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][8]) - Integer.parseInt(difPer[i][2]));
+            difPer[i][13] = String.format(Locale.US, "%s", Integer.parseInt(difPer[i][8]) - Integer.parseInt(difPer[i][2]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][14] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][9]) - Integer.parseInt(difPer[i][3]));
+            difPer[i][14] = String.format(Locale.US, "%s", Integer.parseInt(difPer[i][9]) - Integer.parseInt(difPer[i][3]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][15] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][10]) - Integer.parseInt(difPer[i][4]));
+            difPer[i][15] = String.format(Locale.US, "%s", Integer.parseInt(difPer[i][10]) - Integer.parseInt(difPer[i][4]));
         }
 
         for (int i = 0; i < dimComp; i++) {
-            difPer[i][16] = String.format(Locale.US, "%.4s", Integer.parseInt(difPer[i][11]) - Integer.parseInt(difPer[i][5]));
+            difPer[i][16] = String.format(Locale.US, "%s", Integer.parseInt(difPer[i][11]) - Integer.parseInt(difPer[i][5]));
         }
         return difPer;
     }
@@ -748,14 +747,14 @@ public class LAPR1TurmaDEFGrupo03 {
             int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
-                media[0][i] = String.format(Locale.US, "%.4s", soma / difPer.length);
+                media[0][i] = String.format(Locale.US, "%.4f", Double.valueOf(soma / difPer.length));
             }
         }
         for (int i = 7; i < difPer[0].length; i++) {
             int soma = 0;
             for (int j = 0; j < difPer.length; j++) {
                 soma = soma + Integer.parseInt(difPer[j][i]);
-                media[0][i] = String.format(Locale.US, "%.4s", soma / difPer.length);
+                media[0][i] = String.format(Locale.US, "%.4f", Double.valueOf(soma / difPer.length));
             }
         }
         return media;
@@ -786,7 +785,7 @@ public class LAPR1TurmaDEFGrupo03 {
             }
             fracao = denominador / difPer.length;
             dp = Math.sqrt(fracao);
-            desvioPadrao[0][i] = String.format(Locale.US, "%.4s", dp);
+            desvioPadrao[0][i] = String.format(Locale.US, "%.4f", dp);
         }
         return desvioPadrao;
     }
@@ -884,7 +883,7 @@ public class LAPR1TurmaDEFGrupo03 {
 
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 1; j < matriz[0].length; j++) {
-                matrizDados[i][j-1] = Double.parseDouble(matriz[i][j]);
+                matrizDados[i][j - 1] = Double.parseDouble(matriz[i][j]);
             }
         }
 
@@ -893,7 +892,7 @@ public class LAPR1TurmaDEFGrupo03 {
         }
 
         for (int i = 0; i < matriz.length; i++) {
-            if(date.equals(matriz[i][0])){
+            if (date.equals(matriz[i][0])) {
                 existe = 1;
                 pos = i;
             }
@@ -911,10 +910,10 @@ public class LAPR1TurmaDEFGrupo03 {
             }
         } else {
             System.arraycopy(matrizDados[matriz.length - 1], 0, matrizDia, 0, 5);
-            k = diasAteData(matriz[0][matriz.length - 1], date);
+            k = diasAteData(matriz[matriz.length - 1][0], date);
             double[][] pot = matrixCopy(potencia(matrizP, k));
             for (int i = 0; i < pot.length; i++) {
-                soma=0;
+                soma = 0;
                 for (int j = 0; j < pot[0].length; j++) {
                     soma += matrizDia[j] * pot[i][j];
                 }
@@ -1030,27 +1029,18 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static String[] previsaoDiasAteMorrer(double[][] matrizT) {
-        DecimalFormat df = new DecimalFormat("###.#");
+
         double[][] matrizInversaIQ = decomposicaoLU(subtracaoMatrizTransicao(matrizT));
         String[] diasAteMorrer = new String[4];
-        double [] aux = new double[4];
-        double [][] vetor1 = {{1,1,1,1}};
-        for (int i = 0; i < 4; i++) {
-            double somaColunas = 0;
-            for (int j = 0; j < 4; j++) {
-                somaColunas = vetor1[0][i] * (somaColunas + matrizInversaIQ[j][i]);
-                aux[i] = somaColunas;
-            }
-        }
 
-        diasAteMorrer[0] = df.format(aux[0]).replace(",", ".");
-        diasAteMorrer[1] = df.format(aux[1]).replace(",", ".");
-        diasAteMorrer[2] = df.format(aux[2]).replace(",", ".");
-        diasAteMorrer[3] = df.format(aux[3]).replace(",", ".");
+        diasAteMorrer[0] = String.format(Locale.US, "%.1f", matrizInversaIQ[0][0] + matrizInversaIQ[1][0] + matrizInversaIQ[2][0] + matrizInversaIQ[3][0]);
+        diasAteMorrer[1] = String.format(Locale.US, "%.1f", matrizInversaIQ[0][1] + matrizInversaIQ[1][1] + matrizInversaIQ[2][1] + matrizInversaIQ[3][1]);
+        diasAteMorrer[2] = String.format(Locale.US, "%.1f", matrizInversaIQ[0][2] + matrizInversaIQ[1][2] + matrizInversaIQ[2][2] + matrizInversaIQ[3][2]);
+        diasAteMorrer[3] = String.format(Locale.US, "%.1f", matrizInversaIQ[0][3] + matrizInversaIQ[1][3] + matrizInversaIQ[2][3] + matrizInversaIQ[3][3]);
         return diasAteMorrer;
     }
 
-    public static void mostrarDiasAteMorrer (String[] diasAteMorrer) throws FileNotFoundException {
+    public static void mostrarDiasAteMorrer(String[] diasAteMorrer) throws FileNotFoundException {
         Scanner sc = new Scanner(System.in);
         System.out.println("――――――――――――   A T É   C H E G A R   A   Ó B I T O   ――――――――――――");
         System.out.println();
@@ -1084,16 +1074,16 @@ public class LAPR1TurmaDEFGrupo03 {
     }
 
     public static void guardarFicheiro(String output, String[] imprimir) throws IOException {
-       FileWriter fich = new FileWriter(new File(output), true);
-        String linha = null;
-//        for (int i = 0; i < ; i++) {
-//            outputFile.println();
-//        }
+        FileWriter fich = new FileWriter(new File(output), true);
+        String linha = "";
         for (int i = 0; i < imprimir.length; i++) {
-
+            if (i == 0) {
+                linha += imprimir[i];
+            } else {
+                linha += "," + imprimir[i];
+            }
         }
-
-        fich.write(linha);
+        fich.write(linha + "\n");
 
         fich.close();
     }
