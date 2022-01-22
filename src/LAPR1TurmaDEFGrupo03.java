@@ -978,12 +978,23 @@ public class LAPR1TurmaDEFGrupo03 {
             System.arraycopy(matrizDados[matriz.length - 1], 0, matrizDia, 0, 5);
             k = diasAteData(matriz[matriz.length - 1][0], date);
             double[][] pot = matrixCopy(potencia(matrizP, k));
+            if (k==1) {
+                for (int i = 0; i < matrizP.length; i++) {
+                    soma = 0;
+                    for (int j = 0; j < matrizP[0].length; j++) {
+                        soma = soma + matrizDia[j] * matrizP[i][j];
+                    }
+                    previsao[i] = String.format(Locale.US, "%.1f", soma);
+                }
+            }
+            else {
             for (int i = 0; i < pot.length; i++) {
                 soma = 0;
                 for (int j = 0; j < pot[0].length; j++) {
-                    soma += matrizDia[j] * pot[i][j];
+                    soma = soma + matrizDia[j] * pot[i][j];
                 }
                 previsao[i] = String.format(Locale.US, "%.1f", soma);
+            }
             }
         }
         return previsao;
