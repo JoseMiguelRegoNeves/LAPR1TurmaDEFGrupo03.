@@ -1167,6 +1167,16 @@ public class LAPR1TurmaDEFGrupo03 {
     public static void testesUnitarios(String[] args) throws ParseException {
         double[][] matrizTeste = {{1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,0,1}};
         double[][] matrizResultado= {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
+        double[][] matrizA = { {0.9995, 0.03, 0.002, 0.001, 0},
+                { 0.0005, 0.96, 0.004, 0.015, 0},
+                {0, 0.007, 0.98, 0.02, 0},
+                { 0, 0.003, 0.01, 0.95, 0},
+                { 0, 0, 0.004, 0.014, 1} };
+        double[][] matrizB = { {0.9995, 0.049, 0.005, 0.001, 0},
+                { 0.0005, 0.95, 0.005, 0.018, 0},
+                {0, 0.0009, 0.98, 0.02, 0},
+                {0, 0.0001, 0.0085, 0.947, 0},
+                {0, 0, 0.0015, 0.014, 1} };
         System.out.println("Bem-vindo aos testes unitários!");
 
         if(verificacaoModo(args) == 0){
@@ -1192,6 +1202,10 @@ public class LAPR1TurmaDEFGrupo03 {
         } else {
             System.out.println("subtracaoMatrizTransicao: NOT WORKING");
         }
-
+        if (uploadTXT() == matrizA || uploadTXT() == matrizB) {
+            System.out.println("uploadTXT: WORKING");
+        } else {
+            System.out.println("uploadTXT: NOT WORKING");
+        }
     }
 }
