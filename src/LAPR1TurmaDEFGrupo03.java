@@ -18,7 +18,7 @@ public class LAPR1TurmaDEFGrupo03 {
         switch (MOD) {
             case 0 -> {
                 System.out.println("―――――――――― M O D O  I N T E R A T I V O \uD83D\uDC4B ――――――――――");
-                modoInterativo();
+                modoInterativo(args);
             }
             case 1 -> {
                 System.out.println("―――――――――― M O D O  N Ã O  I N T E R A T I V O \uD83D\uDDA5 ――――――――――");
@@ -239,7 +239,7 @@ public class LAPR1TurmaDEFGrupo03 {
         }
     }
 
-    public static void modoInterativo() throws IOException, ParseException {
+    public static void modoInterativo(String[] args) throws IOException, ParseException {
         Scanner sc = new Scanner(System.in);
         BufferedReader sc1;
         int uploadMOD = upload();
@@ -511,7 +511,7 @@ public class LAPR1TurmaDEFGrupo03 {
                     endOrNot = sc.nextInt();
                     if (endOrNot == 1) System.out.println("Obrigada por utilizar a nossa aplicação!");
                 }
-                case 5 -> testesUnitarios();
+                case 5 -> testesUnitarios(args);
             }
         }
     }
@@ -1117,8 +1117,7 @@ public class LAPR1TurmaDEFGrupo03 {
         return diasAteMorrer;
     }
 
-    public static void mostrarDiasAteMorrer(String[] diasAteMorrer) throws FileNotFoundException {
-        Scanner sc = new Scanner(System.in);
+    public static void mostrarDiasAteMorrer(String[] diasAteMorrer) {
         System.out.println("――――――――――――   A T É   C H E G A R   A   Ó B I T O   ――――――――――――");
         System.out.println();
         System.out.println("Dias de um Não Infetado -> " + diasAteMorrer[0]);
@@ -1165,12 +1164,34 @@ public class LAPR1TurmaDEFGrupo03 {
         fich.close();
     }
 
-    public static void testesUnitarios() {
+    public static void testesUnitarios(String[] args) throws ParseException {
+        double[][] matrizTeste = {{1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,0,1}};
+        double[][] matrizResultado= {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
         System.out.println("Bem-vindo aos testes unitários!");
-        if (ValidarData("2020-04-01", "yyyy-MM-dd") == 0 | ValidarData("2020-04-01", "yyyy-MM-dd") == 1) {
+
+        if(verificacaoModo(args) == 0){
+            System.out.println("VerificacaoModo: WORKING");
+        }else{
+            System.out.println("VerificacaoModo: NOT WORKING");
+        }
+
+        if (ValidarData("2020-04-01", "yyyy-MM-dd") == 0 || ValidarData("2020-04-01", "yyyy-MM-dd") == 1) {
             System.out.println("ValidarData: WORKING");
         } else {
             System.out.println("ValidarData: NOT WORKING");
         }
+
+        if(diasAteData("01-04-2022", "02-04-2022") == 2){
+            System.out.println("diasAteData: WORKING");
+        } else {
+            System.out.println("diasAteData: NOT WORKING");
+        }
+
+        if(subtracaoMatrizTransicao(matrizTeste) == matrizResultado){
+            System.out.println("subtracaoMatrizTransicao: WORKING");
+        } else {
+            System.out.println("subtracaoMatrizTransicao: NOT WORKING");
+        }
+
     }
 }
