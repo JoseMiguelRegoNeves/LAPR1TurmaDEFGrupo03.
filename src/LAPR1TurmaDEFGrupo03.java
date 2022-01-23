@@ -1191,13 +1191,13 @@ public class LAPR1TurmaDEFGrupo03 {
             System.out.println("ValidarData: NOT WORKING");
         }
 
-        if(diasAteData("01-04-2022", "02-04-2022") == 2){
+        if(diasAteData("01-04-2022", "02-04-2022") == 1){
             System.out.println("diasAteData: WORKING");
         } else {
             System.out.println("diasAteData: NOT WORKING");
         }
 
-        if(subtracaoMatrizTransicao(matrizTeste) == matrizResultado){
+        if(subtracaoMatrizTransicao(matrizTeste).equals(matrizResultado)){
             System.out.println("subtracaoMatrizTransicao: WORKING");
         } else {
             System.out.println("subtracaoMatrizTransicao: NOT WORKING");
